@@ -14,7 +14,7 @@ class MapGenerator(ABC):
     
     def generate(self):
         print(f"{self.name} start")
-        with st.spinner("Erstelle Karte ..."):
+        with st.spinner(f"Erstelle Karte {self.name} {self.data} ..."):
             for name, func in self.steps:
                 print(name, func)
                 with st.spinner(name):

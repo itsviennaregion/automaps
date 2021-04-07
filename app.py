@@ -12,12 +12,28 @@ from automaps.selector import SelectorSQL, SelectorSimple
 
 
 class MapGeneratorUeberblick(MapGenerator):
-    name = "Gen ÖV-Überblick"
+    name = "ÖV-Überblick"
 
     def _set_steps(self):
         self.steps = [
             ("Schritt 1", self.schritt_1),
             ("Schritt 2", self.schritt_2)
+        ]
+
+    def schritt_1(self):
+        time.sleep(1)
+        
+    def schritt_2(self):
+        time.sleep(2)
+        
+
+class MapGeneratorPendler(MapGenerator):
+    name = "Pendler"
+
+    def _set_steps(self):
+        self.steps = [
+            ("Schritt A", self.schritt_1),
+            ("Schritt B", self.schritt_2)
         ]
 
     def schritt_1(self):
@@ -49,7 +65,7 @@ MAPTYPES_AVAIL = {
             ),
             SelectorSimple("Richtung", ["Einpendler", "Auspendler"], st.radio),
         ],
-        MapGeneratorUeberblick,
+        MapGeneratorPendler,
     ),
 }
 
