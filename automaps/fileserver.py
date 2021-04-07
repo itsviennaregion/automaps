@@ -1,21 +1,12 @@
 import base64
-import os
-import json
-import pickle
 import uuid
 import re
 
-import streamlit as st
-import pandas as pd
-
 
 def download_button(object_to_download, download_filename, button_text):
-
     try:
-        # some strings <-> bytes conversions necessary here
         b64 = base64.b64encode(object_to_download.encode()).decode()
-
-    except AttributeError as e:
+    except AttributeError:
         b64 = base64.b64encode(object_to_download).decode()
 
     button_uuid = str(uuid.uuid4()).replace("-", "")
@@ -48,7 +39,8 @@ def download_button(object_to_download, download_filename, button_text):
 
     dl_link = (
         custom_css
-        + f'<a download="{download_filename}" id="{button_id}" href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
+        + f'<a download="{download_filename}" id="{button_id}" '
+        + f'href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
     )
 
     return dl_link
