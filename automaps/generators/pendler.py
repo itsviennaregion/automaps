@@ -7,7 +7,10 @@ class MapGeneratorPendler(MapGenerator):
     name = "Pendler"
 
     def _set_steps(self):
-        self.steps = [Step("Schritt A", self.schritt_A, 1), Step("Schritt B", self.schritt_B, 2)]
+        self.steps = [
+            Step("Schritt A", self.schritt_A, 1),
+            Step("Schritt B", self.schritt_B, 2),
+        ]
 
     def schritt_A(self):
         time.sleep(1)

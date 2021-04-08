@@ -7,7 +7,10 @@ class MapGeneratorUeberblick(MapGenerator):
     name = "ÖV-Überblick"
 
     def _set_steps(self):
-        self.steps = [Step("Schritt 1", self.schritt_1, 1), Step("Schritt 2", self.schritt_2, 3)]
+        self.steps = [
+            Step("Schritt 1", self.schritt_1, 1),
+            Step("Schritt 2", self.schritt_2, 3),
+        ]
 
     def schritt_1(self):
         time.sleep(1)
