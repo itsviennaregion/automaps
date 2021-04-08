@@ -1,3 +1,4 @@
+from typing import Dict
 import streamlit as st
 
 from automaps.generators import MapGeneratorUeberblick, MapGeneratorPendler
@@ -5,9 +6,9 @@ from automaps.maptype import MapType
 from automaps.selector import SelectorSQL, SelectorSimple
 
 
-BASEPATH_FILESERVER = r"D:\temp\automap"
+BASEPATH_FILESERVER: str = r"D:\temp\automap"
 
-MAPTYPES_AVAIL = {
+MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick": MapType(
         "ÖV-Überblick",
         "Hiermit kann man einen ÖV-Überblick erzeugen. Das funktioniert so: ...",
