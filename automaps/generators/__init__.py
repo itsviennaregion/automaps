@@ -1,0 +1,2 @@
+from automaps.generators.ueberblick import MapGeneratorUeberblick
+from automaps.generators.pendler import MapGeneratorPendler

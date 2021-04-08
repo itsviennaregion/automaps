@@ -1,24 +1,35 @@
 from abc import ABC, abstractmethod
+from collections import namedtuple
 import os
 from typing import Callable, List, Tuple
 
 import streamlit as st
 
+Step = namedtuple("Step", "name func weight")
+
 
 class MapGenerator(ABC):
     name: str
-    steps: List[Tuple[str, Callable]] = []
+    steps: List[Step] = []
 
     def __init__(self, data: dict, basepath_fileserver: str):
         self.data = data
         self.basepath_fileserver = basepath_fileserver
         self._set_steps()
+        self.total_weight = sum([s.weight for s in self.steps])
 
     def generate(self) -> str:
         with st.spinner(f"Erstelle Karte {self.name} {self.data} ..."):
-            for name, func in self.steps:
-                with st.spinner(name):
-                    func()
+            progress_bar = st.progress(0)
+            progress = 0
+            for step in self.steps:
+                with st.spinner(step.name):
+                    step.func()
+                progress += float(step.weight / self.total_weight)
+                progress_bar.progress(progress)
+            # for name, func in self.steps:
+            #     with st.spinner(name):
+            #         func()
         st.success(f"{self.name} fertig")
         return self.filename
 
