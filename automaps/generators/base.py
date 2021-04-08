@@ -19,18 +19,14 @@ class MapGenerator(ABC):
         self.total_weight = sum([s.weight for s in self.steps])
 
     def generate(self) -> str:
-        with st.spinner(f"Erstelle Karte {self.name} {self.data} ..."):
-            progress_bar = st.progress(0)
-            progress = 0
-            for step in self.steps:
-                with st.spinner(step.name):
-                    step.func()
-                progress += float(step.weight / self.total_weight)
-                progress_bar.progress(progress)
-            # for name, func in self.steps:
-            #     with st.spinner(name):
-            #         func()
-        st.success(f"{self.name} fertig")
+        progress_bar = st.progress(0)
+        progress = 0
+        for step in self.steps:
+            with st.spinner(f"Erstelle Karte _{self.name}_ ({step.name})"):
+                step.func()
+            progress += float(step.weight / self.total_weight)
+            progress_bar.progress(progress)
+        st.success(f"Karte _{self.name}_ fertig")
         return self.filename
 
     @property
