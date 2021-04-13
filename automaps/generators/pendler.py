@@ -15,14 +15,14 @@ class MapGeneratorPendler(MapGenerator):
 
     def schritt_A(self):
         time.sleep(1)
-        
+
     def schritt_B(self):
         time.sleep(4)
 
     def schritt_C(self):
         time.sleep(2)
         self.save_file()
-        
+
     def save_file(self):
         with open(self.filename, "w") as f:
             f.write(f"Ich bin eine Pendlerkarte mit Daten: {self.data}\n")
