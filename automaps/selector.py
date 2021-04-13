@@ -29,7 +29,7 @@ class SelectorSimple(Selector):
 
 
 class SelectorSQL(Selector):
-    def __init__(self, label: str, sql: str, widget_method, widget_args: dict = None):
+    def __init__(self, label: str, sql: str, widget_method, widget_args: dict = {}):
         self.label = label
         self.sql = sql
         self.widget_method = widget_method
@@ -38,7 +38,7 @@ class SelectorSQL(Selector):
 
     @property
     def options(self):
-        return sorted(pd.read_sql(self.sql, self.engine).tolist())
+        return sorted(pd.read_sql(self.sql, self.engine).iloc[:, 0])
 
     @property
     def widget(self):
