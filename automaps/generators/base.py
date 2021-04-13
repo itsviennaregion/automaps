@@ -16,7 +16,7 @@ class MapGenerator(ABC):
         self.data = data
         self.basepath_fileserver = basepath_fileserver
         self._set_steps()
-        self.total_weight = sum([s.weight for s in self.steps])
+        self.total_weight: float = sum([s.weight for s in self.steps])
 
     def generate(self) -> str:
         progress_bar = st.progress(0)
@@ -32,7 +32,8 @@ class MapGenerator(ABC):
     @property
     def filename(self):
         return os.path.join(
-            self.basepath_fileserver, f"{self.name}_{'_'.join(self.data.values())}.txt"
+            self.basepath_fileserver,
+            f"{self.name}_{'_'.join(str(x) for x in self.data.values())}.txt",
         )
 
     @abstractmethod
