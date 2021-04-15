@@ -15,6 +15,7 @@
     host=VOR-GISDB01-PR
     port=5432
 ```
+* Lokale Konfiguration als File `conf_local.py` im Stammverzeichnise des Repos hinterlegen (zum Inhalt der Datei siehe unten).
 
 ## Start des Frontends
 `start_frontend.sh` oder `start_frontend.bat` ausführen.
@@ -26,14 +27,11 @@ erreichbar.
 Die folgenden Files und Verzeichnisse sind für die Konfiguration relevant:
 
     /conf.py
+    /conf_local.py
     /generators
 
 ### `/conf.py`
-Hier müssen zwei Variablen festgelegt werden:
-
-Der Pfad zum Speichern der erzeugten Karten (`BASEPATH_FILESERVER`), z.B.:
-
-    BASEPATH_FILESERVER = r"D:\temp\automap"
+Hier muss die folgende Variable festgelegt werden:
 
 Die Konfiguration des Frontends und der Kartenerstellung (`MAPTYPES_AVAIL`). Dabei 
 handelt es sich um ein Dictionary mit der Struktur `Dict[str, MapType]`. `MapType`
@@ -61,6 +59,13 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     ),
 }
 ```
+
+### `/conf_local.py`
+Hier muss die folgende Variable festgelegt werden:
+
+Der Pfad zum Speichern der erzeugten Karten (`BASEPATH_FILESERVER`), z.B.:
+
+    BASEPATH_FILESERVER = r"D:\temp\automap"
 
 ### `/generators`
 Hier werden die einzelnen Kartengeneratoren als Subklasse von `MapGenerator` (zu 

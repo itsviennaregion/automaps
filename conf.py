@@ -10,8 +10,6 @@ from automaps.maptype import MapType
 from automaps.selector import SelectorSQL, SelectorSimple
 
 
-BASEPATH_FILESERVER: str = r"D:\temp\automap"
-
 MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick": MapType(
         "ÖV-Überblick",
@@ -27,7 +25,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "Hiermit kann man Karten für Fahrgastzahlen erstellen. Das funktioniert so: ... ",
         [
             SelectorSQL(
-                "Bezirk", "select distinct vbez from pendler20171031", st.selectbox
+                "Linie",
+                "select distinct liniennummer from mabinso.mabinso_strecken_2019100120191231",
+                st.selectbox,
             )
         ],
         MapGeneratorFahrgastzahlen,
@@ -36,8 +36,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "Pendler",
         "Hiermit kann man Pendlerkarten erzeugen. Das funktioniert so: ...",
         [
-            SelectorSimple(
-                "Gemeinde", ["Traiskirchen", "Mariazell", "Pfaffstätten"], st.selectbox
+            SelectorSQL(
+                "Gemeinde", "select distinct von_gemeinde from pendlergem", st.selectbox
             ),
             SelectorSimple("Richtung", ["Einpendler", "Auspendler"], st.radio),
         ],

@@ -3,7 +3,8 @@ import os
 import streamlit as st
 
 from automaps.fileserver import download_button
-from conf import BASEPATH_FILESERVER, MAPTYPES_AVAIL
+from conf import MAPTYPES_AVAIL
+import conf_local
 
 
 def start_frontend():
@@ -21,7 +22,7 @@ def start_frontend():
 
     if st.button("Karte erstellen"):
         filename = maptype.generator(
-            data=selector_values, basepath_fileserver=BASEPATH_FILESERVER
+            data=selector_values, basepath_fileserver=conf_local.BASEPATH_FILESERVER
         ).generate()
 
         with open(filename, "rb") as f:

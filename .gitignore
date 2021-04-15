@@ -1,4 +1,5 @@
 db.ini
+conf_local.py
 .vscode/
 
 # Byte-compiled / optimized / DLL files
