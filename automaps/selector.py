@@ -8,6 +8,9 @@ from automaps.db import get_engine
 
 class Selector(ABC):
     label: str
+    options: Iterable[Any]
+    widget_method: Any
+    widget_args: dict
 
     @abstractmethod
     def widget(self):
