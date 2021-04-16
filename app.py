@@ -35,6 +35,7 @@ def start_frontend():
                 )
                 progress += float(step_message["rel_weight"])
                 progress_bar.progress(progress)
+        progress_bar.progress(1.0)
         st.success(f"Karte _{maptype.name}_ fertig")
 
         filename = step_message["filename"]
