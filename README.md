@@ -1,5 +1,11 @@
 # Automatische Karten
 
+## Kurzbeschreibung
+__TODO__
+
+## Architektur
+__TODO__
+
 ## Installation
 * QGIS installieren
 * Installation der benötigten Packages (__im von QGIS genutzten Python-Interpreter!__): 
