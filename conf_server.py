@@ -1,5 +1,8 @@
-from automaps.generators import MapGeneratorUeberblick
+from typing import Dict
 
-GENERATORS = {"ÖV-Überblick": MapGeneratorUeberblick}
+from automaps.generators import MapGeneratorUeberblick
+from automaps.generators.base import MapGenerator
+
+GENERATORS: Dict[str, MapGenerator] = {"ÖV-Überblick": MapGeneratorUeberblick}
 
 PORT = 5555
