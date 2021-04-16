@@ -1,0 +1,1 @@
+streamlit run app.py & ./start_qgis_server.py

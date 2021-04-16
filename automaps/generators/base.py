@@ -1,49 +1,71 @@
 from abc import ABC, abstractmethod
 from collections import namedtuple
+from copy import copy
 import os
-from qgis.core import QgsProject
-from typing import Callable, List, Tuple
+from typing import OrderedDict
 
-import streamlit as st
+from qgis.core import QgsPrintLayout, QgsProject
 
-import conf
+from automaps._qgis.export import export_layout
 from automaps._qgis.layout import get_layout_by_name
+from automaps._qgis.project import get_project
 
-Step = namedtuple("Step", "name func weight")
+
+Step = namedtuple("Step", "func weight")
+
+
+class StepData:
+    def __init__(self, message: dict):
+        self.message_to_client = message
 
 
 class MapGenerator(ABC):
     name: str
-    steps: List[Step] = []
-    project: QgsProject
+    steps: OrderedDict[str, Step]
 
-    def __init__(self, data: dict, basepath_fileserver: str):
+    def __init__(
+        self,
+        data: dict,
+        basepath_fileserver: str,
+        print_layout: str,
+        step_data: StepData,
+    ):
         self.data = data
         self.basepath_fileserver = basepath_fileserver
-        self._set_steps()
-        self.total_weight: float = sum([s.weight for s in self.steps])
+        self.print_layout = print_layout
+        self.step_data = step_data
+        self.step_data.message_to_client["filename"] = self.filename
 
-    def generate(self) -> str:
-        progress_bar = st.progress(0)
-        progress = 0
-        for step in self.steps:
-            with st.spinner(f"Erstelle Karte _{self.name}_ ({step.name})"):
-                step.func()
-            progress += float(step.weight / self.total_weight)
-            progress_bar.progress(progress)
-        st.success(f"Karte _{self.name}_ fertig")
-        return self.filename
+        self._set_steps()
+        self.total_weight: float = sum([s.weight for s in self.steps.values()])
 
     @property
-    def filename(self):
+    def filename(self) -> str:
+        data = copy(self.data)
+        data.pop("maptype_dict_key", None)
+        data.pop("step", None)
+        data.pop("print_layout", None)
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in self.data.values())}.pdf",
+            f"{self.name}_{'_'.join(str(x) for x in data.values())}.pdf",
         )
-
-    def get_print_layout(self):
-        return get_layout_by_name(self.project, conf.PRINT_LAYOUT_NAMES[self.name])
 
     @abstractmethod
     def _set_steps(self):
         pass
+
+    def run_step(self, name: str) -> StepData:
+        self.steps[name].func()
+        self.step_data.message_to_client["rel_weight"] = (
+            self.steps[name].weight / self.total_weight
+        )
+        return self.step_data
+
+    def _get_project(self) -> QgsProject:
+        return get_project()
+
+    def _get_print_layout(self, project: QgsProject) -> QgsPrintLayout:
+        return get_layout_by_name(project, self.print_layout)
+
+    def _export_print_layout(self, layout: QgsPrintLayout):
+        return export_layout(layout, self.filename)

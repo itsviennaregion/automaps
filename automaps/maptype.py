@@ -1,7 +1,5 @@
-from typing import Iterable, Type
+from typing import Iterable
 
-from automaps.db import get_engine
-from automaps.generators.base import MapGenerator
 from automaps.selector import Selector
 
 
@@ -11,9 +9,9 @@ class MapType:
         name: str,
         description: str,
         selectors: Iterable[Selector],
-        generator: Type[MapGenerator],
+        print_layout: str,
     ):
         self.name = name
         self.description = description
         self.selectors = selectors
-        self.generator = generator
+        self.print_layout = print_layout

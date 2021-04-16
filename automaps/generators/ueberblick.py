@@ -1,28 +1,34 @@
 import time
 
-from qgis.core import QgsApplication, QgsProject, QgsLayoutExporter
-import streamlit as st
+from collections import OrderedDict
 
 from automaps.generators.base import MapGenerator, Step
-# from automaps ._qgis.qgis_init import get_project
-from automaps._qgis.project import get_project
-from automaps._qgis.export import export_layout
-
-import conf
-import conf_local
 
 
 class MapGeneratorUeberblick(MapGenerator):
     name = "ÖV-Überblick"
 
     def _set_steps(self):
-        self.steps = [
-            Step("Schritt 1", self.schritt_1, 1),
-            Step("Schritt 2", self.schritt_2, 2),
-        ]
+        self.steps = OrderedDict(
+            {
+                "Projekt laden": Step(self.load_project, 0.5),
+                "Layer filtern": Step(self.filter_layers, 1),
+                "Kartenausschnitt festlegen": Step(self.set_extent, 1),
+                "Karte exportieren": Step(self.export_layout, 0.5),
+            }
+        )
 
-    def schritt_1(self):
-        self.project = get_project()
+    def load_project(self):
+        project = self._get_project()
+        layout = self._get_print_layout(project)
+        self.step_data.project = project
+        self.step_data.layout = layout
 
-    def schritt_2(self):
-        export_layout(self.get_print_layout(), self.filename)
+    def filter_layers(self):
+        time.sleep(0.5)
+
+    def set_extent(self):
+        time.sleep(0.5)
+
+    def export_layout(self):
+        self._export_print_layout(self.step_data.layout)

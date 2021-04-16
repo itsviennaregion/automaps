@@ -40,7 +40,7 @@ class SelectorSQL(Selector):
         self.engine = get_engine()
 
     @property
-    def options(self):
+    def options(self) -> Iterable[Any]:
         return sorted(pd.read_sql(self.sql, self.engine).iloc[:, 0])
 
     @property
