@@ -9,6 +9,9 @@ from automaps.generators import (
 from automaps.maptype import MapType
 from automaps.selector import SelectorSQL, SelectorSimple
 
+PRINT_LAYOUT_NAMES: Dict[str, str] = {
+    "ÖV-Überblick": "test_layout"
+}
 
 MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick": MapType(

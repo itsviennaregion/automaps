@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
 from collections import namedtuple
 import os
+from qgis.core import QgsProject
 from typing import Callable, List, Tuple
 
 import streamlit as st
+
+import conf
+from automaps._qgis.layout import get_layout_by_name
 
 Step = namedtuple("Step", "name func weight")
 
@@ -11,6 +15,7 @@ Step = namedtuple("Step", "name func weight")
 class MapGenerator(ABC):
     name: str
     steps: List[Step] = []
+    project: QgsProject
 
     def __init__(self, data: dict, basepath_fileserver: str):
         self.data = data
@@ -33,8 +38,11 @@ class MapGenerator(ABC):
     def filename(self):
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in self.data.values())}.txt",
+            f"{self.name}_{'_'.join(str(x) for x in self.data.values())}.pdf",
         )
+
+    def get_print_layout(self):
+        return get_layout_by_name(self.project, conf.PRINT_LAYOUT_NAMES[self.name])
 
     @abstractmethod
     def _set_steps(self):

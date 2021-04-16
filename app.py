@@ -1,5 +1,7 @@
 import os
+import time
 
+from qgis.core import QgsApplication
 import streamlit as st
 
 from automaps.fileserver import download_button
@@ -34,4 +36,15 @@ def start_frontend():
 
 
 if __name__ == "__main__":
+    try:
+        qgs.exitQgis()
+        print("except")
+    except Exception:
+        pass
+    QgsApplication.setPrefixPath(conf_local.QGIS_INSTALLATION_PATH, True)
+    qgs = QgsApplication([], False)
+    qgs.setMaxThreads(1)
+    qgs.initQgis()
     start_frontend()
+
+
