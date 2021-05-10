@@ -59,7 +59,7 @@ Als Key des Dictionaries soll eine Bezeichnung des Kartentyps vergeben werden. D
 wird im Frontend zur Auswahl angezeigt. 
 
 `MapType`
-wird mit folgenden Argumenten initialisiert:
+wird mit folgenden Argumenten initialisiert: __TODO: aktualisieren__
 * `name (str)`: Name des Kartentyps. Dieser muss als Key in der Variable `GENERATORS` 
 in `/conf_server.py` vorkommen (siehe unten).
 * `description (str)`: Beschreibung des Kartentyps. Wird im Frontend angezeigt.
@@ -149,7 +149,7 @@ zwischen den Schritten genutzt werden. Stattdessen kann das Attribut `step_data`
 vom Typ `StepData` genutzt werden, wie im Beispiel ersichtlich wird. Dafür können dem
 Objekt beliebige Attribute hinzugefügt werden.
 
-Eine kleine Generatorklasse mit vier Schritten könnte z.B. so aussehen:
+Eine kleine Generatorklasse mit vier Schritten könnte z.B. so aussehen: __TODO: aktualisieren__
 
 ```python
 import time
