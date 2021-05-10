@@ -47,7 +47,7 @@ class MapGenerator(ABC):
         data.pop("print_layout", None)
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in data.values())}.pdf",
+            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}.pdf",
         )
 
     @abstractmethod

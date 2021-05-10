@@ -13,15 +13,19 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "Das funktioniert so: ...",
         selectors=[
             SelectorSimple("Layout", ["A", "B"], st.radio),
-            SelectorSimple("Linie", ["1", "2", "3"], st.selectbox),
+            SelectorSimple("Ebene", ["", "Gemeinde", "Bezirk"], st.selectbox),
             SelectorSQL(
-                "Gemeinde", "select distinct von_gemeinde from pendlergem", st.selectbox
+                "Gemeinde",
+                "select distinct gem_name from gem",
+                st.selectbox,
+                depends_on_selectors={"Ebene": "Gemeinde", "Layout": "A"}
             ),
-            # SelectorSQL(
-            #     "Linie",
-            #     "select distinct liniennummer from mabinso.mabinso_strecken_2019100120191231",
-            #     st.selectbox,
-            # )
+            SelectorSQL(
+                "Bezirk",
+                "select distinct bez_name from bez",
+                st.selectbox,
+                depends_on_selectors={"Ebene": "Bezirk"}
+            ),
         ],
         print_layout="test_layout",
     ),

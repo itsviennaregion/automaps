@@ -9,19 +9,24 @@ from conf import MAPTYPES_AVAIL
 
 
 def start_frontend():
+    # Show available map types and get selected value
     maptype_dict_key = st.sidebar.radio("Kartentyp", list(MAPTYPES_AVAIL.keys()))
+
+    # Instantiate MapType object
     maptype = MAPTYPES_AVAIL[maptype_dict_key]
 
+    # Show information about the selected map type
     st.write(f"# {maptype.name}")
     st.write(f"{maptype.description}")
 
-    selector_values = {}
-    for s in maptype.selectors:
-        selector_values[s.label] = s.widget
+    # Show widgets (if conditions are satisfied) and get selected values
+    selector_values = maptype.selector_values
 
-    for k, v in selector_values.items():
-        st.write(f"{k}: __{v}__")
+    # Show selected values for all widgets (for debugging)
+    # for k, v in selector_values.items():
+    #     st.write(f"{k}: __{v}__")
 
+    # Create map
     if st.button("Karte erstellen"):
         progress_bar = st.progress(0)
         progress = 0

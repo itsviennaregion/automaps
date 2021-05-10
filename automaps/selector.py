@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Iterable
+from typing import Any, Dict, Iterable
 
 import pandas as pd
 
@@ -11,6 +11,7 @@ class Selector(ABC):
     options: Iterable[Any]
     widget_method: Any
     widget_args: dict
+    depends_on_selectors: Dict[str, Any]
 
     @abstractmethod
     def widget(self):
@@ -19,12 +20,14 @@ class Selector(ABC):
 
 class SelectorSimple(Selector):
     def __init__(
-        self, label: str, options: Iterable[Any], widget_method, widget_args: dict = {}
+        self, label: str, options: Iterable[Any], widget_method, widget_args: dict = {},
+        depends_on_selectors: Dict[str, Any] = None
     ):
         self.label = label
         self.options = options
         self.widget_method = widget_method
         self.widget_args = widget_args
+        self.depends_on_selectors = depends_on_selectors
 
     @property
     def widget(self):
@@ -32,11 +35,12 @@ class SelectorSimple(Selector):
 
 
 class SelectorSQL(Selector):
-    def __init__(self, label: str, sql: str, widget_method, widget_args: dict = {}):
+    def __init__(self, label: str, sql: str, widget_method, widget_args: dict = {}, depends_on_selectors: Dict[str, Any] = None):
         self.label = label
         self.sql = sql
         self.widget_method = widget_method
         self.widget_args = widget_args
+        self.depends_on_selectors = depends_on_selectors
         self.engine = get_engine()
 
     @property
