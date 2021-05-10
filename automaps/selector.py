@@ -20,8 +20,12 @@ class Selector(ABC):
 
 class SelectorSimple(Selector):
     def __init__(
-        self, label: str, options: Iterable[Any], widget_method, widget_args: dict = {},
-        depends_on_selectors: Dict[str, Any] = None
+        self,
+        label: str,
+        options: Iterable[Any],
+        widget_method,
+        widget_args: dict = {},
+        depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
         self.options = options
@@ -35,7 +39,14 @@ class SelectorSimple(Selector):
 
 
 class SelectorSQL(Selector):
-    def __init__(self, label: str, sql: str, widget_method, widget_args: dict = {}, depends_on_selectors: Dict[str, Any] = None):
+    def __init__(
+        self,
+        label: str,
+        sql: str,
+        widget_method,
+        widget_args: dict = {},
+        depends_on_selectors: Dict[str, Any] = None,
+    ):
         self.label = label
         self.sql = sql
         self.widget_method = widget_method

@@ -1,1 +1,2 @@
+from automaps.generators.test import MapGeneratorTest
 from automaps.generators.ueberblick import MapGeneratorUeberblick
