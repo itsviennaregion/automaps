@@ -11,6 +11,7 @@ class Selector(ABC):
     label: str
     options: Iterable[Any]
     widget_method: Any
+    no_value_selected_text: str
     widget_args: dict
     depends_on_selectors: Dict[str, Any]
 
@@ -25,11 +26,14 @@ class SelectorSimple(Selector):
         label: str,
         options: Iterable[Any],
         widget_method,
+        no_value_selected_text: str = "",
         widget_args: dict = {},
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
         self.options = options
+        if len(no_value_selected_text) > 0:
+            self.options = [no_value_selected_text] + self.options
         self.widget_method = widget_method
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
@@ -45,18 +49,23 @@ class SelectorSQL(Selector):
         label: str,
         sql: str,
         widget_method,
+        no_value_selected_text: str = "",
         widget_args: dict = {},
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
         self.sql = sql
         self.widget_method = widget_method
+        self.no_value_selected_text = no_value_selected_text
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
 
     @property
     def options(self) -> Iterable[Any]:
-        return read_options_sql(self.sql)
+        options = read_options_sql(self.sql)
+        if len(self.no_value_selected_text) > 0:
+            options = [self.no_value_selected_text] + options
+        return options
 
     @property
     def widget(self):
