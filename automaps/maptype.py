@@ -20,6 +20,7 @@ class MapType:
     def selector_values(self):
         """Show widgets (if conditions are satisfied) and return selected values."""
         selector_values = {}
+        has_init_values = False
         for s in self.selectors:
             if not s.depends_on_selectors:
                 selector_values[s.label] = s.widget
@@ -32,4 +33,8 @@ class MapType:
                     selector_values[s.label] = s.widget
                 else:
                     selector_values[s.label] = None
+            if selector_values[s.label] == s.no_value_selected_text:
+                has_init_values = True
+        if has_init_values:
+            selector_values["has_init_values"] = True
         return selector_values

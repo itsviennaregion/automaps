@@ -32,6 +32,7 @@ class SelectorSimple(Selector):
     ):
         self.label = label
         self.options = options
+        self.no_value_selected_text = no_value_selected_text
         if len(no_value_selected_text) > 0:
             self.options = [no_value_selected_text] + self.options
         self.widget_method = widget_method
