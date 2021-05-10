@@ -97,7 +97,7 @@ Der Verzeichnispfad zum Speichern der erzeugten Karten (`BASEPATH_FILESERVER`), 
 
 Der Verzeichnispfad zur QGIS-Installation (`QGIS_INSTALLATION_PATH`), z.B.:
 
-    QGIS_INSTALLATION_PATH = "/usr/lib/qgis"
+    QGIS_INSTALLATION_PATH = "/usr"
 
 Der Dateipfad zum QGIS-Projektfile (`FILEPATH_QGIS_PROJECT`), z.B.:
 
