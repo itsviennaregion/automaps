@@ -1,6 +1,6 @@
+from collections import OrderedDict
 import time
 
-from collections import OrderedDict
 
 from automaps.generators.base import MapGenerator, Step
 
@@ -23,9 +23,14 @@ class MapGeneratorUeberblick(MapGenerator):
         layout = self._get_print_layout(project)
         self.step_data.project = project
         self.step_data.layout = layout
+        self._set_project_variable(self.step_data.project, "data", str(self.data))
 
     def filter_layers(self):
-        time.sleep(0.5)
+        layer = self.step_data.project.mapLayersByName("gem")[0]
+        layer.setSubsetString(f"gem_name = '{self.data['Gemeinde']}'")
+        self._set_project_variable(
+            self.step_data.project, "gemeinde_aktiv", self.data["Gemeinde"]
+        )
 
     def set_extent(self):
         time.sleep(0.5)

@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 from copy import copy
 import os
-from typing import OrderedDict
+from typing import Any, OrderedDict
 
 from qgis.core import QgsPrintLayout, QgsProject
 
 from automaps._qgis.export import export_layout
 from automaps._qgis.layout import get_layout_by_name
-from automaps._qgis.project import get_project
+from automaps._qgis.project import get_project, set_project_variable
 
 
 Step = namedtuple("Step", "func weight")
@@ -63,6 +63,9 @@ class MapGenerator(ABC):
 
     def _get_project(self) -> QgsProject:
         return get_project()
+
+    def _set_project_variable(self, project: QgsProject, var_name: str, var_value: Any):
+        set_project_variable(project, var_name, var_value)
 
     def _get_print_layout(self, project: QgsProject) -> QgsPrintLayout:
         return get_layout_by_name(project, self.print_layout)
