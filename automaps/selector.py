@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Iterable
 
 import pandas as pd
+import streamlit as st
 
 from automaps.db import get_engine
 
@@ -52,12 +53,16 @@ class SelectorSQL(Selector):
         self.widget_method = widget_method
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
-        self.engine = get_engine()
 
     @property
     def options(self) -> Iterable[Any]:
-        return sorted(pd.read_sql(self.sql, self.engine).iloc[:, 0])
+        return read_options_sql(self.sql)
 
     @property
     def widget(self):
         return self.widget_method(self.label, self.options, **self.widget_args)
+
+
+@st.cache(show_spinner=False, ttl=3600)
+def read_options_sql(sql) -> Iterable[Any]:
+    return sorted(pd.read_sql(sql, get_engine()).iloc[:, 0])
