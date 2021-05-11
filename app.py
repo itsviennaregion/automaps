@@ -66,7 +66,7 @@ def _show_download_button(filename: str):
     download_button_str = download_button(
         s,
         os.path.basename(filename),
-        f"Download {os.path.basename(filename)}",
+        "Download",
     )
     st.markdown(download_button_str, unsafe_allow_html=True)
 
