@@ -18,7 +18,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 st.selectbox,
                 no_value_selected_text="Räumliche Ebene auswählen ...",
             ),
-
             # Räumliche Ebene: Linie
             SelectorSimple(
                 "Bus oder Bahn",
@@ -43,9 +42,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Tagesart",
                 "select distinct tagesart from geom_mabinso_strecken",
                 st.selectbox,
-                depends_on_selectors={"Linie oder Kurs": "Kurs"}
+                depends_on_selectors={"Linie oder Kurs": "Kurs"},
             ),
-
             # Räumliche Ebene: Gemeinde
             SelectorSQL(
                 "Gemeinde",
@@ -57,8 +55,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         ],
         print_layout="test_layout",
     ),
-
-
     "Test": MapType(
         name="Test",
         description="Hier kann man alles mögliche testen.",
