@@ -18,10 +18,8 @@ class MapGeneratorUeberblick(MapGenerator):
         )
 
     def load_project(self):
-        project = self._get_project()
-        layout = self._get_print_layout(project)
-        self.step_data.project = project
-        self.step_data.layout = layout
+        self.step_data.project = self._get_project()
+        self.step_data.layout = self._get_print_layout(self.step_data.project)
         self._set_project_variable(self.step_data.project, "data", str(self.data))
 
     def filter_layers(self):
