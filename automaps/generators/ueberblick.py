@@ -1,7 +1,6 @@
 from collections import OrderedDict
 import time
 
-
 from automaps.generators.base import MapGenerator, Step
 
 
