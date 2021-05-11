@@ -1,4 +1,5 @@
 import os
+import traceback
 
 import streamlit as st
 
@@ -31,28 +32,32 @@ def start_frontend():
         if selector_values.get("has_init_values", False):
             st.error("Bitte alle notwendigen Kartenattribute definieren!")
         else:
-            progress_bar = st.progress(0)
-            progress = 0
+            try:
+                progress_bar = st.progress(0)
+                progress = 0
+                steps = ask_server_for_steps(maptype_dict_key)
 
-            steps = ask_server_for_steps(maptype_dict_key)
+                for step in steps:
+                    with st.spinner(f"Erstelle Karte _{maptype.name}_ ({step})"):
+                        step_message = send_task_to_server(
+                            maptype_dict_key, selector_values, maptype.print_layout, step
+                        )
+                        progress += float(step_message["rel_weight"])
+                        progress_bar.progress(progress)
+                progress_bar.progress(1.0)
+                st.success(f"Karte _{maptype.name}_ fertig")
 
-            for step in steps:
-                with st.spinner(f"Erstelle Karte _{maptype.name}_ ({step})"):
-                    step_message = send_task_to_server(
-                        maptype_dict_key, selector_values, maptype.print_layout, step
-                    )
-                    progress += float(step_message["rel_weight"])
-                    progress_bar.progress(progress)
-            progress_bar.progress(1.0)
-            st.success(f"Karte _{maptype.name}_ fertig")
-
-            filename = step_message["filename"]
-            with open(filename, "rb") as f:
-                s = f.read()
-            download_button_str = download_button(
-                s, os.path.basename(filename), f"Download {os.path.basename(filename)}"
-            )
-            st.markdown(download_button_str, unsafe_allow_html=True)
+                filename = step_message["filename"]
+                with open(filename, "rb") as f:
+                    s = f.read()
+                download_button_str = download_button(
+                    s, os.path.basename(filename), f"Download {os.path.basename(filename)}"
+                )
+                st.markdown(download_button_str, unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"Leider gab es einen Fehler: {e}")
+                tb = traceback.format_exc()
+                st.error(tb)
 
 
 if __name__ == "__main__":
