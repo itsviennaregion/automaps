@@ -16,6 +16,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Räumliche Ebene",
                 ["Linie", "Gemeinde"],
                 st.selectbox,
+                widget_args={"help": "Hier könnte Ihr Hilfetext stehen!"},
                 no_value_selected_text="Räumliche Ebene auswählen ...",
             ),
             # Räumliche Ebene: Linie
