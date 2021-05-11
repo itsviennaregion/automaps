@@ -18,7 +18,8 @@ class MapType:
 
     @property
     def selector_values(self):
-        """Show widgets (if conditions are satisfied) and return selected values."""
+        """Show widgets (if conditions defined by Selector argument
+        `depends_on_selectors` are satisfied) and return selected values."""
         selector_values = {}
         has_init_values = False
         for s in self.selectors:
