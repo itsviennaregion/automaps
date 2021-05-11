@@ -37,7 +37,10 @@ class MapType:
                         selector_values[s.label] = s.widget
                     else:
                         selector_values[s.label] = None
-                if selector_values[s.label] == s.no_value_selected_text:
+                if (
+                    selector_values[s.label] == s.no_value_selected_text
+                    or selector_values[s.label] == []
+                ):
                     has_init_values = True
             elif isinstance(s, tuple):
                 try:
