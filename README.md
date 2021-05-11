@@ -39,7 +39,7 @@ Eventuell vorher:
 
 `chmod +x start_automaps.sh`
 
-Das Frontend ist unter [http://localhost:8501/](http://localhost:8501/)
+Das Frontend ist unter [http://localhost:8505/](http://localhost:8505/)
 erreichbar. 
 
 ## Konfiguration
@@ -59,7 +59,7 @@ Als Key des Dictionaries soll eine Bezeichnung des Kartentyps vergeben werden. D
 wird im Frontend zur Auswahl angezeigt. 
 
 `MapType`
-wird mit folgenden Argumenten initialisiert: __TODO: aktualisieren__
+wird mit folgenden Argumenten initialisiert: 
 * `name (str)`: Name des Kartentyps. Dieser muss als Key in der Variable `GENERATORS` 
 in `/conf_server.py` vorkommen (siehe unten).
 * `description (str)`: Beschreibung des Kartentyps. Wird im Frontend angezeigt.
@@ -74,19 +74,67 @@ Beispiel:
 MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick": MapType(
         name="ÖV-Überblick",
-        description="Hiermit kann man einen ÖV-Überblick erzeugen. "
+        description="Hiermit kann man einen ÖV-Überblick erzeugen."
         "Das funktioniert so: ...",
         selectors=[
-            SelectorSimple("Layout", ["A", "B"], st.radio),
-            SelectorSimple("Linie", ["1", "2", "3"], st.selectbox),
+            SelectorSimple(
+                "Räumliche Ebene",
+                ["Linie", "Gemeinde"],
+                st.selectbox,
+                widget_args={"help":"Hilfetext"},
+                no_value_selected_text="Räumliche Ebene auswählen ...",
+            ),
             SelectorSQL(
-                "Gemeinde", "select distinct von_gemeinde from pendlergem", st.selectbox
+                "Linie",
+                "select distinct liniennummer from oev_strecken",
+                st.selectbox,
+                no_value_selected_text="Liniennummer auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Linie"},
             ),
         ],
         print_layout="test_layout",
     ),
 }
 ```
+
+Die Konfiguration der im UI angezeigten Auswahlmöglichkeiten erfolgt mit Hilfe von
+`Selector`-Objekten.
+Es stehen zwei von `selector.BaseSelector` abgeleitete Selector-Klassen zur Verfügung:
+
+* `SelectorSimple`: Für Listen von Auswahlmöglichkeiten (z.B. "Bus" oder "Bahn"),
+die direkt in `conf.py` definiert werden.
+* `SelectorSQL`: Für Listen von Auswahlmöglichkeiten, die auf Basis von einer
+Datenbankabfrage gebildet werden.
+
+Diese `Selector`-Klassen teilen die folgenden Parameter zur Initialisierung:
+* `label (str)`: Bezeichnung des Selektors. Wird im UI angezeigt. Darüber hinaus
+können mit Hilfe des Labels Abhängigkeiten zwischen den Selektoren eines `MapType`
+definiert werden (siehe Parameter `depends_on_selectors`).
+* `widget_method (streamlit widget)`: Eines der von streamlit bereitgestellten Widgets 
+(z.B. st.radio oder st.selectbox). 
+* `widget_args (dict, optional)`: Dictionary von Argumenten, das zur Initialisierung
+des widget-Objekts weitergegeben wird (z.B. `{"help"="Hilfetext"}`).
+* `no_value_selected_text (str, optional)`: Auswahlmöglichkeit, die angezeigt wird,
+bevor ein Wert ausgewählt wurde (z.B. "Räumliche Ebene auswählen ...").
+* `depends_on_selectors (Dict[str, Any], optional)`: Dictionary, in dem Bedingungen
+definiert werden können, die erfüllt sein müssen, damit das Widget angezeigt wird. Damit 
+können Abhängigkeiten zwischen Selektoren festgelegt werden. Als Keys müssen die Labels
+von ebenfalls für denselben `MapType` definierten Selektoren verwendet werden, als
+Values die Werte, die bei dem entsprechenden Selektor ausgewählt sein müssen. Wenn
+z.B. beim Selektor mit dem Label "Räumliche Ebene" der Wert "Linie" ausgewählt sein
+muss, dann ist `depends_on_selectors={"Räumliche Ebene": "Linie"}` zu setzen. Derzeit
+kann nur auf Gleichheit geprüft werden. Wenn das Dictionary mehrere key/value-Paare
+beinhaltet, müssen alle Bedingungen erfüllt sein (UND-Verknüpfung).
+
+Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter 
+initialisiert:
+* `options (Iterable[Any])`: Iterable von Auswahlmöglichkeiten.
+
+Die `SelectorSQL`-Klasse wird darüber hinaus mit dem folgenden Parameter initialisiert:
+* `sql (str)`: SQL-Statement, das an die in `db.ini` definierte Datenbank geschickt wird
+und eine Liste an Auswahlmöglichkeiten liefern soll, z.B.: `"select distinct 
+liniennummer from strecken"`.
+
 
 ### `/conf_local.py`
 Hier müssen die folgenden Variablen festgelegt werden:
@@ -149,12 +197,11 @@ zwischen den Schritten genutzt werden. Stattdessen kann das Attribut `step_data`
 vom Typ `StepData` genutzt werden, wie im Beispiel ersichtlich wird. Dafür können dem
 Objekt beliebige Attribute hinzugefügt werden.
 
-Eine kleine Generatorklasse mit vier Schritten könnte z.B. so aussehen: __TODO: aktualisieren__
+Eine kleine Generatorklasse mit vier Schritten könnte z.B. so aussehen: 
 
 ```python
-import time
-
 from collections import OrderedDict
+import time
 
 from automaps.generators.base import MapGenerator, Step
 
@@ -167,22 +214,21 @@ class MapGeneratorUeberblick(MapGenerator):
             {
                 "Projekt laden": Step(self.load_project, 0.5),
                 "Layer filtern": Step(self.filter_layers, 1),
-                "Kartenausschnitt festlegen": Step(self.set_extent, 1),
                 "Karte exportieren": Step(self.export_layout, 0.5),
             }
         )
 
     def load_project(self):
-        project = self._get_project()
-        layout = self._get_print_layout(project)
-        self.step_data.project = project
-        self.step_data.layout = layout
+        self.step_data.project = self._get_project()
+        self.step_data.layout = self._get_print_layout(project)
+        self._set_project_variable(self.step_data.project, "data", str(self.data))
 
     def filter_layers(self):
-        time.sleep(0.5)
-
-    def set_extent(self):
-        time.sleep(0.5)
+        layer = self.step_data.project.mapLayersByName("gem")[0]
+        layer.setSubsetString(f"gem_name = '{self.data['Gemeinde']}'")
+        self._set_project_variable(
+            self.step_data.project, "gemeinde_aktiv", self.data["Gemeinde"]
+        )
 
     def export_layout(self):
         self._export_print_layout(self.step_data.layout)
