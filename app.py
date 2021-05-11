@@ -9,6 +9,8 @@ from conf import MAPTYPES_AVAIL
 
 
 def start_frontend():
+    st.set_page_config(page_title="VOR Karten")
+
     # Show available map types and get selected value
     maptype_dict_key = st.sidebar.radio("Kartentyp", list(MAPTYPES_AVAIL.keys()))
 
@@ -22,10 +24,6 @@ def start_frontend():
     # Show widgets if conditions defined by Selector argument `depends_on_selectors`
     # are satisfied) and get selected values
     selector_values = maptype.selector_values
-
-    # Show selected values for all widgets (for debugging)
-    for k, v in selector_values.items():
-        st.write(f"{k}: __{v}__")
 
     # Create map
     if st.button("Karte erstellen"):
@@ -55,6 +53,10 @@ def start_frontend():
 
             except Exception as e:
                 _show_error_message(e)
+
+    # Show selected values for all widgets (for debugging)
+    for k, v in selector_values.items():
+        st.write(f"{k}: __{v}__")
 
 
 def _show_download_button(filename: str):
