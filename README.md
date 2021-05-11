@@ -197,7 +197,7 @@ zwischen den Schritten genutzt werden. Stattdessen kann das Attribut `step_data`
 vom Typ `StepData` genutzt werden, wie im Beispiel ersichtlich wird. Dafür können dem
 Objekt beliebige Attribute hinzugefügt werden.
 
-Eine kleine Generatorklasse mit vier Schritten könnte z.B. so aussehen: 
+Eine kleine Generatorklasse mit drei Schritten könnte z.B. so aussehen: 
 
 ```python
 from collections import OrderedDict
