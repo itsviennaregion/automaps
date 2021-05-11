@@ -4,7 +4,7 @@ from copy import copy
 import os
 from typing import Any, OrderedDict
 
-from qgis.core import QgsPrintLayout, QgsProject
+from qgis.core import QgsLayoutItemMap, QgsMapLayer, QgsPrintLayout, QgsProject
 
 from automaps._qgis.export import export_layout
 from automaps._qgis.layout import get_layout_by_name
@@ -35,6 +35,11 @@ class MapGenerator(ABC):
         self.print_layout = print_layout
         self.step_data = step_data
         self.step_data.message_to_client["filename"] = self.filename
+        try:
+            self.step_data.project
+        except AttributeError:
+            self.step_data.project = self._get_project()
+        self.step_data.layout = self._get_print_layout()
 
         self._set_steps()
         self.total_weight: float = sum([s.weight for s in self.steps.values()])
@@ -64,11 +69,19 @@ class MapGenerator(ABC):
     def _get_project(self) -> QgsProject:
         return get_project()
 
-    def _set_project_variable(self, project: QgsProject, var_name: str, var_value: Any):
-        set_project_variable(project, var_name, var_value)
+    def _set_project_variable(self, var_name: str, var_value: Any):
+        set_project_variable(self.step_data.project, var_name, var_value)
 
-    def _get_print_layout(self, project: QgsProject) -> QgsPrintLayout:
-        return get_layout_by_name(project, self.print_layout)
+    def _get_print_layout(self) -> QgsPrintLayout:
+        return get_layout_by_name(self.step_data.project, self.print_layout)
+
+    def _get_map_layer(self, layer_name: str):
+        layers = self.step_data.project.mapLayersByName(layer_name)
+        assert len(layers) == 1
+        return layers[0]
+
+    def _zoom_map_to_layer_extent(self, map_name: str, layer: QgsMapLayer):
+        self.step_data.layout.itemById(map_name).zoomToExtent(layer.extent())
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename)

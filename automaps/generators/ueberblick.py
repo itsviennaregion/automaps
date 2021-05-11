@@ -18,19 +18,16 @@ class MapGeneratorUeberblick(MapGenerator):
         )
 
     def load_project(self):
-        self.step_data.project = self._get_project()
-        self.step_data.layout = self._get_print_layout(self.step_data.project)
-        self._set_project_variable(self.step_data.project, "data", str(self.data))
+        self._set_project_variable("data", str(self.data))
 
     def filter_layers(self):
-        layer = self.step_data.project.mapLayersByName("gem")[0]
-        layer.setSubsetString(f"gem_name = '{self.data['Gemeinde']}'")
-        self._set_project_variable(
-            self.step_data.project, "gemeinde_aktiv", self.data["Gemeinde"]
-        )
+        layer_gem = self._get_map_layer("gem")
+        layer_gem.setSubsetString(f"gem_name = '{self.data['Gemeinde']}'")
+        self._set_project_variable("gemeinde_aktiv", self.data["Gemeinde"])
+        self.step_data.layer_gem = layer_gem
 
     def set_extent(self):
-        time.sleep(0.5)
+        self._zoom_map_to_layer_extent("Hauptkarte", self.step_data.layer_gem)
 
     def export_layout(self):
         self._export_print_layout(self.step_data.layout)
