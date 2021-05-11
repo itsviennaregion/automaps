@@ -7,7 +7,7 @@ import streamlit as st
 from automaps.db import get_engine
 
 
-class Selector(ABC):
+class BaseSelector(ABC):
     label: str
     options: Iterable[Any]
     widget_method: Any
@@ -20,7 +20,7 @@ class Selector(ABC):
         pass
 
 
-class SelectorSimple(Selector):
+class SelectorSimple(BaseSelector):
     def __init__(
         self,
         label: str,
@@ -44,7 +44,7 @@ class SelectorSimple(Selector):
         return self.widget_method(self.label, self.options, **self.widget_args)
 
 
-class SelectorSQL(Selector):
+class SelectorSQL(BaseSelector):
     def __init__(
         self,
         label: str,

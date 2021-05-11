@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from automaps.selector import Selector
+from automaps.selector import BaseSelector
 
 
 class MapType:
@@ -8,7 +8,7 @@ class MapType:
         self,
         name: str,
         description: str,
-        selectors: Iterable[Selector],
+        selectors: Iterable[BaseSelector],
         print_layout: str,
     ):
         self.name = name
