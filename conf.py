@@ -118,11 +118,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 ],
                 st.radio,
             ),
-            SelectorSimple(
-                "Dateiformat",
-                ["PDF"],
-                st.radio
-            ),
+            SelectorSimple("Dateiformat", ["PDF"], st.radio),
         ],
         print_layout="test_layout",
     ),
