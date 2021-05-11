@@ -15,7 +15,7 @@ def download_button(object_to_download, download_filename, button_text):
     custom_css = f"""
         <style>
             #{button_id} {{
-                background-color: rgb(255, 255, 255);
+                background-color: rgb(230, 230, 230);
                 color: rgb(38, 39, 48);
                 padding: 0.25em 0.38em;
                 position: relative;
