@@ -26,8 +26,8 @@ class SelectorSimple(BaseSelector):
         label: str,
         options: Iterable[Any],
         widget_method,
-        no_value_selected_text: str = "",
         widget_args: dict = {},
+        no_value_selected_text: str = "",
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
@@ -50,8 +50,8 @@ class SelectorSQL(BaseSelector):
         label: str,
         sql: str,
         widget_method,
-        no_value_selected_text: str = "",
         widget_args: dict = {},
+        no_value_selected_text: str = "",
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
