@@ -17,10 +17,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             SelectorSimple("Fahrplanversion", ["aktueller Fahrplan"], st.selectbox),
             SelectorSimple(
                 "Räumliche Ebene",
-                [
-                    "Gemeinde",
-                    "Bezirk"
-                ],
+                ["Gemeinde", "Bezirk"],
                 st.selectbox,
                 widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
                 no_value_selected_text="Räumliche Ebene auswählen ...",
@@ -30,21 +27,21 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "select distinct pg from bev_gemeinden",
                 st.selectbox,
                 # no_value_selected_text="Gemeinde auswählen ...",
-                depends_on_selectors={"Räumliche Ebene": "Gemeinde"}
+                depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
             ),
             SelectorSQL(
                 "Bezirk",
                 "select distinct pb from bev_bezirke",
                 st.selectbox,
                 no_value_selected_text="Bezirk auswählen ...",
-                depends_on_selectors={"Räumliche Ebene": "Bezirk"}
+                depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
             (st.write, "## Datenlayer"),
             SelectorSQL(
                 "Linien",
                 """
                 select distinct lineefa
-                from 
+                from
                     ptlinks_ptl_polyline l,
                     bev_gemeinden g
                 where
@@ -53,7 +50,22 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 """,
                 st.multiselect,
                 no_value_selected_text="Linie auswählen ...",
-                depends_on_selectors={"Räumliche Ebene": "Gemeinde"}
+                depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
+            ),
+            SelectorSQL(
+                "Linien",
+                """
+                select distinct lineefa
+                from
+                    ptlinks_ptl_polyline l,
+                    bev_bezirke b
+                where
+                    b.pb = '{{ data["Bezirk"] }}'
+                    and ST_Intersects(l.geom, b.geom)
+                """,
+                st.multiselect,
+                no_value_selected_text="Linie auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
             SelectorSimple(
                 "Sonstige Objekte",
