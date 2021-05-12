@@ -1,6 +1,11 @@
 # Automatische Karten
 
-![Teaser](static/teaser.webm)
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true">
+    <source src="static/teaser.webm" type="video/webm" 
+    width="960">
+  </video>
+</figure>
 
 ## Kurzbeschreibung
 __TODO__
