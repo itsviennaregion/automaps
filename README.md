@@ -1,7 +1,7 @@
 # Automatische Karten
 
 <figure class="video_container">
-  <video controls="true" allowfullscreen="true">
+  <video controls="true" allowfullscreen="true" poster="static/teaser.png" width="640">
     <source src="static/teaser.webm" type="video/webm">
   </video>
 </figure>
