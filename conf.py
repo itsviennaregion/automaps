@@ -14,7 +14,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "__Räumlichen Ebene 'Gemeinde'__ erzeugt.",
         selectors=[
             (st.write, "## Grundeinstellungen"),
-            SelectorSimple("Fahrplanversion", ["aktueller Fahrplan"], st.selectbox),
             SelectorSimple(
                 "Räumliche Ebene",
                 ["Gemeinde", "Bezirk"],
