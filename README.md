@@ -39,7 +39,7 @@ Eventuell vorher:
 
 `chmod +x start_automaps.sh`
 
-Das Frontend ist unter [http://localhost:8505/](http://localhost:8505/)
+Das Frontend ist unter [http://localhost:8505/vormaps](http://localhost:8505/vormaps)
 erreichbar. 
 
 ## Konfiguration
@@ -63,9 +63,15 @@ wird mit folgenden Argumenten initialisiert:
 * `name (str)`: Name des Kartentyps. Dieser muss als Key in der Variable `GENERATORS` 
 in `/conf_server.py` vorkommen (siehe unten).
 * `description (str)`: Beschreibung des Kartentyps. Wird im Frontend angezeigt.
-* `selectors (Iterable[Selector])`: Iterable von `Selector`-Objekten. Damit werden die
-  Auswahlmöglichkeiten, die im UI angezeigt werden, definiert. Die Auswahl wird beim 
-  Start der Verarbeitung als `self.data`-Attribut übergeben.
+* `ui_elements (Iterable[Union[BaseSelector, Tuple[Callable, str]]])`: Iterable von 
+UI-Elementen, wobei es sich entweder um `Selector`-Objekte oder Tupel aus `st.write` und
+einem String, z.B. `(st.write, "## Überschrift")` handeln kann. 
+    * Mit `Selector`-Objekten werden die Auswahlmöglichkeiten, die im UI angezeigt 
+    werden, definiert. Die Auswahl wird beim Start der Verarbeitung als 
+    `self.data`-Attribut übergeben.
+    * Mit Tupeln von der Art `(st.write, str)` können Texte im UI angezeigt werden,
+    z.B. um Überschriften oder weitere Erklärungen darzustellen. Künftig werden
+    eventuell auch andere streamlit-Methoden unterstützt.
 * `print_layout (str)`: Name des im QGIS-Projektfile (siehe `/conf_local.py`)
 verwendeten Print-Layouts
 
@@ -77,6 +83,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         description="Hiermit kann man einen ÖV-Überblick erzeugen."
         "Das funktioniert so: ...",
         selectors=[
+            (st.write, "## Grundeinstellungen"),
             SelectorSimple(
                 "Räumliche Ebene",
                 ["Linie", "Gemeinde"],
@@ -85,11 +92,27 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Räumliche Ebene auswählen ...",
             ),
             SelectorSQL(
-                "Linie",
-                "select distinct liniennummer from oev_strecken",
+                "Gemeinde",
+                "select distinct pg from bev_gemeinden",
                 st.selectbox,
-                no_value_selected_text="Liniennummer auswählen ...",
-                depends_on_selectors={"Räumliche Ebene": "Linie"},
+                no_value_selected_text="Gemeinde auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
+            ),
+            (st.write, "## Kartenelemente"),
+            SelectorSQL(
+                "Linien",
+                """
+                select distinct line_name
+                from
+                    pt_links l,
+                    gemeinden g
+                where
+                    g.name = '{{ data["Gemeinde"] }}'
+                    and ST_Intersects(l.geom, g.geom)
+                """,
+                st.multiselect,
+                additional_values=["ALLE"],
+                depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
             ),
         ],
         print_layout="test_layout",
@@ -103,7 +126,7 @@ Es stehen zwei von `selector.BaseSelector` abgeleitete Selector-Klassen zur Verf
 
 * `SelectorSimple`: Für Listen von Auswahlmöglichkeiten (z.B. "Bus" oder "Bahn"),
 die direkt in `conf.py` definiert werden.
-* `SelectorSQL`: Für Listen von Auswahlmöglichkeiten, die auf Basis von einer
+* `SelectorSQL`: Für Listen von Auswahlmöglichkeiten, die auf Basis einer
 Datenbankabfrage gebildet werden.
 
 Diese `Selector`-Klassen teilen die folgenden Parameter zur Initialisierung:
@@ -130,10 +153,21 @@ Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter
 initialisiert:
 * `options (Iterable[Any])`: Iterable von Auswahlmöglichkeiten.
 
-Die `SelectorSQL`-Klasse wird darüber hinaus mit dem folgenden Parameter initialisiert:
+Die `SelectorSQL`-Klasse verfügt darüber zusätzlich über die folgenden 
+Initialisierungsparameter:
 * `sql (str)`: SQL-Statement, das an die in `db.ini` definierte Datenbank geschickt wird
 und eine Liste an Auswahlmöglichkeiten liefern soll, z.B.: `"select distinct 
-liniennummer from strecken"`.
+liniennummer from strecken"`. Der String kann 
+[Jinja2](https://pypi.org/project/Jinja2/)-Ausdrücke zum Auslesen des 
+`data`-Dictionaries mit den auswähltenden UI-Optionen beinhalten. 
+Damit können die ausgewählten Werte eines im `MapType` als `ui_element` 
+definierten Selektors in der SQL-Abfrage eines anderen Selektors verwendet werden. Auf 
+diese Weise kann zum Beispiel die Auswahl von Buslinien auf jene Linien eingeschränkt 
+werden, welche die ausgewählte Gemeinde schneiden. Für ein Beispiel siehe oben bei 
+`MapType`. 
+* `additional_values (Iterable[Any], optional)`: Iterable von zusätzlichen 
+Auswahlmöglichkeiten, die den per SQL gewonnenen Werten vorangestellt werden,
+z.B. `["ALLE"]`.
 
 
 ### `/conf_local.py`
@@ -197,11 +231,16 @@ zwischen den Schritten genutzt werden. Stattdessen kann das Attribut `step_data`
 vom Typ `StepData` genutzt werden, wie im Beispiel ersichtlich wird. Dafür können dem
 Objekt beliebige Attribute hinzugefügt werden.
 
+Bei der Initialisierung werden das zugehörige QGIS-Projekt (definiert in 
+`/conf_local.py`) und das Druck-Layout (definiert mit dem Argument `print_layout`
+in der Konfiguration des zugehörigen `MapType` in `/conf.py`) geladen. Die zwei 
+geladenen Objekte werden in `self.step_data.project` und `self.step_data.layout` 
+abgelegt und sind dort für alle Bearbeitungsschritte verfügbar.
+
 Eine kleine Generatorklasse mit drei Schritten könnte z.B. so aussehen: 
 
 ```python
 from collections import OrderedDict
-import time
 
 from automaps.generators.base import MapGenerator, Step
 
@@ -212,22 +251,24 @@ class MapGeneratorUeberblick(MapGenerator):
     def _set_steps(self):
         self.steps = OrderedDict(
             {
-                "Projekt laden": Step(self.load_project, 0.5),
+                "Projektvariablen setzen": Step(self.set_variables, 1),
                 "Layer filtern": Step(self.filter_layers, 1),
-                "Karte exportieren": Step(self.export_layout, 0.5),
+                "Kartenausschnitt festlegen": Step(self.set_extent, 1),
+                "Karte exportieren": Step(self.export_layout, 3),
             }
         )
 
-    def load_project(self):
-        self.step_data.project = self._get_project()
-        self.step_data.layout = self._get_print_layout(self.step_data.project)
-        self._set_project_variable(self.step_data.project, "data", str(self.data))
+    def set_variables(self):
+        self._set_project_variable("gemeinde_aktiv", self.data["Gemeinde"])
 
     def filter_layers(self):
-        layer = self.step_data.project.mapLayersByName("gem")[0]
-        layer.setSubsetString(f"gem_name = '{self.data['Gemeinde']}'")
-        self._set_project_variable(
-            self.step_data.project, "gemeinde_aktiv", self.data["Gemeinde"]
+        self._set_map_layer_filter_expression(
+                "bev_gemeinden", f"pg = '{self.data['Gemeinde']}'"
+            )
+    
+    def set_extent(self):
+        self._zoom_map_to_layer_extent(
+            "Hauptkarte", self._get_map_layer("bev_gemeinden")
         )
 
     def export_layout(self):
