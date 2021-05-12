@@ -2,8 +2,7 @@
 
 <figure class="video_container">
   <video controls="true" allowfullscreen="true">
-    <source src="static/teaser.webm" type="video/webm" 
-    width="960">
+    <source src="static/teaser.webm" type="video/webm">
   </video>
 </figure>
 
