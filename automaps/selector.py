@@ -56,6 +56,7 @@ class SelectorSQL(BaseSelector):
     ):
         self.label = label
         self.sql = sql
+        self.sql_orig = sql
         self.widget_method = widget_method
         self.no_value_selected_text = no_value_selected_text
         self.widget_args = widget_args

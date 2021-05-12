@@ -29,11 +29,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Gemeinde",
                 "select distinct pg from bev_gemeinden",
                 st.selectbox,
-                no_value_selected_text="Gemeinde auswählen ...",
+                # no_value_selected_text="Gemeinde auswählen ...",
                 depends_on_selectors={"Räumliche Ebene": "Gemeinde"}
             ),
             SelectorSQL(
-                "Gemeinde",
+                "Bezirk",
                 "select distinct pb from bev_bezirke",
                 st.selectbox,
                 no_value_selected_text="Bezirk auswählen ...",
@@ -41,10 +41,19 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             (st.write, "## Datenlayer"),
             SelectorSQL(
-                "Linie",
-                "select distinct lineefa from ptlinks_ptl_polyline",
-                st.selectbox,
-                no_value_selected_text="Linie auswählen ..."
+                "Linien",
+                """
+                select distinct lineefa
+                from 
+                    ptlinks_ptl_polyline l,
+                    bev_gemeinden g
+                where
+                    g.pg = '{{ data["Gemeinde"] }}'
+                    and ST_Intersects(l.geom, g.geom)
+                """,
+                st.multiselect,
+                no_value_selected_text="Linie auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Gemeinde"}
             ),
             SelectorSimple(
                 "Sonstige Objekte",
