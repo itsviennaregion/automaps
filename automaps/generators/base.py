@@ -90,6 +90,10 @@ class MapGenerator(ABC):
         lyr = self._get_map_layer(layer_name)
         lyr.setSubsetString(filter_expr.replace("[", "(").replace("]", ")"))
 
+    def _remove_map_layer_filter_expression(self, layer_name: str):
+        lyr = self._get_map_layer(layer_name)
+        lyr.setSubsetString("")
+
     def _set_map_layer_visibility(self, layer_name: str, is_visible: bool):
         layer = self._get_map_layer(layer_name)
         root = self.step_data.project.layerTreeRoot()  # type: ignore
