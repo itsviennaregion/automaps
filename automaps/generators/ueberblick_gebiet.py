@@ -23,6 +23,13 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
         self._set_map_layer_filter_expression(
             "bev_gemeinden", f"pg = '{self.data['Gemeinde']}'"
         )
+        linien = self.data["Linien in der Gemeinde"] or self.data["Linien im Bezirk"]
+        print(linien)
+        if "ALLE" not in linien:
+            self._set_map_layer_filter_expression(
+                "Linien",
+                f"lineefa in {linien}".replace("[", "(").replace("]", ")")
+            )
         self._set_project_variable("gemeinde_aktiv", self.data["Gemeinde"])
         self._set_map_layer_visibility(self.data["Grundkarte"], True)
 

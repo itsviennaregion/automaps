@@ -26,7 +26,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Gemeinde",
                 "select distinct pg from bev_gemeinden",
                 st.selectbox,
-                # no_value_selected_text="Gemeinde auswählen ...",
+                no_value_selected_text="Gemeinde auswählen ...",
                 depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
             ),
             SelectorSQL(
@@ -38,7 +38,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             (st.write, "## Datenlayer"),
             SelectorSQL(
-                "Linien",
+                "Linien in der Gemeinde",
                 """
                 select distinct lineefa
                 from
@@ -49,11 +49,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     and ST_Intersects(l.geom, g.geom)
                 """,
                 st.multiselect,
-                no_value_selected_text="Linie auswählen ...",
+                additional_values=["ALLE"],
                 depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
             ),
             SelectorSQL(
-                "Linien",
+                "Linien im Bezirk",
                 """
                 select distinct lineefa
                 from
@@ -64,7 +64,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     and ST_Intersects(l.geom, b.geom)
                 """,
                 st.multiselect,
-                no_value_selected_text="Linie auswählen ...",
+                additional_values=["ALLE"],
                 depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
             SelectorSimple(
@@ -90,7 +90,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSimple("Dateiformat", ["PDF"], st.radio),
         ],
-        print_layout="test_layout",
+        print_layout="ÖV-Überblick Gebiet",
     ),
     "Test": MapType(
         name="Test",
