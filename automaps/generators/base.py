@@ -50,9 +50,15 @@ class MapGenerator(ABC):
         data.pop("maptype_dict_key", None)
         data.pop("step", None)
         data.pop("print_layout", None)
+        data.pop("Dateiformat", None)
+        file_ext = (
+            self.data["Dateiformat"].lower()
+            if self.data.get("Dateiformat", None)
+            else "pdf"
+        )
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}.pdf",
+            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}.{file_ext}",
         )
 
     @abstractmethod
@@ -95,4 +101,4 @@ class MapGenerator(ABC):
         self.step_data.layout.itemById(map_name).zoomToExtent(layer.extent())  # type: ignore
 
     def _export_print_layout(self, layout: QgsPrintLayout):
-        return export_layout(layout, self.filename)
+        return export_layout(layout, self.filename, self.data.get("Dateiformat", "pdf"))
