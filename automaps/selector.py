@@ -52,6 +52,7 @@ class SelectorSQL(BaseSelector):
         widget_method,
         widget_args: dict = {},
         no_value_selected_text: str = "",
+        additional_values: Iterable[Any] = [],  # TODO: document
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
@@ -59,12 +60,15 @@ class SelectorSQL(BaseSelector):
         self.sql_orig = sql
         self.widget_method = widget_method
         self.no_value_selected_text = no_value_selected_text
+        self.additional_values = additional_values
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
 
     @property
     def options(self) -> Iterable[Any]:
         options = read_options_sql(self.sql)
+        if len(self.additional_values) > 0:
+            options = list(self.additional_values) + options
         if len(self.no_value_selected_text) > 0:
             options = [self.no_value_selected_text] + options
         return options
