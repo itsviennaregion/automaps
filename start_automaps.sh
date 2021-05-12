@@ -1,1 +1,1 @@
-streamlit run app.py --server.port 8505 & ./start_qgis_server.py
+streamlit run app.py --server.port=8505 --server.baseUrlPath=vormaps & ./start_qgis_server.py
