@@ -4,7 +4,7 @@ from copy import copy
 import os
 from typing import Any, OrderedDict
 
-from qgis.core import QgsLayoutItemMap, QgsMapLayer, QgsPrintLayout, QgsProject
+from qgis.core import QgsMapLayer, QgsPrintLayout, QgsProject
 
 from automaps._qgis.export import export_layout
 from automaps._qgis.layout import get_layout_by_name
@@ -75,10 +75,21 @@ class MapGenerator(ABC):
     def _get_print_layout(self) -> QgsPrintLayout:
         return get_layout_by_name(self.step_data.project, self.print_layout)
 
-    def _get_map_layer(self, layer_name: str):
+    def _get_map_layer(self, layer_name: str) -> QgsMapLayer:
         layers = self.step_data.project.mapLayersByName(layer_name)
         assert len(layers) == 1
         return layers[0]
+
+    def _set_map_layer_filter_expression(self, layer_name: str, filter_expr: str):
+        lyr = self._get_map_layer(layer_name)
+        lyr.setSubsetString(filter_expr)
+
+    def _set_map_layer_visibility(self, layer_name: str, is_visible: bool):
+        layer = self._get_map_layer(layer_name)
+        root = self.step_data.project.layerTreeRoot()
+        node = root.findLayer(layer.id())
+        if node:
+            node.setItemVisibilityChecked(is_visible)
 
     def _zoom_map_to_layer_extent(self, map_name: str, layer: QgsMapLayer):
         self.step_data.layout.itemById(map_name).zoomToExtent(layer.extent())

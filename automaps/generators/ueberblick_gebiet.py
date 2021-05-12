@@ -1,13 +1,10 @@
 from collections import OrderedDict
-import time
-
-from PyQt5.QtCore import QTimer
 
 from automaps.generators.base import MapGenerator, Step
 
 
-class MapGeneratorUeberblick(MapGenerator):
-    name = "ÖV-Überblick"
+class MapGeneratorUeberblickGebiet(MapGenerator):
+    name = "ÖV-Überblick Gebiet"
 
     def _set_steps(self):
         self.steps = OrderedDict(
@@ -23,17 +20,17 @@ class MapGeneratorUeberblick(MapGenerator):
         self._set_project_variable("data", str(self.data))
 
     def filter_layers(self):
-        layer_gem = self._get_map_layer("bev_gemeinden")
-        layer_gem.setSubsetString(f"pg = '{self.data['Gemeinde']}'")
+        self._set_map_layer_filter_expression(
+            "bev_gemeinden", f"pg = '{self.data['Gemeinde']}'"
+        )
         self._set_project_variable("gemeinde_aktiv", self.data["Gemeinde"])
-        self.step_data.layer_gem = layer_gem
-
         self._set_map_layer_visibility(self.data["Grundkarte"], True)
 
     def set_extent(self):
-        self._zoom_map_to_layer_extent("Hauptkarte", self.step_data.layer_gem)
+        self._zoom_map_to_layer_extent(
+            "Hauptkarte", self._get_map_layer("bev_gemeinden")
+        )
 
     def export_layout(self):
-        # QTimer.singleShot(1000, lambda x: x)
         self._export_print_layout(self.step_data.layout)
         self.step_data.project.write("/home/automaps/automaps_qgis/ueberblick.qgz")
