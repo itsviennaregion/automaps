@@ -13,7 +13,7 @@ class BaseSelector(ABC):
     widget_method: Any
     no_value_selected_text: Optional[str]
     widget_args: Optional[Dict[str, Any]]
-    depends_on_selectors: Optional[Dict[str, Any]]
+    depends_on_selectors: Dict[str, Any]
 
     @abstractmethod
     def widget(self):
@@ -28,7 +28,7 @@ class SelectorSimple(BaseSelector):
         widget_method,
         widget_args: dict = {},
         no_value_selected_text: str = "",
-        depends_on_selectors: Dict[str, Any] = None,
+        depends_on_selectors: Dict[str, Any] = {},
     ):
         self.label = label
         self.options = list(options)
@@ -53,7 +53,7 @@ class SelectorSQL(BaseSelector):
         widget_args: dict = {},
         no_value_selected_text: str = "",
         additional_values: Iterable[Any] = [],
-        depends_on_selectors: Dict[str, Any] = None,
+        depends_on_selectors: Dict[str, Any] = {},
     ):
         self.label = label
         self.sql = sql
