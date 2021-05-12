@@ -18,5 +18,13 @@ def export_layout(layout: QgsLayout, filepath: str, file_format: str):
         image_settings = QgsLayoutExporter.ImageExportSettings()
         image_settings.cropToContents = True
         exporter.exportToImage(filepath, image_settings)
+    elif file_format.lower() == "svg":
+        svg_settings = QgsLayoutExporter.SvgExportSettings()
+        svg_settings.cropToContents = True
+        svg_settings.forceVectorOutput = True
+        svg_settings.simplifyGeometries = True
+        svg_settings.exportLabelsToSeparateLayers = True
+        svg_settings.exportAsLayers = True
+        exporter.exportToSvg(filepath, svg_settings)
     else:
         raise ValueError(f"Unsupported export file format: {file_format}")

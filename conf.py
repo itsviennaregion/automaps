@@ -87,7 +87,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 ],
                 st.radio,
             ),
-            SelectorSimple("Dateiformat", ["PDF", "PNG"], st.radio),
+            SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
         ],
         print_layout="ÖV-Überblick Gebiet",
     ),
