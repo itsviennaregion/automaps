@@ -28,9 +28,7 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
 
         linien = self.data["Linien in der Gemeinde"] or self.data["Linien im Bezirk"]
         if "ALLE" not in linien:
-            self._set_map_layer_filter_expression(
-                "Linien", f"lineefa in {linien}"
-            )
+            self._set_map_layer_filter_expression("Linien", f"lineefa in {linien}")
 
         self._set_map_layer_visibility(self.data["Grundkarte"], True)
 
