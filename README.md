@@ -1,5 +1,7 @@
 # Automatische Karten
 
+![Teaser](static/teaser.webm)
+
 ## Kurzbeschreibung
 __TODO__
 
