@@ -35,7 +35,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Bezirk auswählen ...",
                 depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
-            (st.write, "## Datenlayer"),
+            (st.write, "## Kartenelemente"),
             SelectorSQL(
                 "Linien in der Gemeinde",
                 """
