@@ -52,7 +52,7 @@ class SelectorSQL(BaseSelector):
         widget_method,
         widget_args: dict = {},
         no_value_selected_text: str = "",
-        additional_values: Iterable[Any] = [],  # TODO: document
+        additional_values: Iterable[Any] = [],
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
