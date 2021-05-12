@@ -71,6 +71,8 @@ class SelectorSQL(BaseSelector):
             options = list(self.additional_values) + options
         if len(self.no_value_selected_text) > 0:
             options = [self.no_value_selected_text] + options
+        if len(self.additional_values) > 0:
+            options = list(self.additional_values) + options
         return options
 
     @property
