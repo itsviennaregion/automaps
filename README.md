@@ -84,7 +84,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         name="ÖV-Überblick",
         description="Hiermit kann man einen ÖV-Überblick erzeugen."
         "Das funktioniert so: ...",
-        selectors=[
+        ui_elements=[
             (st.write, "## Grundeinstellungen"),
             SelectorSimple(
                 "Räumliche Ebene",
@@ -155,7 +155,7 @@ Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter
 initialisiert:
 * `options (Iterable[Any])`: Iterable von Auswahlmöglichkeiten.
 
-Die `SelectorSQL`-Klasse verfügt darüber zusätzlich über die folgenden 
+Die `SelectorSQL`-Klasse verfügt zusätzlich über die folgenden 
 Initialisierungsparameter:
 * `sql (str)`: SQL-Statement, das an die in `db.ini` definierte Datenbank geschickt wird
 und eine Liste an Auswahlmöglichkeiten liefern soll, z.B.: `"select distinct 
