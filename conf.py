@@ -66,12 +66,12 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
-            SelectorSimple(
-                "Sonstige Objekte",
-                ["Schulen", "Siedlungskerne"],
-                st.multiselect,
-                widget_args={"default": ["Schulen", "Siedlungskerne"]},
-            ),
+            # SelectorSimple(
+            #     "Sonstige Objekte",
+            #     ["Schulen", "Siedlungskerne"],
+            #     st.multiselect,
+            #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
+            # ),
             (st.write, "## Layout"),
             SelectorSimple(
                 "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
@@ -87,7 +87,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 ],
                 st.radio,
             ),
-            SelectorSimple("Dateiformat", ["PDF"], st.radio),
+            SelectorSimple("Dateiformat", ["PDF", "PNG"], st.radio),
         ],
         print_layout="ÖV-Überblick Gebiet",
     ),
