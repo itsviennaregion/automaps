@@ -1,8 +1,9 @@
 # Automatische Karten
 
 <figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="static/teaser.png" width="640">
+  <video controls="true" allowfullscreen="true" poster="static/teaser.png">
     <source src="static/teaser.webm" type="video/webm">
+    <source src="static/teaser.mp4" type="video/mp4">
   </video>
 </figure>
 
