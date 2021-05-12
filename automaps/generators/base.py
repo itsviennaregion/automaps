@@ -36,10 +36,10 @@ class MapGenerator(ABC):
         self.step_data = step_data
         self.step_data.message_to_client["filename"] = self.filename
         try:
-            self.step_data.project
+            self.step_data.project  # type: ignore
         except AttributeError:
-            self.step_data.project = self._get_project()
-        self.step_data.layout = self._get_print_layout()
+            self.step_data.project = self._get_project()  # type: ignore
+        self.step_data.layout = self._get_print_layout()  # type: ignore
 
         self._set_steps()
         self.total_weight: float = sum([s.weight for s in self.steps.values()])
@@ -70,13 +70,13 @@ class MapGenerator(ABC):
         return get_project()
 
     def _set_project_variable(self, var_name: str, var_value: Any):
-        set_project_variable(self.step_data.project, var_name, var_value)
+        set_project_variable(self.step_data.project, var_name, var_value)  # type: ignore
 
     def _get_print_layout(self) -> QgsPrintLayout:
-        return get_layout_by_name(self.step_data.project, self.print_layout)
+        return get_layout_by_name(self.step_data.project, self.print_layout)  # type: ignore
 
     def _get_map_layer(self, layer_name: str) -> QgsMapLayer:
-        layers = self.step_data.project.mapLayersByName(layer_name)
+        layers = self.step_data.project.mapLayersByName(layer_name)  # type: ignore
         assert len(layers) == 1
         return layers[0]
 
@@ -86,13 +86,13 @@ class MapGenerator(ABC):
 
     def _set_map_layer_visibility(self, layer_name: str, is_visible: bool):
         layer = self._get_map_layer(layer_name)
-        root = self.step_data.project.layerTreeRoot()
+        root = self.step_data.project.layerTreeRoot()  # type: ignore
         node = root.findLayer(layer.id())
         if node:
             node.setItemVisibilityChecked(is_visible)
 
     def _zoom_map_to_layer_extent(self, map_name: str, layer: QgsMapLayer):
-        self.step_data.layout.itemById(map_name).zoomToExtent(layer.extent())
+        self.step_data.layout.itemById(map_name).zoomToExtent(layer.extent())  # type: ignore
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename)

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 import pandas as pd
 import streamlit as st
@@ -9,11 +9,11 @@ from automaps.db import get_engine
 
 class BaseSelector(ABC):
     label: str
-    options: Iterable[Any]
+    options: Optional[Iterable[Any]]
     widget_method: Any
-    no_value_selected_text: str
-    widget_args: dict
-    depends_on_selectors: Dict[str, Any]
+    no_value_selected_text: Optional[str]
+    widget_args: Optional[Dict[str, Any]]
+    depends_on_selectors: Optional[Dict[str, Any]]
 
     @abstractmethod
     def widget(self):
@@ -31,7 +31,7 @@ class SelectorSimple(BaseSelector):
         depends_on_selectors: Dict[str, Any] = None,
     ):
         self.label = label
-        self.options = options
+        self.options = list(options)
         self.no_value_selected_text = no_value_selected_text
         if len(no_value_selected_text) > 0:
             self.options = [no_value_selected_text] + self.options
@@ -59,13 +59,13 @@ class SelectorSQL(BaseSelector):
         self.sql = sql
         self.sql_orig = sql
         self.widget_method = widget_method
-        self.no_value_selected_text = no_value_selected_text
-        self.additional_values = additional_values
+        self.no_value_selected_text: str = no_value_selected_text
+        self.additional_values = list(additional_values)
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
 
     @property
-    def options(self) -> Iterable[Any]:
+    def options(self) -> Iterable[Any]:  # type: ignore
         options = read_options_sql(self.sql)
         if len(self.additional_values) > 0:
             options = list(self.additional_values) + options

@@ -1,9 +1,9 @@
-from typing import Dict
+from typing import Dict, Type
 
 from automaps.generators import MapGeneratorTest, MapGeneratorUeberblickGebiet
 from automaps.generators.base import MapGenerator
 
-GENERATORS: Dict[str, MapGenerator] = {
+GENERATORS: Dict[str, Type[MapGenerator]] = {
     "Test": MapGeneratorTest,
     "ÖV-Überblick Gebiet": MapGeneratorUeberblickGebiet,
 }

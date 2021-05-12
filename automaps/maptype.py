@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Callable, Iterable, Tuple, Union
 
 from jinja2 import Template
 import streamlit as st
@@ -11,7 +11,7 @@ class MapType:
         self,
         name: str,
         description: str,
-        ui_elements: Iterable[BaseSelector],
+        ui_elements: Iterable[Union[BaseSelector, Tuple[Callable, str]]],
         print_layout: str,
     ):
         self.name = name
