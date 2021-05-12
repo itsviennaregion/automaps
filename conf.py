@@ -12,7 +12,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         description="Hier kann man eine ÖV-Überblickskarte erstellen. "
         "Aber derzeit nur __testweise__. Sinnvolle Ergebnisse werden nur mit der "
         "__Räumlichen Ebene 'Gemeinde'__ erzeugt.",
-        selectors=[
+        ui_elements=[
             (st.write, "## Grundeinstellungen"),
             SelectorSimple(
                 "Räumliche Ebene",
@@ -94,7 +94,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     "Test": MapType(
         name="Test",
         description="Hier kann man alles mögliche testen.",
-        selectors=[
+        ui_elements=[
             SelectorSimple("Layout", ["A", "B"], st.radio),
             SelectorSimple("Ebene", ["Gemeinde", "Bezirk"], st.selectbox),
             SelectorSQL(

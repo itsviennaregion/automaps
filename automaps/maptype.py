@@ -11,12 +11,12 @@ class MapType:
         self,
         name: str,
         description: str,
-        selectors: Iterable[BaseSelector],
+        ui_elements: Iterable[BaseSelector],
         print_layout: str,
     ):
         self.name = name
         self.description = description
-        self.selectors = selectors
+        self.ui_elements = ui_elements
         self.print_layout = print_layout
 
     @property
@@ -25,36 +25,36 @@ class MapType:
         `depends_on_selectors` are satisfied) and return selected values."""
         selector_values = {}
         has_init_values = False
-        for s in self.selectors:
-            if isinstance(s, BaseSelector):
-                if isinstance(s, SelectorSQL):
-                    self._update_sql(s, selector_values)
-                if not s.depends_on_selectors:
-                    selector_values[s.label] = s.widget
+        for el in self.ui_elements:
+            if isinstance(el, BaseSelector):
+                if isinstance(el, SelectorSQL):
+                    self._update_sql(el, selector_values)
+                if not el.depends_on_selectors:
+                    selector_values[el.label] = el.widget
                 else:
                     show_widget = True
-                    for sel_name, sel_value in s.depends_on_selectors.items():
+                    for sel_name, sel_value in el.depends_on_selectors.items():
                         if selector_values.get(sel_name, None) != sel_value:
                             show_widget = False
-                        for s2 in self.selectors:
-                            if isinstance(s2, BaseSelector):
-                                if s2.label == sel_name:
-                                    if sel_value == s2.no_value_selected_text:
+                        for el2 in self.ui_elements:
+                            if isinstance(el2, BaseSelector):
+                                if el2.label == sel_name:
+                                    if sel_value == el2.no_value_selected_text:
                                         show_widget = False
                     if show_widget:
-                        selector_values[s.label] = s.widget
+                        selector_values[el.label] = el.widget
                     else:
-                        selector_values[s.label] = None
+                        selector_values[el.label] = None
                 if (
-                    selector_values[s.label] == s.no_value_selected_text
-                    or selector_values[s.label] == []
+                    selector_values[el.label] == el.no_value_selected_text
+                    or selector_values[el.label] == []
                 ):
                     has_init_values = True
-            elif isinstance(s, tuple):
+            elif isinstance(el, tuple):
                 try:
-                    name = s[0].__name__
+                    name = el[0].__name__
                     if name == "write":
-                        s[0](s[1])
+                        el[0](el[1])
                     else:
                         st.error(
                             f"'{name}' nicht unterstützt! Bitte 'st.write' "
