@@ -6,12 +6,16 @@ import streamlit as st
 from automaps.selector import BaseSelector, SelectorSQL
 
 
+# UI elements can either be Selector objects or tuples like (st.write, "## Header 1")
+UIElement = Iterable[Union[BaseSelector, Tuple[Callable, str]]]
+
+
 class MapType:
     def __init__(
         self,
         name: str,
         description: str,
-        ui_elements: Iterable[Union[BaseSelector, Tuple[Callable, str]]],
+        ui_elements: UIElement,
         print_layout: str,
     ):
         self.name = name
