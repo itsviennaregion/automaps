@@ -82,7 +82,7 @@ class MapGenerator(ABC):
 
     def _set_map_layer_filter_expression(self, layer_name: str, filter_expr: str):
         lyr = self._get_map_layer(layer_name)
-        lyr.setSubsetString(filter_expr)
+        lyr.setSubsetString(filter_expr.replace("[", "(").replace("]", ")"))
 
     def _set_map_layer_visibility(self, layer_name: str, is_visible: bool):
         layer = self._get_map_layer(layer_name)
