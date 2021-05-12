@@ -1,4 +1,4 @@
-from typing import Callable, Iterable, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, Tuple, Union
 
 from jinja2 import Template
 import streamlit as st
@@ -24,53 +24,65 @@ class MapType:
         self.print_layout = print_layout
 
     @property
-    def selector_values(self):
+    def selector_values(self) -> Dict[str, Any]:
         """Show widgets (if conditions defined by Selector argument
         `depends_on_selectors` are satisfied) and return selected values."""
-        selector_values = {}
+        _selector_values: Dict[str, Any] = {}
         has_init_values = False
-        for el in self.ui_elements:
-            if isinstance(el, BaseSelector):
-                if isinstance(el, SelectorSQL):
-                    self._update_sql(el, selector_values)
-                if not el.depends_on_selectors:
-                    selector_values[el.label] = el.widget
+        for element in self.ui_elements:
+            if isinstance(element, BaseSelector):
+                # Process Jinja template?
+                if isinstance(element, SelectorSQL):
+                    self._update_sql(element, _selector_values)
+
+                # Show Selector?
+                if not element.depends_on_selectors:
+                    _selector_values[element.label] = element.widget
                 else:
-                    show_widget = True
-                    for sel_name, sel_value in el.depends_on_selectors.items():
-                        if selector_values.get(sel_name, None) != sel_value:
-                            show_widget = False
-                        for el2 in self.ui_elements:
-                            if isinstance(el2, BaseSelector):
-                                if el2.label == sel_name:
-                                    if sel_value == el2.no_value_selected_text:
-                                        show_widget = False
+                    show_widget = self._widget_is_visible(element, _selector_values)
                     if show_widget:
-                        selector_values[el.label] = el.widget
+                        _selector_values[element.label] = element.widget
                     else:
-                        selector_values[el.label] = None
+                        _selector_values[element.label] = None
+
+                # Does Selector have init values?
                 if (
-                    selector_values[el.label] == el.no_value_selected_text
-                    or selector_values[el.label] == []
+                    _selector_values[element.label] == element.no_value_selected_text
+                    or _selector_values[element.label] == []
                 ):
                     has_init_values = True
-            elif isinstance(el, tuple):
-                try:
-                    name = el[0].__name__
-                    if name == "write":
-                        el[0](el[1])
-                    else:
-                        st.error(
-                            f"'{name}' nicht unterstützt! Bitte 'st.write' "
-                            "verwenden."
-                        )
-                except Exception as e:
-                    st.error(e)
+            elif isinstance(element, tuple):
+                self._process_other_ui_element(element)
+
         if has_init_values:
-            selector_values["has_init_values"] = True
-        return selector_values
+            _selector_values["has_init_values"] = True
+
+        return _selector_values
+
+    def _widget_is_visible(self, sel: BaseSelector, selector_values: dict) -> bool:
+        is_visible = True
+        for sel_name, sel_value in sel.depends_on_selectors.items():
+            # Does it satisfy condition?
+            if selector_values.get(sel_name, None) != sel_value:
+                is_visible = False
+            # Is default value selected?
+            for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
+                if sel2.label == sel_name:
+                    if sel_value == sel2.no_value_selected_text:
+                        is_visible = False
+        return is_visible
 
     def _update_sql(self, selector: SelectorSQL, selector_values: dict):
         template = Template(selector.sql_orig)
         sql_updated = template.render(data=selector_values)
         selector.sql = sql_updated
+
+    def _process_other_ui_element(self, element: Tuple[Callable, str]):
+        try:
+            name = element[0].__name__
+            if name == "write":
+                element[0](element[1])
+            else:
+                st.error(f"'{name}' nicht unterstützt! Bitte 'st.write' " "verwenden.")
+        except Exception as e:
+            st.error(e)
