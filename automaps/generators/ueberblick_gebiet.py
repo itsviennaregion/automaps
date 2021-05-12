@@ -9,14 +9,14 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
     def _set_steps(self):
         self.steps = OrderedDict(
             {
-                "Projekt laden": Step(self.load_project, 1),
+                "Projektvariablen setzen": Step(self.set_variables, 1),
                 "Layer filtern": Step(self.filter_layers, 1),
                 "Kartenausschnitt festlegen": Step(self.set_extent, 1),
                 "Karte exportieren": Step(self.export_layout, 5),
             }
         )
 
-    def load_project(self):
+    def set_variables(self):
         self._set_project_variable("data", str(self.data))
         self._set_project_variable("gemeinde_aktiv", self.data["Gemeinde"])
 
