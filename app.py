@@ -43,8 +43,8 @@ def start_frontend():
             try:
                 progress_bar = st.progress(0)
                 progress = 0
-
-                steps = ask_server_for_steps(maptype_dict_key)
+                with st.spinner(f"Warte auf Kartenserver ..."):
+                    steps = ask_server_for_steps(maptype_dict_key)
 
                 for step in steps:
                     with st.spinner(f"Erstelle Karte _{maptype.name}_ ({step})"):
@@ -64,9 +64,9 @@ def start_frontend():
                 _show_error_message(e)
 
     # Show selected values for all widgets (for debugging)
-    # st.write("## Debug Info")
-    # for k, v in selector_values.items():
-    #     st.write(f"{k}: __{v}__")
+    st.write("## Debug Info")
+    for k, v in selector_values.items():
+        st.write(f"{k}: __{v}__")
 
 
 def _show_download_link(filename: str):
