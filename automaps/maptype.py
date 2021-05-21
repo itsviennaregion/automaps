@@ -38,10 +38,13 @@ class MapType:
                 # Show Selector?
                 if not element.depends_on_selectors:
                     _selector_values[element.label] = element.widget
+                    if element.provide_raw_options:
+                        _selector_values[f"{element.label} OPTIONS"] = element.options_raw
                 else:
-                    show_widget = self._widget_is_visible(element, _selector_values)
-                    if show_widget:
+                    if self._widget_is_visible(element, _selector_values):
                         _selector_values[element.label] = element.widget
+                        if element.provide_raw_options:
+                            _selector_values[f"{element.label} OPTIONS"] = element.options_raw
                     else:
                         _selector_values[element.label] = None
 

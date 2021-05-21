@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 import pandas as pd
 import streamlit as st
@@ -10,10 +10,12 @@ from automaps.db import get_engine
 class BaseSelector(ABC):
     label: str
     options: Optional[Iterable[Any]]
-    widget_method: Any
+    widget_method: Optional[Callable]
     no_value_selected_text: Optional[str]
     widget_args: Optional[Dict[str, Any]]
     depends_on_selectors: Union[List[str], Dict[str, Any]]
+    provide_raw_options: bool = False
+    options_raw: Iterable[Any]
 
     @abstractmethod
     def widget(self):
@@ -25,7 +27,7 @@ class SelectorSimple(BaseSelector):
         self,
         label: str,
         options: Iterable[Any],
-        widget_method,
+        widget_method: Optional[Callable],
         widget_args: dict = {},
         no_value_selected_text: str = "",
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
@@ -49,11 +51,12 @@ class SelectorSQL(BaseSelector):
         self,
         label: str,
         sql: str,
-        widget_method,
+        widget_method: Optional[Callable],
         widget_args: dict = {},
         no_value_selected_text: str = "",
         additional_values: Iterable[Any] = [],
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
+        provide_raw_options: bool = False,
     ):
         self.label = label
         self.sql = sql
@@ -63,10 +66,12 @@ class SelectorSQL(BaseSelector):
         self.additional_values = list(additional_values)
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
+        self.provide_raw_options = provide_raw_options
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
         options = read_options_sql(self.sql)
+        self.options_raw = options
         if len(self.additional_values) > 0:
             options = list(self.additional_values) + options
         if len(self.no_value_selected_text) > 0:

@@ -51,6 +51,9 @@ class MapGenerator(ABC):
         data.pop("step", None)
         data.pop("print_layout", None)
         data.pop("Dateiformat", None)
+        option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
+        for key in option_keys_to_pop:
+            data.pop(key, None)
         file_ext = (
             self.data["Dateiformat"].lower()
             if self.data.get("Dateiformat", None)
