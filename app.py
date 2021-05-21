@@ -64,9 +64,10 @@ def start_frontend():
                 _show_error_message(e)
 
     # Show selected values for all widgets (for debugging)
-    st.write("## Debug Info")
-    for k, v in selector_values.items():
-        st.write(f"{k}: __{v}__")
+    if st.checkbox("Debug"):
+        st.write("## Debug Info")
+        for k, v in selector_values.items():
+            st.write(f"{k}: __{v}__")
 
 
 def _show_download_link(filename: str):
