@@ -61,15 +61,24 @@ class MapType:
 
     def _widget_is_visible(self, sel: BaseSelector, selector_values: dict) -> bool:
         is_visible = True
-        for sel_name, sel_value in sel.depends_on_selectors.items():
-            # Does it satisfy condition?
-            if selector_values.get(sel_name, None) != sel_value:
-                is_visible = False
-            # Is default value selected?
-            for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
-                if sel2.label == sel_name:
-                    if sel_value == sel2.no_value_selected_text:
-                        is_visible = False
+        if isinstance(sel.depends_on_selectors, dict):
+            for sel_name, sel_value in sel.depends_on_selectors.items():
+                # Does it satisfy condition?
+                if selector_values.get(sel_name, None) != sel_value:
+                    is_visible = False
+                # Is default value selected?
+                for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
+                    if sel2.label == sel_name:
+                        if selector_values.get(sel_name, None) == sel2.no_value_selected_text:
+                            is_visible = False
+        elif isinstance(sel.depends_on_selectors, list):
+            for sel_name in sel.depends_on_selectors:
+                for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
+                    if sel2.label == sel_name:
+                        if selector_values.get(sel_name, None) == sel2.no_value_selected_text:
+                            is_visible = False
+                        if selector_values.get(sel_name, None) == None:
+                            is_visible = False
         return is_visible
 
     def _update_sql(self, selector: SelectorSQL, selector_values: dict):

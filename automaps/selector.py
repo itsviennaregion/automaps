@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import pandas as pd
 import streamlit as st
@@ -13,7 +13,7 @@ class BaseSelector(ABC):
     widget_method: Any
     no_value_selected_text: Optional[str]
     widget_args: Optional[Dict[str, Any]]
-    depends_on_selectors: Dict[str, Any]
+    depends_on_selectors: Union[List[str], Dict[str, Any]]
 
     @abstractmethod
     def widget(self):
@@ -28,7 +28,7 @@ class SelectorSimple(BaseSelector):
         widget_method,
         widget_args: dict = {},
         no_value_selected_text: str = "",
-        depends_on_selectors: Dict[str, Any] = {},
+        depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
     ):
         self.label = label
         self.options = list(options)
@@ -53,7 +53,7 @@ class SelectorSQL(BaseSelector):
         widget_args: dict = {},
         no_value_selected_text: str = "",
         additional_values: Iterable[Any] = [],
-        depends_on_selectors: Dict[str, Any] = {},
+        depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
     ):
         self.label = label
         self.sql = sql
@@ -75,7 +75,13 @@ class SelectorSQL(BaseSelector):
 
     @property
     def widget(self):
-        return self.widget_method(self.label, self.options, **self.widget_args)
+        if self.widget_method:
+            return self.widget_method(self.label, self.options, **self.widget_args)
+        else:
+            if len(self.options) == 0:
+                return None
+            else:
+                return self.options
 
 
 @st.cache(show_spinner=False, ttl=3600)
