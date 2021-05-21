@@ -10,8 +10,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick Gebiet": MapType(
         name="ÖV-Überblick Gebiet",
         description="Hier kann man eine ÖV-Überblickskarte erstellen. "
-        "Aber derzeit nur __testweise__. Sinnvolle Ergebnisse werden nur mit der "
-        "__Räumlichen Ebene 'Gemeinde'__ erzeugt.",
+        "Aber derzeit nur __testweise__.",
         ui_elements=[
             (st.write, "## Grundeinstellungen"),
             SelectorSimple(
@@ -64,6 +63,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 st.multiselect,
                 additional_values=["ALLE"],
                 depends_on_selectors=["Gemeinde"],
+                provide_raw_options=True,
             ),
             SelectorSQL(
                 "Linien im Bezirk",
@@ -78,73 +78,42 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 """,
                 st.multiselect,
                 additional_values=["ALLE"],
-                depends_on_selectors={"Räumliche Ebene": "Bezirk"},
+                depends_on_selectors=["Bezirk"],
+                provide_raw_options=True,
             ),
-            # SelectorSimple(
-            #     "Sonstige Objekte",
-            #     ["Schulen", "Siedlungskerne"],
-            #     st.multiselect,
-            #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
-            # ),
-            (st.write, "## Layout"),
-            SelectorSimple(
-                "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
-            ),
-            SelectorSimple(
-                "Grundkarte",
-                [
-                    "basemap.at Vector",
-                    "basemap.at Standard",
-                    "basemap.at Grau",
-                    "basemap.at Stumm Grau",
-                    "OpenStreetMap",
-                ],
-                st.radio,
-            ),
-            SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
-        ],
-        print_layout="ÖV-Überblick Gebiet",
-    ),
-    "ÖV-Überblick Linie": MapType(
-        name="ÖV-Überblick Linie",
-        description="Hier kann man eine ÖV-Überblickskarte erstellen. "
-        "Aber derzeit nur __testweise__.",
-        ui_elements=[
-            (st.write, "## Grundeinstellungen"),
+            SelectorSQL(
+                "Linien im Bundesland",
+                """
+                select distinct lineefa
+                from
+                    ptlinks_ptl_polyline l,
+                    bev_bundeslaender b
+                where
+                    b.bl = '{{ data["Bundesland"] }}'
+                    and ST_Intersects(l.geom, b.geom)
+                """,
+                st.multiselect,
+                additional_values=["ALLE"],
+                depends_on_selectors=["Bundesland"],
+                provide_raw_options=True,
 
-            SelectorSQL(
-                "Betriebszweig",
-                """select distinct name from betriebszweige""",
-                st.selectbox,
-                no_value_selected_text="Betriebszweig auswählen ...",
             ),
             SelectorSQL(
-                "Betriebszweig ID",
+                "Linien in Ausschreibungsregion",
                 """
-                select kode
-                from betriebszweige
-                where name = '{{ data["Betriebszweig"] }}'""",
-                None,
-                depends_on_selectors=["Betriebszweig"]
-            ),
-            SelectorSQL(
-                "Linie",
-                """
-                select distinct lineefa 
-                from ptlinks_ptl_polyline
-                where opbranch = '{{ data["Betriebszweig ID"][0] }}'""",
-                st.selectbox,
-                no_value_selected_text="Linie auswählen ...",
-                depends_on_selectors=["Betriebszweig ID"]
-            ),
-            
-            (st.write, "## Kartenelemente"),
-            
-            SelectorSimple(
-                "Linie oder Kurs",
-                ["Linie", "Kurs"],
-                st.radio,
-                # widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
+                select distinct lineefa
+                from
+                    ptlinks_ptl_polyline l,
+                    au_regionen_polygon a
+                where
+                    a.bl = '{{ data["Ausschreibungsregion"] }}'
+                    and ST_Intersects(l.geom, a.geom)
+                """,
+                st.multiselect,
+                additional_values=["ALLE"],
+                depends_on_selectors=["Ausschreibungsregion"],
+                provide_raw_options=True,
+
             ),
             # SelectorSimple(
             #     "Sonstige Objekte",
@@ -171,26 +140,92 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         ],
         print_layout="ÖV-Überblick Gebiet",
     ),
-    "Test": MapType(
-        name="Test",
-        description="Hier kann man alles mögliche testen.",
-        ui_elements=[
-            SelectorSimple("Layout", ["A", "B"], st.radio),
-            SelectorSimple("Ebene", ["Gemeinde", "Bezirk"], st.selectbox),
-            SelectorSQL(
-                "Gemeinde",
-                "select distinct gem_name from gem",
-                st.selectbox,
-                no_value_selected_text="...???...",
-                depends_on_selectors={"Ebene": "Gemeinde", "Layout": "A"},
-            ),
-            SelectorSQL(
-                "Bezirk",
-                "select distinct bez_name from bez",
-                st.selectbox,
-                depends_on_selectors={"Ebene": "Bezirk"},
-            ),
-        ],
-        print_layout="test_layout",
-    ),
+    # "ÖV-Überblick Linie": MapType(
+    #     name="ÖV-Überblick Linie",
+    #     description="Hier kann man eine ÖV-Überblickskarte erstellen. "
+    #     "Aber derzeit nur __testweise__.",
+    #     ui_elements=[
+    #         (st.write, "## Grundeinstellungen"),
+
+    #         SelectorSQL(
+    #             "Betriebszweig",
+    #             """select distinct name from betriebszweige""",
+    #             st.selectbox,
+    #             no_value_selected_text="Betriebszweig auswählen ...",
+    #         ),
+    #         SelectorSQL(
+    #             "Betriebszweig ID",
+    #             """
+    #             select kode
+    #             from betriebszweige
+    #             where name = '{{ data["Betriebszweig"] }}'""",
+    #             None,
+    #             depends_on_selectors=["Betriebszweig"]
+    #         ),
+    #         SelectorSQL(
+    #             "Linie",
+    #             """
+    #             select distinct lineefa 
+    #             from ptlinks_ptl_polyline
+    #             where opbranch = '{{ data["Betriebszweig ID"][0] }}'""",
+    #             st.selectbox,
+    #             no_value_selected_text="Linie auswählen ...",
+    #             depends_on_selectors=["Betriebszweig ID"]
+    #         ),
+            
+    #         (st.write, "## Kartenelemente"),
+            
+    #         SelectorSimple(
+    #             "Linie oder Kurs",
+    #             ["Linie", "Kurs"],
+    #             st.radio,
+    #             # widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
+    #         ),
+    #         # SelectorSimple(
+    #         #     "Sonstige Objekte",
+    #         #     ["Schulen", "Siedlungskerne"],
+    #         #     st.multiselect,
+    #         #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
+    #         # ),
+    #         (st.write, "## Layout"),
+    #         SelectorSimple(
+    #             "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
+    #         ),
+    #         SelectorSimple(
+    #             "Grundkarte",
+    #             [
+    #                 "basemap.at Vector",
+    #                 "basemap.at Standard",
+    #                 "basemap.at Grau",
+    #                 "basemap.at Stumm Grau",
+    #                 "OpenStreetMap",
+    #             ],
+    #             st.radio,
+    #         ),
+    #         SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
+    #     ],
+    #     print_layout="ÖV-Überblick Gebiet",
+    # ),
+    # "Test": MapType(
+    #     name="Test",
+    #     description="Hier kann man alles mögliche testen.",
+    #     ui_elements=[
+    #         SelectorSimple("Layout", ["A", "B"], st.radio),
+    #         SelectorSimple("Ebene", ["Gemeinde", "Bezirk"], st.selectbox),
+    #         SelectorSQL(
+    #             "Gemeinde",
+    #             "select distinct gem_name from gem",
+    #             st.selectbox,
+    #             no_value_selected_text="...???...",
+    #             depends_on_selectors={"Ebene": "Gemeinde", "Layout": "A"},
+    #         ),
+    #         SelectorSQL(
+    #             "Bezirk",
+    #             "select distinct bez_name from bez",
+    #             st.selectbox,
+    #             depends_on_selectors={"Ebene": "Bezirk"},
+    #         ),
+    #     ],
+    #     print_layout="test_layout",
+    # ),
 }
