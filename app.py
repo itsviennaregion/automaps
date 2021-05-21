@@ -1,12 +1,18 @@
 import os
+import pathlib
 import traceback
 
 import streamlit as st
 
-from automaps.fileserver import download_button
+from automaps.fileserver import download_button, download_link
 from automaps.client.client import ask_server_for_steps, send_task_to_server
 from conf import MAPTYPES_AVAIL
 
+STREAMLIT_STATIC_PATH = pathlib.Path(st.__path__[0]) / "static"
+DOWNLOADS_PATH = (STREAMLIT_STATIC_PATH / "downloads")
+if not DOWNLOADS_PATH.is_dir():
+    DOWNLOADS_PATH.mkdir()
+    print(f"Downloadpfad {DOWNLOADS_PATH} wurde erstellt. Eventuell müssen noch die Berechtigungen angepasst werden.")
 
 def start_frontend():
     st.set_page_config(page_title="VOR Karten")
@@ -48,7 +54,6 @@ def start_frontend():
                         progress_bar.progress(progress)
                 progress_bar.progress(1.0)
                 st.success(f"Karte _{maptype.name}_ fertig")
-
                 _show_download_button(step_message["filename"])
 
             except Exception as e:
@@ -60,11 +65,12 @@ def start_frontend():
     #     st.write(f"{k}: __{v}__")
 
 
+def _show_download_link(filename: str):
+    st.markdown(download_link(filename, "Download"), unsafe_allow_html=True)
+
+
 def _show_download_button(filename: str):
-    with open(filename, "rb") as f:
-        s = f.read()
     download_button_str = download_button(
-        s,
         os.path.basename(filename),
         "Download",
     )

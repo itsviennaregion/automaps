@@ -1,14 +1,17 @@
 import base64
+import os
 import uuid
 import re
 
+def download_link(download_filepath, link_text):
+    filename = os.path.basename(download_filepath)
+    dl_link = (
+        f'<a href="downloads/{filename}" download>{link_text}</a><br></br>'
+    )
+    return dl_link
 
-def download_button(object_to_download, download_filename, button_text):
-    try:
-        b64 = base64.b64encode(object_to_download.encode()).decode()
-    except AttributeError:
-        b64 = base64.b64encode(object_to_download).decode()
-
+def download_button(download_filepath, button_text):
+    filename = os.path.basename(download_filepath)
     button_uuid = str(uuid.uuid4()).replace("-", "")
     button_id = re.sub(r"\d+", "", button_uuid)
 
@@ -39,8 +42,8 @@ def download_button(object_to_download, download_filename, button_text):
 
     dl_link = (
         custom_css
-        + f'<a download="{download_filename}" id="{button_id}" '
-        + f'href="data:file/txt;base64,{b64}">{button_text}</a><br></br>'
+        + f'<a download="downloads/{filename}" id="{button_id}" '
+        + f'href="downloads/{filename}">{button_text}</a><br></br>'
     )
 
     return dl_link
