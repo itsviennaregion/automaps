@@ -1,8 +1,7 @@
 # TODO
 * Ergänzen
-    * Listen bei `depends_on_selectors`
-    * `None` bei `widget_method`
     * `provide_raw_options`
+    * `label_ui`
 
 # Automatische Karten
 
@@ -141,21 +140,38 @@ Diese `Selector`-Klassen teilen die folgenden Parameter zur Initialisierung:
 * `label (str)`: Bezeichnung des Selektors. Wird im UI angezeigt. Darüber hinaus
 können mit Hilfe des Labels Abhängigkeiten zwischen den Selektoren eines `MapType`
 definiert werden (siehe Parameter `depends_on_selectors`).
-* `widget_method (streamlit widget)`: Eines der von streamlit bereitgestellten Widgets 
-(z.B. st.radio oder st.selectbox). 
+* `widget_method (Callable, optional)`: Eines der von streamlit bereitgestellten Widgets 
+(z.B. st.radio oder st.selectbox). Wird kein Argument oder `None` übergeben, wird im
+UI kein Widget zur Auswahl von Werten angezeigt. Die (z.B. durch eine SQL-Abfrage)
+erstellte Liste von Optionen ist aber dennoch verfügbar und kann über das 
+`self.data`-Attribut des zugehörigen `MapType` abgefragt werden. Mit diesem Mechanismus
+lassen sich z.B. im Hintergrund SQL-Abfragen durchführen, deren Ergebnis zwar nicht
+unmittelbar im UI sichtbar und auswählbar sein soll, das aber von nachfolgenden 
+Selektoren genutzt werden kann.
 * `widget_args (dict, optional)`: Dictionary von Argumenten, das zur Initialisierung
 des widget-Objekts weitergegeben wird (z.B. `{"help"="Hilfetext"}`).
 * `no_value_selected_text (str, optional)`: Auswahlmöglichkeit, die angezeigt wird,
 bevor ein Wert ausgewählt wurde (z.B. "Räumliche Ebene auswählen ...").
-* `depends_on_selectors (Dict[str, Any], optional)`: Dictionary, in dem Bedingungen
-definiert werden können, die erfüllt sein müssen, damit das Widget angezeigt wird. Damit 
-können Abhängigkeiten zwischen Selektoren festgelegt werden. Als Keys müssen die Labels
+* `depends_on_selectors (Union[List[str], Dict[str, Any]], optional)`: 
+Damit können Bedingungen definiert werden, die erfüllt sein müssen, damit das Widget
+angezeigt wird. Damit können Abhängigkeiten zwischen Selektoren festgelegt werden. 
+Es kann entweder eine Liste oder ein Dictionary übergeben werden:
+
+    * __Dictionary__: 
+Als Keys müssen die Labels
 von ebenfalls für denselben `MapType` definierten Selektoren verwendet werden, als
 Values die Werte, die bei dem entsprechenden Selektor ausgewählt sein müssen. Wenn
 z.B. beim Selektor mit dem Label "Räumliche Ebene" der Wert "Linie" ausgewählt sein
 muss, dann ist `depends_on_selectors={"Räumliche Ebene": "Linie"}` zu setzen. Derzeit
 kann nur auf Gleichheit geprüft werden. Wenn das Dictionary mehrere key/value-Paare
 beinhaltet, müssen alle Bedingungen erfüllt sein (UND-Verknüpfung).
+
+    * __Liste__:
+Eine Liste von Selektor-Labels von Selektoren desselben `MapType`. Wenn die 
+entsprechenden Selektoren entweder `None` oder den Defaulttext 
+(`no_value_selected_text`) als Wert annehmen, wird das Widget nicht angezeigt.
+Beispielsweise kann ein Selektor für ÖV-Linien erst dann angezeigt werden, wenn zuvor
+eine Gemeinde ausgewählt wurde (`depends_on_selectors=["Gemeinde"]`).
 
 Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter 
 initialisiert:
