@@ -16,7 +16,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             (st.write, "## Grundeinstellungen"),
             SelectorSimple(
                 "Räumliche Ebene",
-                ["Gemeinde", "Bezirk"],
+                ["Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion"],
                 st.selectbox,
                 widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
                 no_value_selected_text="Räumliche Ebene auswählen ...",
@@ -35,10 +35,24 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Bezirk auswählen ...",
                 depends_on_selectors={"Räumliche Ebene": "Bezirk"},
             ),
+            SelectorSQL(
+                "Bundesland",
+                "select distinct bl from bev_bundeslaender",
+                st.selectbox,
+                no_value_selected_text="Bundesland auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Bundesland"},
+            ),
+            SelectorSQL(
+                "Ausschreibungsregion",
+                "select distinct bl from au_regionen_polygon",
+                st.selectbox,
+                no_value_selected_text="Ausschreibungsregion auswählen ...",
+                depends_on_selectors={"Räumliche Ebene": "Ausschreibungsregion"},
+            ),
             (st.write, "## Kartenelemente"),
             SelectorSQL(
                 "Linien in der Gemeinde",
-                """
+                """  
                 select distinct lineefa
                 from
                     ptlinks_ptl_polyline l,
@@ -46,10 +60,10 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 where
                     g.pg = '{{ data["Gemeinde"] }}'
                     and ST_Intersects(l.geom, g.geom)
-                """,
+                """,  # TODO: opbranch
                 st.multiselect,
                 additional_values=["ALLE"],
-                depends_on_selectors={"Räumliche Ebene": "Gemeinde"},
+                depends_on_selectors=["Gemeinde"],
             ),
             SelectorSQL(
                 "Linien im Bezirk",
@@ -65,6 +79,72 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 st.multiselect,
                 additional_values=["ALLE"],
                 depends_on_selectors={"Räumliche Ebene": "Bezirk"},
+            ),
+            # SelectorSimple(
+            #     "Sonstige Objekte",
+            #     ["Schulen", "Siedlungskerne"],
+            #     st.multiselect,
+            #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
+            # ),
+            (st.write, "## Layout"),
+            SelectorSimple(
+                "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
+            ),
+            SelectorSimple(
+                "Grundkarte",
+                [
+                    "basemap.at Vector",
+                    "basemap.at Standard",
+                    "basemap.at Grau",
+                    "basemap.at Stumm Grau",
+                    "OpenStreetMap",
+                ],
+                st.radio,
+            ),
+            SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
+        ],
+        print_layout="ÖV-Überblick Gebiet",
+    ),
+    "ÖV-Überblick Linie": MapType(
+        name="ÖV-Überblick Linie",
+        description="Hier kann man eine ÖV-Überblickskarte erstellen. "
+        "Aber derzeit nur __testweise__.",
+        ui_elements=[
+            (st.write, "## Grundeinstellungen"),
+
+            SelectorSQL(
+                "Betriebszweig",
+                """select distinct name from betriebszweige""",
+                st.selectbox,
+                no_value_selected_text="Betriebszweig auswählen ...",
+            ),
+            SelectorSQL(
+                "Betriebszweig ID",
+                """
+                select kode
+                from betriebszweige
+                where name = '{{ data["Betriebszweig"] }}'""",
+                None,
+                depends_on_selectors=["Betriebszweig"]
+            ),
+            SelectorSQL(
+                "Linie",
+                """
+                select distinct lineefa 
+                from ptlinks_ptl_polyline
+                where opbranch = '{{ data["Betriebszweig ID"][0] }}'""",
+                st.selectbox,
+                no_value_selected_text="Linie auswählen ...",
+                depends_on_selectors=["Betriebszweig ID"]
+            ),
+            
+            (st.write, "## Kartenelemente"),
+            
+            SelectorSimple(
+                "Linie oder Kurs",
+                ["Linie", "Kurs"],
+                st.radio,
+                # widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
             ),
             # SelectorSimple(
             #     "Sonstige Objekte",
