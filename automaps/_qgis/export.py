@@ -6,7 +6,9 @@ import conf_local
 def export_layout(layout: QgsLayout, filepath: str, file_format: str):
     exporter = QgsLayoutExporter(layout)
     if file_format.lower() == "pdf":
-        exporter.exportToPdf(filepath, QgsLayoutExporter.PdfExportSettings())
+        pdf_settings = QgsLayoutExporter.PdfExportSettings()
+        pdf_settings.rasterizeWholeImage = True
+        exporter.exportToPdf(filepath, pdf_settings)
     elif file_format.lower() == "png":
         # Don't show the following error message
         # ERROR 6: The PNG driver does not support update access to existing datasets.
