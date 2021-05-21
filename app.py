@@ -12,7 +12,8 @@ STREAMLIT_STATIC_PATH = pathlib.Path(st.__path__[0]) / "static"
 DOWNLOADS_PATH = (STREAMLIT_STATIC_PATH / "downloads")
 if not DOWNLOADS_PATH.is_dir():
     DOWNLOADS_PATH.mkdir()
-    print(f"Downloadpfad {DOWNLOADS_PATH} wurde erstellt. Eventuell müssen noch die Berechtigungen angepasst werden.")
+    print(f"Downloadpfad '{DOWNLOADS_PATH}' wurde erstellt. Eventuell müssen noch die "
+        f"Berechtigungen angepasst werden (z.B. sudo chmod -R a+w {DOWNLOADS_PATH}).")
 
 def start_frontend():
     st.set_page_config(page_title="VOR Karten")
