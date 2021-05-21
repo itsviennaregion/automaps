@@ -16,6 +16,7 @@ class BaseSelector(ABC):
     depends_on_selectors: Union[List[str], Dict[str, Any]]
     provide_raw_options: bool = False
     options_raw: Iterable[Any]
+    label_ui: Optional[str]
 
     @abstractmethod
     def widget(self):
@@ -27,10 +28,11 @@ class SelectorSimple(BaseSelector):
         self,
         label: str,
         options: Iterable[Any],
-        widget_method: Optional[Callable],
+        widget_method: Optional[Callable] = None,
         widget_args: dict = {},
         no_value_selected_text: str = "",
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
+        label_ui: Optional[str] = None,
     ):
         self.label = label
         self.options = list(options)
@@ -40,10 +42,21 @@ class SelectorSimple(BaseSelector):
         self.widget_method = widget_method
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
+        self.label_ui = label_ui
 
     @property
     def widget(self):
-        return self.widget_method(self.label, self.options, **self.widget_args)
+        if self.widget_method:
+            return self.widget_method(
+                self.label_ui if self.label_ui else self.label,
+                self.options,
+                **self.widget_args
+            )
+        else:
+            if len(self.options) == 0:
+                return None
+            else:
+                return self.options
 
 
 class SelectorSQL(BaseSelector):
@@ -51,12 +64,13 @@ class SelectorSQL(BaseSelector):
         self,
         label: str,
         sql: str,
-        widget_method: Optional[Callable],
+        widget_method: Optional[Callable] = None,
         widget_args: dict = {},
         no_value_selected_text: str = "",
         additional_values: Iterable[Any] = [],
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         provide_raw_options: bool = False,
+        label_ui: Optional[str] = None,
     ):
         self.label = label
         self.sql = sql
@@ -67,6 +81,7 @@ class SelectorSQL(BaseSelector):
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
         self.provide_raw_options = provide_raw_options
+        self.label_ui = label_ui
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
@@ -81,7 +96,11 @@ class SelectorSQL(BaseSelector):
     @property
     def widget(self):
         if self.widget_method:
-            return self.widget_method(self.label, self.options, **self.widget_args)
+            return self.widget_method(
+                self.label_ui if self.label_ui else self.label,
+                self.options,
+                **self.widget_args
+            )
         else:
             if len(self.options) == 0:
                 return None
