@@ -39,12 +39,16 @@ class MapType:
                 if not element.depends_on_selectors:
                     _selector_values[element.label] = element.widget
                     if element.provide_raw_options:
-                        _selector_values[f"{element.label} OPTIONS"] = element.options_raw
+                        _selector_values[
+                            f"{element.label} OPTIONS"
+                        ] = element.options_raw
                 else:
                     if self._widget_is_visible(element, _selector_values):
                         _selector_values[element.label] = element.widget
                         if element.provide_raw_options:
-                            _selector_values[f"{element.label} OPTIONS"] = element.options_raw
+                            _selector_values[
+                                f"{element.label} OPTIONS"
+                            ] = element.options_raw
                     else:
                         _selector_values[element.label] = None
 
@@ -70,15 +74,25 @@ class MapType:
                 if selector_values.get(sel_name, None) != sel_value:
                     is_visible = False
                 # Is default value selected?
-                for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
+                for sel2 in (
+                    x for x in self.ui_elements if isinstance(x, BaseSelector)
+                ):
                     if sel2.label == sel_name:
-                        if selector_values.get(sel_name, None) == sel2.no_value_selected_text:
+                        if (
+                            selector_values.get(sel_name, None)
+                            == sel2.no_value_selected_text
+                        ):
                             is_visible = False
         elif isinstance(sel.depends_on_selectors, list):
             for sel_name in sel.depends_on_selectors:
-                for sel2 in (x for x in self.ui_elements if isinstance(x, BaseSelector)):
+                for sel2 in (
+                    x for x in self.ui_elements if isinstance(x, BaseSelector)
+                ):
                     if sel2.label == sel_name:
-                        if selector_values.get(sel_name, None) == sel2.no_value_selected_text:
+                        if (
+                            selector_values.get(sel_name, None)
+                            == sel2.no_value_selected_text
+                        ):
                             is_visible = False
                         if selector_values.get(sel_name, None) == None:
                             is_visible = False

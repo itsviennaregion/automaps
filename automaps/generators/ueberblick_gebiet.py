@@ -56,14 +56,16 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
 
         self._set_map_layer_visibility(self.step_data.gebiets_layer_name, True)
         linien = (
-            self.data["Linien in der Gemeinde"] 
+            self.data["Linien in der Gemeinde"]
             or self.data["Linien im Bezirk"]
             or self.data["Linien im Bundesland"]
             or self.data["Linien in Ausschreibungsregion"]
         )
         if "ALLE" in linien:
             # self._remove_map_layer_filter_expression("Linien")
-            self._set_map_layer_filter_expression("Linien", f"lineefa in {self.data[self.step_data.all_options_name]}")
+            self._set_map_layer_filter_expression(
+                "Linien", f"lineefa in {self.data[self.step_data.all_options_name]}"
+            )
         else:
             self._set_map_layer_filter_expression("Linien", f"lineefa in {linien}")
 

@@ -3,12 +3,12 @@ import os
 import uuid
 import re
 
+
 def download_link(download_filepath, link_text):
     filename = os.path.basename(download_filepath)
-    dl_link = (
-        f'<a href="downloads/{filename}" download>{link_text}</a><br></br>'
-    )
+    dl_link = f'<a href="downloads/{filename}" download>{link_text}</a><br></br>'
     return dl_link
+
 
 def download_button(download_filepath, button_text):
     filename = os.path.basename(download_filepath)

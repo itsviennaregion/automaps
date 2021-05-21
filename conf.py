@@ -96,7 +96,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Bundesland"],
                 provide_raw_options=True,
-
             ),
             SelectorSQL(
                 "Linien in Ausschreibungsregion",
@@ -113,7 +112,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Ausschreibungsregion"],
                 provide_raw_options=True,
-
             ),
             # SelectorSimple(
             #     "Sonstige Objekte",
@@ -146,7 +144,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     #     "Aber derzeit nur __testweise__.",
     #     ui_elements=[
     #         (st.write, "## Grundeinstellungen"),
-
     #         SelectorSQL(
     #             "Betriebszweig",
     #             """select distinct name from betriebszweige""",
@@ -165,16 +162,14 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     #         SelectorSQL(
     #             "Linie",
     #             """
-    #             select distinct lineefa 
+    #             select distinct lineefa
     #             from ptlinks_ptl_polyline
     #             where opbranch = '{{ data["Betriebszweig ID"][0] }}'""",
     #             st.selectbox,
     #             no_value_selected_text="Linie auswählen ...",
     #             depends_on_selectors=["Betriebszweig ID"]
     #         ),
-            
     #         (st.write, "## Kartenelemente"),
-            
     #         SelectorSimple(
     #             "Linie oder Kurs",
     #             ["Linie", "Kurs"],
