@@ -1,3 +1,9 @@
+# TODO
+* Ergänzen
+    * Listen bei `depends_on_selectors`
+    * `None` bei `widget_method`
+    * `provide_raw_options`
+
 # Automatische Karten
 
 ![](static/teaser.webm)
@@ -177,7 +183,7 @@ Hier müssen die folgenden Variablen festgelegt werden:
 
 Der Verzeichnispfad zum Speichern der erzeugten Karten (`BASEPATH_FILESERVER`), z.B.:
 
-    BASEPATH_FILESERVER = "/home/automaps/automaps_files"
+    BASEPATH_FILESERVER = "/usr/local/lib/python3.8/dist-packages/streamlit/static/downloads"
 
 Der Verzeichnispfad zur QGIS-Installation (`QGIS_INSTALLATION_PATH`), z.B.:
 
