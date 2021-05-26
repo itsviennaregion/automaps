@@ -185,15 +185,19 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     ),
     "ÖV-Überblick Linie": MapType(
         name="ÖV-Überblick Linie",
-        description="Hier kann man eine ÖV-Überblickskarte erstellen. "
-        "Aber derzeit nur __testweise__.",
+        description="Die Karte '_ÖV-Überblick Linie_' stellt eine auswählbare Linie "
+        "dar. Künftig wird darüber hinaus die Darstellung von Kursen möglich sein, "
+        "abgrenzbar nach Tagestyp und Zeitfenster. Sollen in einer Karte mehrere "
+        "Linien angezeigt werden, bitte den Kartentyp 'ÖV-Überblick Gebiet' wählen.",
         ui_elements=[
             (st.write, "## Grundeinstellungen"),
+            (st.write, "Hier kann festgelegt werden, welche Linie in der Karte dargestellt werden soll."),
             SelectorSQL(
                 "Betriebszweig",
                 """select distinct name from betriebszweige""",
                 st.selectbox,
-                no_value_selected_text="Betriebszweig auswählen ...",
+                no_value_selected_text="ALLE Betriebszweige",
+                label_ui="Nach Betriebszweig filtern (optional)"
             ),
             SelectorSQL(
                 "Betriebszweig ID",
@@ -209,18 +213,20 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 """
                 select distinct lineefa
                 from ptlinks_ptl_polyline
-                where opbranch = '{{ data["Betriebszweig ID"][0] }}'""",
+                {% if data["Betriebszweig ID"] %}
+                where opbranch = '{{ data["Betriebszweig ID"][0] }}'
+                {% endif %}
+                """,
                 st.selectbox,
                 no_value_selected_text="Linie auswählen ...",
-                depends_on_selectors=["Betriebszweig ID"],
+                # depends_on_selectors=["Betriebszweig ID"],
             ),
-            (st.write, "## Kartenelemente"),
-            SelectorSimple(
-                "Linie oder Kurs",
-                ["Linie", "Kurs"],
-                st.radio,
-                # widget_args={"help": "Hier könnte __Ihr__ Hilfetext stehen!"},
-            ),
+            # (st.write, "## Kartenelemente"),
+            # SelectorSimple(
+            #     "Linie oder Kurs",
+            #     ["Linie", "Kurs"],
+            #     st.radio,
+            # ),
             # SelectorSimple(
             #     "Sonstige Objekte",
             #     ["Schulen", "Siedlungskerne"],
