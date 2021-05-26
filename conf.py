@@ -196,7 +196,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Betriebszweig",
                 """select distinct name from betriebszweige""",
                 st.selectbox,
-                no_value_selected_text="ALLE Betriebszweige",
+                additional_values=["ALLE Betriebszweige"],
                 label_ui="Nach Betriebszweig filtern (optional)"
             ),
             SelectorSQL(
