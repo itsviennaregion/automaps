@@ -1,8 +1,3 @@
-# TODO
-* Ergänzen
-    * `provide_raw_options`
-    * `label_ui`
-
 # Automatische Karten
 
 ![](static/teaser.webm)
@@ -172,6 +167,8 @@ entsprechenden Selektoren entweder `None` oder den Defaulttext
 (`no_value_selected_text`) als Wert annehmen, wird das Widget nicht angezeigt.
 Beispielsweise kann ein Selektor für ÖV-Linien erst dann angezeigt werden, wenn zuvor
 eine Gemeinde ausgewählt wurde (`depends_on_selectors=["Gemeinde"]`).
+* `label_ui (str, optional)`: Alternative Bezeichnung des Widgets, die im UI angezeigt
+werden soll.
 
 Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter 
 initialisiert:
@@ -192,6 +189,10 @@ werden, welche die ausgewählte Gemeinde schneiden. Für ein Beispiel siehe oben
 * `additional_values (Iterable[Any], optional)`: Iterable von zusätzlichen 
 Auswahlmöglichkeiten, die den per SQL gewonnenen Werten vorangestellt werden,
 z.B. `["ALLE"]`.
+* `provide_raw_options (Boolean, optional)`: Dem Data Dictionary des zugehörigen
+`MapType` kann damit ein neuer Eintrag hinzugefügt werden. Dieser hat als Key den 
+Namen des Selektors mit angehängtem `" OPTIONS"` und als Value alle zur Auswahl 
+stehenden Optionen, unabhängig davon, welche im UI ausgewählt wurde. Default `False`. 
 
 
 ### `/conf_local.py`
