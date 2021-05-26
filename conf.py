@@ -9,10 +9,12 @@ from automaps.selector import SelectorSimple, SelectorSQL
 MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick Gebiet": MapType(
         name="ÖV-Überblick Gebiet",
-        description="Hier kann man eine ÖV-Überblickskarte erstellen. "
-        "Aber derzeit nur __testweise__.",
+        description="Die Karte '_ÖV-Überblick Gebiet_' stellt eine auswählbare "
+        "Gebietseinheit (Gemeinde, Bezirk, Bundesland oder Ausschreibungsregion) dar.",
         ui_elements=[
             (st.write, "## Grundeinstellungen"),
+            (st.write, "Hier kann festgelegt werden, welche Gebietseinheit dargestellt "
+            "werden soll."),
             SelectorSimple(
                 "Räumliche Ebene",
                 ["Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion"],
