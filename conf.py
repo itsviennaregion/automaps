@@ -13,8 +13,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "Gebietseinheit (Gemeinde, Bezirk, Bundesland oder Ausschreibungsregion) dar.",
         ui_elements=[
             (st.write, "## Grundeinstellungen"),
-            (st.write, "Hier kann festgelegt werden, welche Gebietseinheit dargestellt "
-            "werden soll."),
+            (
+                st.write,
+                "Hier kann festgelegt werden, welche Gebietseinheit dargestellt "
+                "werden soll.",
+            ),
             SelectorSimple(
                 "Räumliche Ebene",
                 ["Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion"],
@@ -26,7 +29,10 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSQL(
                 "Gemeinde",
-                "select distinct pg from bev_gemeinden",
+                """
+                select distinct pg 
+                from bev_gemeinden
+                where bl in ('Wien', 'Niederösterreich', 'Burgenland', 'Oberösterreich', 'Steiermark')""",
                 st.selectbox,
                 widget_args={
                     "help": "Für welche Gemeinde soll eine Karte erstellt werden?"
@@ -36,7 +42,10 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSQL(
                 "Bezirk",
-                "select distinct pb from bev_bezirke",
+                """
+                select distinct pb 
+                from bev_bezirke
+                where bl in ('Wien', 'Niederösterreich', 'Burgenland', 'Oberösterreich', 'Steiermark')""",
                 st.selectbox,
                 widget_args={
                     "help": "Für welchen Bezirk soll eine Karte erstellt werden?"
@@ -46,7 +55,10 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSQL(
                 "Bundesland",
-                "select distinct bl from bev_bundeslaender",
+                """
+                select distinct bl 
+                from bev_bundeslaender
+                where bl in ('Wien', 'Niederösterreich', 'Burgenland', 'Oberösterreich', 'Steiermark')""",
                 st.selectbox,
                 widget_args={
                     "help": "Für welches Bundesland soll eine Karte erstellt werden?"
@@ -145,12 +157,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 provide_raw_options=True,
                 label_ui="ÖV-Linien",
             ),
-            # SelectorSimple(
-            #     "Sonstige Objekte",
-            #     ["Schulen", "Siedlungskerne"],
-            #     st.multiselect,
-            #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
-            # ),
+            (st.write, "### Sonstige Objekte"),
+            SelectorSimple("Schulen", [], st.checkbox),
+            SelectorSimple("Siedlungskerne", [], st.checkbox),
             (st.write, "## Layout"),
             SelectorSimple(
                 "Kartendarstellung",
@@ -193,13 +202,16 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "Linien angezeigt werden, bitte den Kartentyp 'ÖV-Überblick Gebiet' wählen.",
         ui_elements=[
             (st.write, "## Grundeinstellungen"),
-            (st.write, "Hier kann festgelegt werden, welche Linie in der Karte dargestellt werden soll."),
+            (
+                st.write,
+                "Hier kann festgelegt werden, welche Linie in der Karte dargestellt werden soll.",
+            ),
             SelectorSQL(
                 "Betriebszweig",
                 """select distinct name from betriebszweige""",
                 st.selectbox,
                 additional_values=["ALLE Betriebszweige"],
-                label_ui="Nach Betriebszweig filtern (optional)"
+                label_ui="Nach Betriebszweig filtern (optional)",
             ),
             SelectorSQL(
                 "Betriebszweig ID",
@@ -223,18 +235,15 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Linie auswählen ...",
                 # depends_on_selectors=["Betriebszweig ID"],
             ),
-            # (st.write, "## Kartenelemente"),
+            (st.write, "## Kartenelemente"),
             # SelectorSimple(
             #     "Linie oder Kurs",
             #     ["Linie", "Kurs"],
             #     st.radio,
             # ),
-            # SelectorSimple(
-            #     "Sonstige Objekte",
-            #     ["Schulen", "Siedlungskerne"],
-            #     st.multiselect,
-            #     widget_args={"default": ["Schulen", "Siedlungskerne"]},
-            # ),
+            (st.write, "### Sonstige Objekte"),
+            SelectorSimple("Schulen", [], st.checkbox),
+            SelectorSimple("Siedlungskerne", [], st.checkbox),
             (st.write, "## Layout"),
             SelectorSimple(
                 "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
@@ -254,6 +263,100 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         ],
         print_layout="ÖV-Überblick Gebiet",
     ),
+    "ÖV-Überblick Haltestelle": MapType(
+        name="ÖV-Überblick Haltestelle",
+        description="Die Karte '_ÖV-Überblick Haltestelle_' stellt eine auswählbare "
+        "Haltestelle und ihre unmittelbare Umgebung dar. "
+        "Künfig wird darüber hinaus die Darstellung einzelner Steige möglich sein.",
+        ui_elements=[
+            (st.write, "## Grundeinstellungen"),
+            (
+                st.write,
+                "Hier kann festgelegt werden, welche Haltestelle in der Karte dargestellt werden soll.",
+            ),
+            # SelectorSimple(
+            #     "Auswahlmethode",
+            #     ["nach Haltestellenname"],
+            #     st.radio,
+            #     label_ui="Wie soll die Haltestelle ausgewählt werden?"
+            # ),
+            # SelectorSQL(
+            #     "Bezirk",
+            #     "select distinct pb from bev_bezirke",
+            #     st.selectbox,
+            #     widget_args={
+            #         "help": "In welchem Bezirk soll die Haltestelle liegen?"
+            #     },
+            #     no_value_selected_text="Bezirk auswählen (optional)",
+            #     label_ui="nach Bezirk Filtern (optional, funktioniert noch nicht)"
+            # ),
+            SelectorSQL(
+                "Linie",
+                "select distinct pubdivalinnam from stops_ptlinks",
+                st.selectbox,
+                widget_args={"help": "An welcher Linie soll die Haltestelle liegen?"},
+                no_value_selected_text="Linie auswählen (optional) ...",
+                label_ui="nach Linien Filtern (optional)",
+                optional=True,
+            ),
+            SelectorSQL(
+                "Bezirk ID",
+                """select id from bev_bezirke where pb = '{{ data["Bezirk"] }}'""",
+                None,
+                depends_on_selectors=["Bezirk"],
+            ),
+            SelectorSQL(
+                "Haltestellenname",
+                """
+                select distinct haltestelle_name 
+                from stops_ptlinks
+                {% if data["Linie"] != "Linie auswählen (optional) ..." %}
+                where pubdivalinnam = '{{ data["Linie"] }}'
+                {% endif %}
+                order by haltestelle_name""",
+                st.selectbox,
+                no_value_selected_text="Haltestelle auswählen ...",
+            ),
+            (st.write, "## Kartenelemente"),
+            SelectorSQL(
+                "Linien an Haltestelle",
+                """
+                select pubdivalinnam 
+                from stops_ptlinks
+                where haltestelle_name = '{{ data["Haltestellenname"] }}'""",
+                st.multiselect,
+                depends_on_selectors=["Haltestellenname"],
+                additional_values=["ALLE"],
+                widget_args={"default": ["ALLE"]},
+            ),
+            (st.write, "### Sonstige Objekte"),
+            SelectorSimple(
+                "Andere Haltestellen",
+                [],
+                st.checkbox,
+                label_ui="Andere Haltestellen",
+            ),
+            SelectorSimple("Schulen", [], st.checkbox),
+            SelectorSimple("Siedlungskerne", [], st.checkbox),
+            (st.write, "## Layout"),
+            SelectorSimple(
+                "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
+            ),
+            SelectorSimple(
+                "Grundkarte",
+                [
+                    "basemap.at Vector",
+                    "basemap.at Standard",
+                    "basemap.at Grau",
+                    "basemap.at Stumm Grau",
+                    "OpenStreetMap",
+                ],
+                st.radio,
+            ),
+            SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
+        ],
+        print_layout="ÖV-Überblick Haltestelle",
+    )
     # "Test": MapType(
     #     name="Test",
     #     description="Hier kann man alles mögliche testen.",
