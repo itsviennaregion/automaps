@@ -57,7 +57,8 @@ class MapType:
                     _selector_values[element.label] == element.no_value_selected_text
                     or _selector_values[element.label] == []
                 ):
-                    has_init_values = True
+                    if not element.optional:
+                        has_init_values = True
             elif isinstance(element, tuple):
                 self._process_other_ui_element(element)
 

@@ -17,6 +17,7 @@ class BaseSelector(ABC):
     provide_raw_options: bool = False
     options_raw: Iterable[Any]
     label_ui: Optional[str]
+    optional: bool
 
     @abstractmethod
     def widget(self):
@@ -33,6 +34,7 @@ class SelectorSimple(BaseSelector):
         no_value_selected_text: str = "",
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         label_ui: Optional[str] = None,
+        optional: bool = False
     ):
         self.label = label
         self.options = list(options)
@@ -43,6 +45,7 @@ class SelectorSimple(BaseSelector):
         self.widget_args = widget_args
         self.depends_on_selectors = depends_on_selectors
         self.label_ui = label_ui
+        self.optional = optional
 
     @property
     def widget(self):
@@ -71,6 +74,7 @@ class SelectorSQL(BaseSelector):
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         provide_raw_options: bool = False,
         label_ui: Optional[str] = None,
+        optional: bool = False
     ):
         self.label = label
         self.sql = sql
@@ -82,6 +86,7 @@ class SelectorSQL(BaseSelector):
         self.depends_on_selectors = depends_on_selectors
         self.provide_raw_options = provide_raw_options
         self.label_ui = label_ui
+        self.optional = optional
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore

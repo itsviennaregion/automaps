@@ -169,6 +169,10 @@ Beispielsweise kann ein Selektor für ÖV-Linien erst dann angezeigt werden, wen
 eine Gemeinde ausgewählt wurde (`depends_on_selectors=["Gemeinde"]`).
 * `label_ui (str, optional)`: Alternative Bezeichnung des Widgets, die im UI angezeigt
 werden soll.
+* `optional (bool, optional, default False)`: Gibt an, ob das Widget optional ist, ob
+also die Kartenerzeugung gestartet werden kann, obwohl das Widget den Defaultwert
+(`no_value_selected_text`) oder eine leere Liste als Ergebnis übergibt. Hat Einfluss
+auf das Setzen des flags `has init values` im zugehörigen `MapType`.
 
 Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter 
 initialisiert:
