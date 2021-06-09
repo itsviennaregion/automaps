@@ -34,7 +34,7 @@ class SelectorSimple(BaseSelector):
         no_value_selected_text: str = "",
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         label_ui: Optional[str] = None,
-        optional: bool = False
+        optional: bool = False,
     ):
         self.label = label
         self.options = list(options)
@@ -74,7 +74,7 @@ class SelectorSQL(BaseSelector):
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         provide_raw_options: bool = False,
         label_ui: Optional[str] = None,
-        optional: bool = False
+        optional: bool = False,
     ):
         self.label = label
         self.sql = sql
