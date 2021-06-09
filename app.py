@@ -20,6 +20,7 @@ if not DOWNLOADS_PATH.is_dir():
 
 def start_frontend():
     st.set_page_config(page_title="VOR Karten")
+    _hide_footer()
 
     # Show available map types and get selected value
     maptype_dict_key = st.sidebar.radio("Kartentyp", list(MAPTYPES_AVAIL.keys()))
@@ -86,6 +87,16 @@ def _show_error_message(exception: Exception):
     st.error(f"Leider gab es einen Fehler: {exception}")
     tb = traceback.format_exc()
     st.error(tb)
+
+
+def _hide_footer():
+    custom_css = """
+        <style>
+            footer {
+                visibility: hidden;
+            }
+        </style> """
+    st.markdown(custom_css, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
