@@ -206,7 +206,9 @@ Der Verzeichnispfad zum Speichern der erzeugten Karten (`BASEPATH_FILESERVER`), 
 
     BASEPATH_FILESERVER = "/usr/local/lib/python3.8/dist-packages/streamlit/static/downloads"
 
-Der Verzeichnispfad zur QGIS-Installation (`QGIS_INSTALLATION_PATH`), z.B.:
+Der Verzeichnispfad zur QGIS-Installation (`QGIS_INSTALLATION_PATH`). Dieser kann im 
+QGIS GUI in der Python Console mit folgendem Befehl eruiert werden:
+`QgsApplication.prefixPath()`. Beispiel:
 
     QGIS_INSTALLATION_PATH = "/usr"
 
