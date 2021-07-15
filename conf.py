@@ -191,8 +191,90 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     "help": "In welchem Dateiformat soll die Karte erstellt werden? _SVG_ eignet sich am besten, für weitere Nachbearbeitung."
                 },
             ),
+            SelectorSQL(
+                "Linienfokus",
+                """
+                select unnest(ltwo.res) from (
+                    select
+                        case when 'ALLE' = ANY(lone.sel) then lone.opt else lone.sel end as res
+                    from(
+                        select
+                            string_to_array(sel, ', ') sel,
+                            string_to_array(opt, ', ') opt
+                        from ( values
+                            (
+                                '{{ data["Linien in der Gemeinde"]|list|join(", ") if data["Linien in der Gemeinde"] }}',
+                                '{{ data["Linien in der Gemeinde OPTIONS"]|list|join(", ") }}'
+                            ),
+                            (
+                                '{{ data["Linien im Bezirk"]|list|join(", ") if data["Linien im Bezirk"] }}',
+                                '{{ data["Linien im Bezirk OPTIONS"]|list|join(", ") }}'
+                            ),
+                            (
+                                '{{ data["Linien im Bundesland"]|list|join(", ") if data["Linien im Bundesland"] }}',
+                                '{{ data["Linien im Bundesland OPTIONS"]|list|join(", ") }}'
+                            ),
+                            (
+                                '{{ data["Linien in Ausschreibungsregion"]|list|join(", ") if data["Linien in Ausschreibungsregion"] }}',
+                                '{{ data["Linien in Ausschreibungsregion OPTIONS"]|list|join(", ") }}'
+                            )
+                        ) as t (sel, opt)
+                    ) lone
+                    where
+                        array_ndims(lone.opt) > 0
+                ) ltwo""",
+                None,
+                depends_on_selectors=[("Linien in der Gemeinde", "Linien im Bezirk", "Linien im Bundesland", "Linien in Ausschreibungsregion")],
+                provide_raw_options=False,
+            ),
+            SelectorSQL(
+                "Geometriefokus",
+                """
+                select
+                    st_astext(geo)
+                from ( values
+                    ((select geom from bev_gemeinden where pg = '{{ data["Gemeinde"] }}')),
+                    ((select geom from bev_bezirke where pb = '{{ data["Bezirk"] }}')),
+                    ((select geom from bev_bundeslaender where bl = '{{ data["Bundesland"] }}')),
+                    ((select geom from au_regionen_polygon where bl = '{{ data["Ausschreibungsregion"] }}'))
+                ) as t (geo)
+                where
+                    geo is not null""",
+                None,
+                depends_on_selectors=[("Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion")],
+                provide_raw_options=False,
+            ),
+            SelectorSQL(
+                "Haltestellenfokus",
+                """
+                select distinct
+                    hst_id, max(geom), array_agg(lin_id)
+                from (
+                select
+                    fromstopid hst_id,
+                    lineefa lin_id,
+                    st_startpoint(geom) geom
+                from ptlinks_ptl_polyline
+                union
+                select
+                    tostopid hst_id,
+                    lineefa lin_id,
+                    st_endpoint(geom) geom
+                from ptlinks_ptl_polyline
+                ) unioned
+                where
+                    lin_id in ({{ "'" + "', '".join(data["Linienfokus"]) + "'"}})
+                    and
+                    st_intersects(geom, st_geomfromtext('{{ data["Geometriefokus"][0] }}', 32633))
+                group by
+                    hst_id""",
+                None,
+                depends_on_selectors=["Linienfokus", "Geometriefokus"],
+                provide_raw_options=False,
+            ),
         ],
-        print_layout="ÖV-Überblick Gebiet",
+        #print_layout="ÖV-Überblick Gebiet",
+        print_layout="a3q_vor",
     ),
     "ÖV-Überblick Linie": MapType(
         name="ÖV-Überblick Linie",
