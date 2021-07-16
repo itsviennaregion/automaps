@@ -172,10 +172,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             SelectorSimple(
                 "Grundkarte",
                 [
-                    "basemap.at Vector",
-                    "basemap.at Standard",
-                    "basemap.at Grau",
-                    "basemap.at Stumm Grau",
+                    "basemap.at",
+                    "Luftbild",
                     "OpenStreetMap",
                 ],
                 st.radio,
@@ -331,10 +329,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             SelectorSimple(
                 "Grundkarte",
                 [
-                    "basemap.at Vector",
-                    "basemap.at Standard",
-                    "basemap.at Grau",
-                    "basemap.at Stumm Grau",
+                    "basemap.at",
+                    "Luftbild",
                     "OpenStreetMap",
                 ],
                 st.radio,
