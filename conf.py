@@ -224,7 +224,6 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                         array_ndims(lone.opt) > 0
                 ) ltwo""",
                 None,
-                depends_on_selectors=[("Linien in der Gemeinde", "Linien im Bezirk", "Linien im Bundesland", "Linien in Ausschreibungsregion")],
                 provide_raw_options=False,
             ),
             SelectorSQL(
@@ -233,15 +232,14 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 select
                     st_astext(geo)
                 from ( values
-                    ((select geom from bev_gemeinden where pg = '{{ data["Gemeinde"] }}')),
-                    ((select geom from bev_bezirke where pb = '{{ data["Bezirk"] }}')),
-                    ((select geom from bev_bundeslaender where bl = '{{ data["Bundesland"] }}')),
-                    ((select geom from au_regionen_polygon where bl = '{{ data["Ausschreibungsregion"] }}'))
+                    ((select geom from bev_gemeinden where pg = '{{ data["Gemeinde"] if data["Linien in der Gemeinde"] }}')),
+                    ((select geom from bev_bezirke where pb = '{{ data["Bezirk"] if data["Linien im Bezirk"] }}')),
+                    ((select geom from bev_bundeslaender where bl = '{{ data["Bundesland"] if data["Linien im Bundesland"] }}')),
+                    ((select geom from au_regionen_polygon where bl = '{{ data["Ausschreibungsregion"] if data["Linien in Ausschreibungsregion"] }}'))
                 ) as t (geo)
                 where
                     geo is not null""",
                 None,
-                depends_on_selectors=[("Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion")],
                 provide_raw_options=False,
             ),
             SelectorSQL(
@@ -263,13 +261,13 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 from ptlinks_ptl_polyline
                 ) unioned
                 where
-                    lin_id in ({{ "'" + "', '".join(data["Linienfokus"]) + "'"}})
+                    lin_id in ({{ "'" + "', '".join(data["Linienfokus"]) + "'" if data["Linienfokus"] }})
                     and
-                    st_intersects(geom, st_geomfromtext('{{ data["Geometriefokus"][0] }}', 32633))
+                    st_intersects(geom, st_geomfromtext('{{ data["Geometriefokus"][0] if data["Geometriefokus"] }}', 32633))
                 group by
                     hst_id""",
                 None,
-                depends_on_selectors=["Linienfokus", "Geometriefokus"],
+                depends_on_selectors=["Geometriefokus"],
                 provide_raw_options=False,
             ),
         ],
