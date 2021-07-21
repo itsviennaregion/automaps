@@ -59,10 +59,12 @@ class MapType:
                 ):
                     if not element.optional:
                         has_init_values = True
-                
+
                 # Should selector value be part of the export filename?
                 if element.exclude_from_filename:
-                    _selector_values["selectors_to_exclude_from_filename"].append(element.label)
+                    _selector_values["selectors_to_exclude_from_filename"].append(
+                        element.label
+                    )
 
             elif isinstance(element, tuple):
                 self._process_other_ui_element(element)

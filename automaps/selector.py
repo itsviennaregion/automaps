@@ -36,8 +36,7 @@ class SelectorSimple(BaseSelector):
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         label_ui: Optional[str] = None,
         optional: bool = False,
-        exclude_from_filename: bool = False
-
+        exclude_from_filename: bool = False,
     ):
         self.label = label
         self.options = list(options)
@@ -79,7 +78,7 @@ class SelectorSQL(BaseSelector):
         provide_raw_options: bool = False,
         label_ui: Optional[str] = None,
         optional: bool = False,
-        exclude_from_filename: bool = False
+        exclude_from_filename: bool = False,
     ):
         self.label = label
         self.sql = sql
