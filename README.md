@@ -159,14 +159,16 @@ Values die Werte, die bei dem entsprechenden Selektor ausgewählt sein müssen. 
 z.B. beim Selektor mit dem Label "Räumliche Ebene" der Wert "Linie" ausgewählt sein
 muss, dann ist `depends_on_selectors={"Räumliche Ebene": "Linie"}` zu setzen. Derzeit
 kann nur auf Gleichheit geprüft werden. Wenn das Dictionary mehrere key/value-Paare
-beinhaltet, müssen alle Bedingungen erfüllt sein (UND-Verknüpfung).
+beinhaltet, muss nur eine der Bedingungen erfüllt sein (ODER-Verknüpfung).
 
     * __Liste__:
 Eine Liste von Selektor-Labels von Selektoren desselben `MapType`. Wenn die 
 entsprechenden Selektoren entweder `None` oder den Defaulttext 
 (`no_value_selected_text`) als Wert annehmen, wird das Widget nicht angezeigt.
 Beispielsweise kann ein Selektor für ÖV-Linien erst dann angezeigt werden, wenn zuvor
-eine Gemeinde ausgewählt wurde (`depends_on_selectors=["Gemeinde"]`).
+eine Gemeinde ausgewählt wurde (`depends_on_selectors=["Gemeinde"]`). Wenn die Liste
+mehrere Selektor-Labels umfasst, wird das Widget angezeigt, sobald bei einem der
+gelisteten Selektoren ein Wert ausgewählt wurde (ODER-Verknüpfung).
 * `label_ui (str, optional)`: Alternative Bezeichnung des Widgets, die im UI angezeigt
 werden soll.
 * `optional (bool, optional, default False)`: Gibt an, ob das Widget optional ist, ob
