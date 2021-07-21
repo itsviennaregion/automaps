@@ -68,22 +68,24 @@ class MapType:
         return _selector_values
 
     def _widget_is_visible(self, sel: BaseSelector, selector_values: dict) -> bool:
-        is_visible = True
+
         if isinstance(sel.depends_on_selectors, dict):
+            # is visible, if at least one of the other selectors has the desired value
+            is_visible = False
             for sel_name, sel_value in sel.depends_on_selectors.items():
                 # Does it satisfy condition?
-                if selector_values.get(sel_name, None) != sel_value:
-                    is_visible = False
+                if selector_values.get(sel_name, None) == sel_value:
+                    is_visible = True
                 # Is default value selected?
-                for sel2 in (
-                    x for x in self.ui_elements if isinstance(x, BaseSelector)
-                ):
-                    if sel2.label == sel_name:
-                        if (
-                            selector_values.get(sel_name, None)
-                            == sel2.no_value_selected_text
-                        ):
-                            is_visible = False
+                # for sel2 in (
+                #     x for x in self.ui_elements if isinstance(x, BaseSelector)
+                # ):
+                #     if sel2.label == sel_name:
+                #         if (
+                #             selector_values.get(sel_name, None)
+                #             == sel2.no_value_selected_text
+                #         ):
+                #             is_visible = False
         elif isinstance(sel.depends_on_selectors, list):
             # is_visible, if at least one of the other selectors has a value
             is_visible = False
@@ -92,10 +94,17 @@ class MapType:
                     x for x in self.ui_elements if isinstance(x, BaseSelector)
                 ):
                     if sel2.label == sel_name:
+                        print(
+                            f"{sel.label} depends on {sel_name}: {selector_values.get(sel_name, None)}. Visible: {is_visible}"
+                        )
                         if (
-                            selector_values.get(sel_name, None)
-                            != sel2.no_value_selected_text
-                        ) & (selector_values.get(sel_name, None) != None):
+                            (
+                                selector_values.get(sel_name, None)
+                                != sel2.no_value_selected_text
+                            )
+                            and (selector_values.get(sel_name, None) != None)
+                            and ((len(selector_values.get(sel_name, [])) > 0))
+                        ):
                             is_visible = True
 
         return is_visible
