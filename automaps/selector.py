@@ -118,6 +118,6 @@ class SelectorSQL(BaseSelector):
                 return self.options
 
 
-@st.cache(show_spinner=False, ttl=3600)
+@st.cache(show_spinner=False)
 def read_options_sql(sql) -> Iterable[Any]:
     return sorted(pd.read_sql(sql, get_engine()).iloc[:, 0])
