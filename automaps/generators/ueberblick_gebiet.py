@@ -17,7 +17,9 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
         )
 
     def set_variables(self):
-        self._set_project_variable("data", self.data)  # NL: Using dict variables in QGIS works only, when they're dict or transformed to json (not str). [% map_get(  @data, 'Räumliche Ebene') %] or [% map_get(  json_to_map( @data ), 'Räumliche Ebene') %]
+        self._set_project_variable(
+            "data", self.data
+        )  # NL: Using dict variables in QGIS works only, when they're dict or transformed to json (not str). [% map_get(  @data, 'Räumliche Ebene') %] or [% map_get(  json_to_map( @data ), 'Räumliche Ebene') %]
         gebiet_aktiv = (
             self.data["Gemeinde"]
             or self.data["Bezirk"]
@@ -30,8 +32,9 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
 
         self._set_project_variable("Linien_in_Gebiet", self.data["Linienfokus"])
 
-        self._set_project_variable("Haltestellen_in_Gebiet", self.data["Haltestellenfokus"])
-
+        self._set_project_variable(
+            "Haltestellen_in_Gebiet", self.data["Haltestellenfokus"]
+        )
 
     def filter_layers(self):
         if self.data["Gemeinde"]:
@@ -68,9 +71,13 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
             or self.data["Linien im Bundesland"]
             or self.data["Linien in Ausschreibungsregion"]
         )
-        
-        self._set_map_layer_filter_expression("Linien in Gebiet", f"lineefa in ({self.data['Linienfokus']})")
-        self._set_map_layer_filter_expression("Linien", f"line_name not in ({self.data['Linienfokus']})")
+
+        self._set_map_layer_filter_expression(
+            "Linien in Gebiet", f"lineefa in ({self.data['Linienfokus']})"
+        )
+        self._set_map_layer_filter_expression(
+            "Linien", f"line_name not in ({self.data['Linienfokus']})"
+        )
 
         self._set_map_layer_visibility(self.data["Grundkarte"], True)
 
