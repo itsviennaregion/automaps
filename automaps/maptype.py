@@ -27,7 +27,7 @@ class MapType:
     def selector_values(self) -> Dict[str, Any]:
         """Show widgets (if conditions defined by Selector argument
         `depends_on_selectors` are satisfied) and return selected values."""
-        _selector_values: Dict[str, Any] = {}
+        _selector_values: Dict[str, Any] = {"selectors_to_exclude_from_filename": []}
         has_init_values = False
         for element in self.ui_elements:
             if isinstance(element, BaseSelector):
@@ -59,6 +59,11 @@ class MapType:
                 ):
                     if not element.optional:
                         has_init_values = True
+                
+                # Should selector value be part of the export filename?
+                if element.exclude_from_filename:
+                    _selector_values["selectors_to_exclude_from_filename"].append(element.label)
+
             elif isinstance(element, tuple):
                 self._process_other_ui_element(element)
 
@@ -94,9 +99,6 @@ class MapType:
                     x for x in self.ui_elements if isinstance(x, BaseSelector)
                 ):
                     if sel2.label == sel_name:
-                        print(
-                            f"{sel.label} depends on {sel_name}: {selector_values.get(sel_name, None)}. Visible: {is_visible}"
-                        )
                         if (
                             (
                                 selector_values.get(sel_name, None)

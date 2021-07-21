@@ -18,6 +18,7 @@ class BaseSelector(ABC):
     options_raw: Iterable[Any]
     label_ui: Optional[str]
     optional: bool
+    exclude_from_filename: bool
 
     @abstractmethod
     def widget(self):
@@ -35,6 +36,8 @@ class SelectorSimple(BaseSelector):
         depends_on_selectors: Union[List[str], Dict[str, Any]] = {},
         label_ui: Optional[str] = None,
         optional: bool = False,
+        exclude_from_filename: bool = False
+
     ):
         self.label = label
         self.options = list(options)
@@ -46,6 +49,7 @@ class SelectorSimple(BaseSelector):
         self.depends_on_selectors = depends_on_selectors
         self.label_ui = label_ui
         self.optional = optional
+        self.exclude_from_filename = exclude_from_filename
 
     @property
     def widget(self):
@@ -75,6 +79,7 @@ class SelectorSQL(BaseSelector):
         provide_raw_options: bool = False,
         label_ui: Optional[str] = None,
         optional: bool = False,
+        exclude_from_filename: bool = False
     ):
         self.label = label
         self.sql = sql
@@ -87,6 +92,7 @@ class SelectorSQL(BaseSelector):
         self.provide_raw_options = provide_raw_options
         self.label_ui = label_ui
         self.optional = optional
+        self.exclude_from_filename = exclude_from_filename
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore

@@ -175,6 +175,8 @@ werden soll.
 also die Kartenerzeugung gestartet werden kann, obwohl das Widget den Defaultwert
 (`no_value_selected_text`) oder eine leere Liste als Ergebnis übergibt. Hat Einfluss
 auf das Setzen des flags `has init values` im zugehörigen `MapType`.
+* `exclude_from_filename (bool, optional, default False)`: Wenn `True`, dann wird der
+Wert / die Werte des Selektors nicht zur Erzeugung des Dateinamens herangezogen. 
 
 Die `SelectorSimple`-Klasse wird darüber hinaus mit dem folgenden Parameter 
 initialisiert:

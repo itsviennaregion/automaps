@@ -47,13 +47,13 @@ class MapGenerator(ABC):
     @property
     def filename(self) -> str:
         data = copy(self.data)
+        for label in data.get("selectors_to_exclude_from_filename", []):
+            data.pop(label)
+        data.pop("selectors_to_exclude_from_filename", None)
         data.pop("maptype_dict_key", None)
         data.pop("step", None)
         data.pop("print_layout", None)
         data.pop("Dateiformat", None)
-        data.pop("Linienfokus", None)
-        data.pop("Geometriefokus", None)
-        data.pop("Haltestellenfokus", None)
         option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
         for key in option_keys_to_pop:
             data.pop(key, None)

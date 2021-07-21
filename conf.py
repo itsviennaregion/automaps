@@ -184,6 +184,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     "Linien im Bundesland": [],
                 },
                 label_ui="Haltestellen",
+                exclude_from_filename=True
             ),
             SelectorSimple(
                 "Haltestellen 2",
@@ -196,6 +197,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     "Linien im Bundesland",
                 ],
                 label_ui="Haltestellen",
+                exclude_from_filename=True
             ),
             SelectorSQL(
                 "Haltestellen",
@@ -285,6 +287,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 ) ltwo""",
                 None,
                 provide_raw_options=False,
+                exclude_from_filename=True
             ),
             ############################################################################
             # Geometriefokus
@@ -304,7 +307,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     geo is not null""",
                 None,
                 provide_raw_options=False,
+                exclude_from_filename=True
             ),
+            ############################################################################
+            # Haltestellenfokus
+            ############################################################################
             SelectorSQL(
                 "Haltestellenfokus",
                 """
@@ -332,6 +339,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 None,
                 depends_on_selectors=["Geometriefokus"],
                 provide_raw_options=False,
+                exclude_from_filename=True
             ),
         ],
         # print_layout="ÖV-Überblick Gebiet",
