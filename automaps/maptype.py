@@ -85,6 +85,8 @@ class MapType:
                         ):
                             is_visible = False
         elif isinstance(sel.depends_on_selectors, list):
+            # is_visible, if at least one of the other selectors has a value
+            is_visible = False
             for sel_name in sel.depends_on_selectors:
                 for sel2 in (
                     x for x in self.ui_elements if isinstance(x, BaseSelector)
@@ -92,11 +94,10 @@ class MapType:
                     if sel2.label == sel_name:
                         if (
                             selector_values.get(sel_name, None)
-                            == sel2.no_value_selected_text
-                        ):
-                            is_visible = False
-                        if selector_values.get(sel_name, None) == None:
-                            is_visible = False
+                            != sel2.no_value_selected_text
+                        ) & (selector_values.get(sel_name, None) != None):
+                            is_visible = True
+
         return is_visible
 
     def _update_sql(self, selector: SelectorSQL, selector_values: dict):
