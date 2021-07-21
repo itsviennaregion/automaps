@@ -64,7 +64,7 @@ class MapGenerator(ABC):
         )
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}.{file_ext}",
+            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}".replace(" ", "_").replace(".", "_") + f".{file_ext}",
         )
 
     @abstractmethod

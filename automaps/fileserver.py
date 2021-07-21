@@ -42,7 +42,7 @@ def download_button(download_filepath, button_text):
 
     dl_link = (
         custom_css
-        + f'<a download="downloads/{filename}" id="{button_id}" '
+        + f'<a download="{filename}" id="{button_id}" '
         + f'href="downloads/{filename}">{button_text}</a><br></br>'
     )
 
