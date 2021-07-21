@@ -18,6 +18,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Hier kann festgelegt werden, welche Gebietseinheit dargestellt "
                 "werden soll.",
             ),
+            ############################################################################
+            # Räumliche Ebene
+            ############################################################################
             SelectorSimple(
                 "Räumliche Ebene",
                 ["Gemeinde", "Bezirk", "Bundesland", "Ausschreibungsregion"],
@@ -27,6 +30,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 },
                 no_value_selected_text="Räumliche Ebene auswählen ...",
             ),
+            ############################################################################
+            # Gebietseinheit
+            ############################################################################
             SelectorSQL(
                 "Gemeinde",
                 """
@@ -77,6 +83,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 depends_on_selectors={"Räumliche Ebene": "Ausschreibungsregion"},
             ),
             (st.write, "## Kartenelemente"),
+            ############################################################################
+            # Linien
+            ############################################################################
             SelectorSQL(
                 "Linien in der Gemeinde",
                 """  
@@ -95,7 +104,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Gemeinde"],
                 provide_raw_options=True,
-                label_ui="ÖV-Linien",
+                label_ui="ÖV-Linien (optional)",
+                optional=True,
             ),
             SelectorSQL(
                 "Linien im Bezirk",
@@ -115,7 +125,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Bezirk"],
                 provide_raw_options=True,
-                label_ui="ÖV-Linien",
+                label_ui="ÖV-Linien (optional)",
+                optional=True,
             ),
             SelectorSQL(
                 "Linien im Bundesland",
@@ -135,7 +146,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Bundesland"],
                 provide_raw_options=True,
-                label_ui="ÖV-Linien",
+                label_ui="ÖV-Linien (optional)",
+                optional=True,
             ),
             SelectorSQL(
                 "Linien in Ausschreibungsregion",
@@ -155,11 +167,58 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 additional_values=["ALLE"],
                 depends_on_selectors=["Ausschreibungsregion"],
                 provide_raw_options=True,
-                label_ui="ÖV-Linien",
+                label_ui="ÖV-Linien (optional)",
+                optional=True,
             ),
+            ############################################################################
+            # Haltestellen
+            ############################################################################
+            SelectorSimple(
+                "Haltestellen 1",
+                ["Alle", "Keine"],
+                st.radio,
+                depends_on_selectors={
+                    "Linien in der Gemeinde": [],
+                    "Linien im Bezirk": [],
+                    "Linien in Ausschreibungsregion": [],
+                    "Linien im Bundesland": [],
+                },
+                label_ui="Haltestellen",
+            ),
+            SelectorSimple(
+                "Haltestellen 2",
+                ["Alle", "Bediente Haltestellen", "Keine"],
+                st.radio,
+                depends_on_selectors=[
+                    "Linien in der Gemeinde",
+                    "Linien im Bezirk",
+                    "Linien in Ausschreibungsregion",
+                    "Linien im Bundesland",
+                ],
+                label_ui="Haltestellen",
+            ),
+            SelectorSQL(
+                "Haltestellen",
+                """
+                {% if data["Haltestellen 1"] %}
+                select a from (values ('{{ data["Haltestellen 1"] }}')) s(a);
+                {% endif %}
+                {% if data["Haltestellen 2"] %}
+                select a from (values ('{{ data["Haltestellen 2"] }}')) s(a);
+                {% endif %}
+                """,
+                None,
+                depends_on_selectors=["Haltestellen 1", "Haltestellen 2"],
+            ),
+            ############################################################################
+            # Sonstige Objekte
+            ############################################################################
             (st.write, "### Sonstige Objekte"),
             SelectorSimple("Schulen", [], st.checkbox),
             SelectorSimple("Siedlungskerne", [], st.checkbox),
+            ############################################################################
+            # Layout
+            ############################################################################
             (st.write, "## Layout"),
             SelectorSimple(
                 "Kartendarstellung",
@@ -189,6 +248,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                     "help": "In welchem Dateiformat soll die Karte erstellt werden? _SVG_ eignet sich am besten, für weitere Nachbearbeitung."
                 },
             ),
+            ############################################################################
+            # Linienfokus
+            ############################################################################
             SelectorSQL(
                 "Linienfokus",
                 """
@@ -224,6 +286,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 None,
                 provide_raw_options=False,
             ),
+            ############################################################################
+            # Geometriefokus
+            ############################################################################
             SelectorSQL(
                 "Geometriefokus",
                 """
@@ -269,7 +334,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 provide_raw_options=False,
             ),
         ],
-        #print_layout="ÖV-Überblick Gebiet",
+        # print_layout="ÖV-Überblick Gebiet",
         print_layout="a3q_vor",
     ),
     "ÖV-Überblick Linie": MapType(
