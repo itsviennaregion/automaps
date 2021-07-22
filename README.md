@@ -65,9 +65,9 @@ wird mit folgenden Argumenten initialisiert:
 * `name (str)`: Name des Kartentyps. Dieser muss als Key in der Variable `GENERATORS` 
 in `/conf_server.py` vorkommen (siehe unten).
 * `description (str)`: Beschreibung des Kartentyps. Wird im Frontend angezeigt.
-* `ui_elements (Iterable[Union[BaseSelector, Tuple[Callable, str]]])`: Iterable von 
-UI-Elementen, wobei es sich entweder um `Selector`-Objekte oder Tupel aus `st.write` und
-einem String, z.B. `(st.write, "## Überschrift")` handeln kann. 
+* `ui_elements (Iterable[Union[MultiSelector, BaseSelector, Tuple[Callable, str]]])`: 
+Iterable von UI-Elementen, wobei es sich entweder um `Selector`-Objekte oder Tupel aus 
+`st.write` und einem String, z.B. `(st.write, "## Überschrift")` handeln kann. 
     * Mit `Selector`-Objekten werden die Auswahlmöglichkeiten, die im UI angezeigt 
     werden, definiert. Die Auswahl wird beim Start der Verarbeitung als 
     `self.data`-Attribut übergeben.
@@ -124,6 +124,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
 
 Die Konfiguration der im UI angezeigten Auswahlmöglichkeiten erfolgt mit Hilfe von
 `Selector`-Objekten.
+
+__`BaseSelector`-Klassen__
+
 Es stehen zwei von `selector.BaseSelector` abgeleitete Selector-Klassen zur Verfügung:
 
 * `SelectorSimple`: Für Listen von Auswahlmöglichkeiten (z.B. "Bus" oder "Bahn"),
@@ -202,6 +205,54 @@ z.B. `["ALLE"]`.
 Namen des Selektors mit angehängtem `" OPTIONS"` und als Value alle zur Auswahl 
 stehenden Optionen, unabhängig davon, welche im UI ausgewählt wurde. Default `False`. 
 
+__`MultiSelector`-Klasse__
+
+Zusätzlich zu den beiden von `BaseSelector` abgeleiteten Klassen steht der
+`MultiSelector` zur Verfügung. Damit können mehrere Selektoren zusammengefasst werden.
+Diese Selektoren sollten einander ausschließende Abhängigkeiten haben (definiert 
+mit `depends_on_selectors`). Der erste über die `selectors`-Liste übergebene Selektor,
+der einen Wert ungleich `None` zurückliefert, wird genutzt, um im `data`-Dictionary
+einen Eintrag mit dem `label` des `MultiSelector` als Key anzulegen.
+
+Die `MultiSelector`-Klasse wird mit den folgenden Parametern initialisiert:
+* `label (str)`: Bezeichnung des Selektors. Wird im UI angezeigt. 
+* `selectors (List[BaseSelector])`: Liste von `BaseSelector`-Objekten, siehe oben.
+* `exclude_from_filename (bool, optional, default False)`: Wenn `True`, dann wird der
+Wert / die Werte des Selektors nicht zur Erzeugung des Dateinamens herangezogen. 
+
+Beispiel:
+
+```python
+MultiSelector(
+    "Haltestellen",
+    [
+        SelectorSimple(
+        "Haltestellen a",
+        ["Alle", "Keine"],
+        st.radio,
+        depends_on_selectors={
+            "Linien in der Gemeinde": [],
+            "Linien im Bezirk": [],
+            "Linien in Ausschreibungsregion": [],
+            "Linien im Bundesland": [],
+        },
+        label_ui="Haltestellen",
+    ),
+    SelectorSimple(
+        "Haltestellen b",
+        ["Alle", "Bediente Haltestellen", "Keine"],
+        st.radio,
+        depends_on_selectors=[
+            "Linien in der Gemeinde",
+            "Linien im Bezirk",
+            "Linien in Ausschreibungsregion",
+            "Linien im Bundesland",
+        ],
+        label_ui="Haltestellen",
+    ),
+],
+),
+```
 
 ### `/conf_local.py`
 Hier müssen die folgenden Variablen festgelegt werden:

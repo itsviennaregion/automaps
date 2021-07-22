@@ -121,3 +121,15 @@ class SelectorSQL(BaseSelector):
 @st.cache(show_spinner=False)
 def read_options_sql(sql) -> Iterable[Any]:
     return sorted(pd.read_sql(sql, get_engine()).iloc[:, 0])
+
+
+class MultiSelector:
+    def __init__(
+        self,
+        label: str,
+        selectors: List[BaseSelector],
+        exclude_from_filename: bool = False,
+    ):
+        self.label = label
+        self.selectors = selectors
+        self.exclude_from_filename = exclude_from_filename

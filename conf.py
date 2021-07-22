@@ -3,7 +3,7 @@ from typing import Dict
 import streamlit as st
 
 from automaps.maptype import MapType
-from automaps.selector import SelectorSimple, SelectorSQL
+from automaps.selector import SelectorSimple, SelectorSQL, MultiSelector
 
 
 MAPTYPES_AVAIL: Dict[str, MapType] = {
@@ -173,44 +173,34 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ############################################################################
             # Haltestellen
             ############################################################################
-            SelectorSimple(
-                "Haltestellen 1",
-                ["Alle", "Keine"],
-                st.radio,
-                depends_on_selectors={
-                    "Linien in der Gemeinde": [],
-                    "Linien im Bezirk": [],
-                    "Linien in Ausschreibungsregion": [],
-                    "Linien im Bundesland": [],
-                },
-                label_ui="Haltestellen",
-                exclude_from_filename=True,
-            ),
-            SelectorSimple(
-                "Haltestellen 2",
-                ["Alle", "Bediente Haltestellen", "Keine"],
-                st.radio,
-                depends_on_selectors=[
-                    "Linien in der Gemeinde",
-                    "Linien im Bezirk",
-                    "Linien in Ausschreibungsregion",
-                    "Linien im Bundesland",
-                ],
-                label_ui="Haltestellen",
-                exclude_from_filename=True,
-            ),
-            SelectorSQL(
+            MultiSelector(
                 "Haltestellen",
-                """
-                {% if data["Haltestellen 1"] %}
-                select a from (values ('{{ data["Haltestellen 1"] }}')) s(a);
-                {% endif %}
-                {% if data["Haltestellen 2"] %}
-                select a from (values ('{{ data["Haltestellen 2"] }}')) s(a);
-                {% endif %}
-                """,
-                None,
-                depends_on_selectors=["Haltestellen 1", "Haltestellen 2"],
+                [
+                    SelectorSimple(
+                    "Haltestellen (wenn keine ÖV-Linie ausgewählt wurde)",
+                    ["Alle", "Keine"],
+                    st.radio,
+                    depends_on_selectors={
+                        "Linien in der Gemeinde": [],
+                        "Linien im Bezirk": [],
+                        "Linien in Ausschreibungsregion": [],
+                        "Linien im Bundesland": [],
+                    },
+                    label_ui="Haltestellen",
+                ),
+                SelectorSimple(
+                    "Haltestellen (wenn eine oder mehrere ÖV-Linien ausgewählt wurden)",
+                    ["Alle", "Bediente Haltestellen", "Keine"],
+                    st.radio,
+                    depends_on_selectors=[
+                        "Linien in der Gemeinde",
+                        "Linien im Bezirk",
+                        "Linien in Ausschreibungsregion",
+                        "Linien im Bundesland",
+                    ],
+                    label_ui="Haltestellen",
+                ),
+            ],
             ),
             ############################################################################
             # Sonstige Objekte
