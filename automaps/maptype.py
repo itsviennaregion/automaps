@@ -85,10 +85,8 @@ class MapType:
             _selector_values[multi_sel.label] = base_value
             if base_value:
                 break
-        
-        _selector_values = self._exclude_from_filename(
-            _selector_values, multi_sel
-        )
+
+        _selector_values = self._exclude_from_filename(_selector_values, multi_sel)
         return _selector_values
 
     def _process_base_selector_element(
@@ -114,12 +112,10 @@ class MapType:
         ):
             if not element.optional:
                 _selector_values["has_init_values"] = True
-            
+
         # Exclude Selector values from filename?
-        _selector_values = self._exclude_from_filename(
-            _selector_values, element
-        )
-        
+        _selector_values = self._exclude_from_filename(_selector_values, element)
+
         return _selector_values
 
     def _get_selector_values(

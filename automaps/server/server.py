@@ -8,7 +8,6 @@ import automapsconf
 
 
 def start_server():
-    print("starting server")
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind(f"tcp://*:{automapsconf.PORT}")
