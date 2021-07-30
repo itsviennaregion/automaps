@@ -2,12 +2,12 @@ from typing import Any
 
 from qgis.core import QgsExpressionContextUtils, QgsProject
 
-import conf_local
+import automapsconf
 
 
 def get_project() -> QgsProject:
     project = QgsProject()
-    project.read(conf_local.FILEPATH_QGIS_PROJECT)
+    project.read(automapsconf.FILEPATH_QGIS_PROJECT)
     return project
 
 

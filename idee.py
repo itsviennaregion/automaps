@@ -1,6 +1,6 @@
 from automaps.app import AutoMaps
 
-app = AutoMaps()
+app = AutoMaps(conf_path="./automapsconf.py")
 
 # Aufruf mit python idee.py
 # alternativ mit CLI: automaps idee.py (ev. mit Parametern)

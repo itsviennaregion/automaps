@@ -3,13 +3,13 @@ from typing import Iterable
 
 import zmq
 
-import conf_server
+import automapsconf
 
 
 def ask_server_for_steps(maptype_dict_key: str) -> Iterable[str]:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect(f"tcp://localhost:{conf_server.PORT}")
+    socket.connect(f"tcp://localhost:{automapsconf.PORT}")
 
     socket.send_json({"init": maptype_dict_key})
 
@@ -23,7 +23,7 @@ def send_task_to_server(
 ) -> dict:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect(f"tcp://localhost:{conf_server.PORT}")
+    socket.connect(f"tcp://localhost:{automapsconf.PORT}")
 
     data = copy(data)
     data["maptype_dict_key"] = maptype_dict_key

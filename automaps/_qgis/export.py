@@ -1,6 +1,6 @@
 from qgis.core import QgsLayout, QgsLayoutExporter
 
-import conf_local
+# import conf_local
 
 
 def export_layout(layout: QgsLayout, filepath: str, file_format: str):

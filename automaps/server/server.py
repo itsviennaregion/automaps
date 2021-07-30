@@ -4,29 +4,29 @@ import zmq
 from automaps._qgis import start_qgis
 from automaps.generators.base import StepData
 
-import conf_server
-import conf_local
+import automapsconf
 
 
 def start_server():
+    print("starting server")
     context = zmq.Context()
     socket = context.socket(zmq.REP)
-    socket.bind(f"tcp://*:{conf_server.PORT}")
+    socket.bind(f"tcp://*:{automapsconf.PORT}")
     step_data = StepData({})
     try:
         while True:
             message = socket.recv_json()
             if "init" in message.keys():
-                generator = conf_server.GENERATORS[message["init"]](
-                    message, conf_local.BASEPATH_FILESERVER, "", step_data
+                generator = automapsconf.GENERATORS[message["init"]](
+                    message, automapsconf.BASEPATH_FILESERVER, "", step_data
                 )
                 steps = generator.steps
                 init_message = {"steps": list(steps.keys())}
                 socket.send_json(init_message)
             else:
-                generator = conf_server.GENERATORS[message["maptype_dict_key"]](
+                generator = automapsconf.GENERATORS[message["maptype_dict_key"]](
                     message,
-                    conf_local.BASEPATH_FILESERVER,
+                    automapsconf.BASEPATH_FILESERVER,
                     message["print_layout"],
                     step_data,
                 )
