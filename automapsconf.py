@@ -5,6 +5,8 @@ import streamlit as st
 from automaps.maptype import MapType
 from automaps.selector import SelectorSimple, SelectorSQL, MultiSelector
 
+from ueberblick_gebiet import MapGeneratorUeberblickGebiet
+# MAPTYPES
 
 MAPTYPES_AVAIL: Dict[str, MapType] = {
     "ÖV-Überblick Gebiet": MapType(
@@ -519,3 +521,38 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
     #     print_layout="test_layout",
     # ),
 }
+
+
+# SERVER
+
+from typing import Dict, Type
+
+# from automaps.generators import MapGeneratorTest, MapGeneratorUeberblickGebiet
+from automaps.generators.base import MapGenerator
+
+GENERATORS: Dict[str, Type[MapGenerator]] = {
+    "ÖV-Überblick Gebiet": MapGeneratorUeberblickGebiet,
+}
+
+PORT = 5555
+
+# DB
+db = {
+"drivername": "postgresql",
+"database": "postgis",
+"username": "roland.lukesch",
+"password": "w&6Tncan",
+"host": "192.168.100.168",
+"port": 5432}
+
+# LOCAL
+
+QGIS_INSTALLATION_PATH = "/usr"
+
+# BASEPATH_FILESERVER = "/home/automaps/automaps_files"
+# BASEPATH_FILESERVER = "/home/automaps/.local/lib/python3.8/site-packages/streamlit/static/downloads"
+BASEPATH_FILESERVER = "/usr/local/lib/python3.8/dist-packages/streamlit/static/downloads"
+
+FILEPATH_QGIS_PROJECT = "/home/automaps/automaps_qgis/automaps_dev.qgz"
+
+
