@@ -361,4 +361,158 @@ class MapGeneratorUeberblick(MapGenerator):
         self._export_print_layout(self.step_data.layout)
 ```
 
+## Kartenlayer
 
+
+### Steig Betriebszweig
+```sql
+-- drop view automaps_lin;
+create or replace view automaps_lin as
+select
+    row_number () over (),
+	lin.subnetwork,
+    lin.opbranch,
+    lin.fromstopid,
+    lin.fromstopar,
+    lin.fromstoppi,
+    lin.tostopid,
+    lin.tostopar,
+    lin.tostoppi,
+    lin.linediva,
+    lin.lineefa,
+    lin.project,
+    lin.direction,
+    lin.sequenceno,
+    lin.geom::geometry(Linestring, 32633) as geom,
+	bz.kurzbezeichnung kurz,
+	case
+		when bz.kode in (1, 4, 5, 6, 7, 9, 10)  then 'Bahn'
+		when bz.kode in (21, 31)  then 'U-Bahn'
+		when bz.kode in (11, 22, 32)  then 'Tram'
+		when bz.kode in (23, 24, 33, 34, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 76, 77, 79, 81, 82, 86, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99)  then 'Bus'
+		when bz.kode in (8, 25, 35, 73)  then 'Mikro V'
+		else 'Unbekannt'
+	end typ
+from ptlinks_ptl_polyline lin
+left join betriebszweige bz on bz.kode = lin.opbranch
+;
+```
+
+### Steig Betriebszweig
+```sql
+-- drop view automaps_stg;
+-- drop view automaps_hst;
+-- drop view automaps_stg_class;
+create or replace view automaps_stg_class as
+select distinct
+	stopid,
+    stopareaid,
+    stoppingpo,
+	array_agg(lin_id) linien,
+	array_agg(distinct kurz),
+	case
+		when array_agg(kode) && array[1, 4, 5, 6, 7, 9, 10]  then 'Bahn'
+		when array_agg(kode) && array[21, 31]  then 'U-Bahn'
+		when array_agg(kode) && array[11, 22, 32]  then 'Tram'
+		when array_agg(kode) && array[23, 24, 33, 34, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 76, 77, 79, 81, 82, 86, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]  then 'Bus'
+		when array_agg(kode) && array[8, 25, 35, 73]  then 'Mikro V'
+		else 'Unbekannt'
+	end typ
+from (
+select
+	lin.fromstopid stopid,
+	lin.fromstopar stopareaid,
+	lin.fromstoppi stoppingpo,
+	lin.lineefa lin_id,
+	bz.kurzbezeichnung kurz,
+	bz.kode
+from ptlinks_ptl_polyline lin
+left join betriebszweige bz on bz.kode = lin.opbranch
+union
+select
+	lin.tostopid stopid,
+	lin.tostopar stopareaid,
+	lin.tostoppi stoppingpo,
+	lin.lineefa lin_id,
+	bz.kurzbezeichnung kurz,
+	bz.kode
+from ptlinks_ptl_polyline lin
+left join betriebszweige bz on bz.kode = lin.opbranch
+) unioned
+group by
+	stopid,
+    stopareaid,
+    stoppingpo
+;
+```
+
+### Steig
+```sql
+-- drop view automaps_stg;
+create or replace view automaps_stg as
+select
+    stg.subnetwork,
+    stg.stopid,
+    stg.stopareaid,
+    stg.stoppingpo,
+    stg.drawclass,
+    stg.name1,
+    stg.name2,
+    stg.globalid,
+    stg.servingsta,
+    stg.geom::geometry(Point, 32633) as geom,
+    hst.name1 as hst_name,
+    st_x(hst.geom) as hst_x,
+    st_y(hst.geom) as hst_y,
+    cla.typ,
+    cla.linien
+from stoppingpoints_stp_point stg
+left join stops_stp_point hst on stg.stopid = hst.stopid
+left join automaps_stg_class cla on stg.stopid = cla.stopid 
+    and stg.stopareaid = cla.stopareaid 
+    and stg.stoppingpo = cla.stoppingpo
+;
+```
+
+### Haltestelle
+```sql
+-- drop view automaps_hst;
+create or replace view automaps_hst as
+select
+    hst.subnetwork,
+    hst.stopid,
+    hst.drawclass,
+    hst.name1,
+    hst.name2,
+    hst.tarifzone,
+    hst.attributes,
+    hst.servinglin,
+    hst.globalid,
+    hst.servingsta,
+    hst.name0,
+    hst.geom::geometry(Point, 32633) as geom,
+    case
+        when array_agg(cla.typ) && array['Bahn']  then 'Bahn'
+		when array_agg(cla.typ) && array['U-Bahn']  then 'U-Bahn'
+		when array_agg(cla.typ) && array['Tram']  then 'Tram'
+		when array_agg(cla.typ) && array['Bus']  then 'Bus'
+		when array_agg(cla.typ) && array['Mikro V']  then 'Mikro V'
+		else 'Unbekannt'
+	end typ
+from stops_stp_point hst
+left join automaps_stg_class cla on hst.stopid = cla.stopid
+group by
+	hst.subnetwork,
+    hst.stopid,
+    hst.drawclass,
+    hst.name1,
+    hst.name2,
+    hst.tarifzone,
+    hst.attributes,
+    hst.servinglin,
+    hst.globalid,
+    hst.servingsta,
+    hst.name0,
+    hst.geom
+;
+```
