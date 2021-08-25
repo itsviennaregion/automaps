@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Iterable
+from typing import Dict, Iterable, Tuple, Union
 
 import zmq
 
@@ -19,7 +19,10 @@ def ask_server_for_steps(maptype_dict_key: str) -> Iterable[str]:
 
 
 def send_task_to_server(
-    maptype_dict_key: str, data: dict, print_layout: str, step: str
+    maptype_dict_key: str,
+    data: dict,
+    print_layout: Union[str, Tuple[str, Dict[str, str]]],
+    step: str,
 ) -> dict:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
@@ -31,7 +34,8 @@ def send_task_to_server(
 
     if isinstance(print_layout, str):
         data["print_layout"] = print_layout
-    elif isinstance(print_layout, tuple):
+    elif isinstance(print_layout, tuple) or isinstance(print_layout, list):
+        print_layout = tuple(print_layout)  # type: ignore
         assert len(print_layout) == 2
         assert isinstance(print_layout[0], str)
         assert isinstance(print_layout[1], dict)
