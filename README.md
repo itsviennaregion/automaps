@@ -74,8 +74,18 @@ Iterable von UI-Elementen, wobei es sich entweder um `Selector`-Objekte oder Tup
     * Mit Tupeln von der Art `(st.write, str)` können Texte im UI angezeigt werden,
     z.B. um Überschriften oder weitere Erklärungen darzustellen. Künftig werden
     eventuell auch andere streamlit-Methoden unterstützt.
-* `print_layout (str)`: Name des im QGIS-Projektfile (siehe `/conf_local.py`)
-verwendeten Print-Layouts
+* `print_layout (Union[str, Tuple[str, Dict[str, str]]])`: Damit wird der Name des im 
+QGIS-Projektfile (siehe `/conf_local.py`) verwendeten Print-Layouts definiert. 
+`print_layout` muss einen der folgenden beiden Typen annehmen:
+    * `str`: Der Name des Print-Layouts im zugehörigen QGIS-Projekt
+    * `Tuple[str, Dict[str, str]]`: 
+        * An Position 0 des `tuple`: Der Name des Selektors, aus dem der Name des 
+        Print-Layouts ausgelesen werden soll
+        * An Position 1 des `tuple`: Ein Mapping zwischen den Optionen des Selektors
+        und den entsprechenden Namen des Print-Layouts.
+        * Beispiel: `print_layout=("Kartendarstellung", {"extern": "ÖV-Überblick Gebiet 
+        [extern]", "intern": "ÖV-Überblick Gebiet [intern]", "reduziert": "ÖV-Überblick
+        Gebiet [reduziert]"})`
 
 Beispiel:
 ```python

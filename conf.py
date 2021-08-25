@@ -177,30 +177,30 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 "Haltestellen",
                 [
                     SelectorSimple(
-                    "Haltestellen (wenn keine ÖV-Linie ausgewählt wurde)",
-                    ["Alle", "Keine"],
-                    st.radio,
-                    depends_on_selectors={
-                        "Linien in der Gemeinde": [],
-                        "Linien im Bezirk": [],
-                        "Linien in Ausschreibungsregion": [],
-                        "Linien im Bundesland": [],
-                    },
-                    label_ui="Haltestellen",
-                ),
-                SelectorSimple(
-                    "Haltestellen (wenn eine oder mehrere ÖV-Linien ausgewählt wurden)",
-                    ["Alle", "Bediente Haltestellen", "Keine"],
-                    st.radio,
-                    depends_on_selectors=[
-                        "Linien in der Gemeinde",
-                        "Linien im Bezirk",
-                        "Linien in Ausschreibungsregion",
-                        "Linien im Bundesland",
-                    ],
-                    label_ui="Haltestellen",
-                ),
-            ],
+                        "Haltestellen (wenn keine ÖV-Linie ausgewählt wurde)",
+                        ["Alle", "Keine"],
+                        st.radio,
+                        depends_on_selectors={
+                            "Linien in der Gemeinde": [],
+                            "Linien im Bezirk": [],
+                            "Linien in Ausschreibungsregion": [],
+                            "Linien im Bundesland": [],
+                        },
+                        label_ui="Haltestellen",
+                    ),
+                    SelectorSimple(
+                        "Haltestellen (wenn eine oder mehrere ÖV-Linien ausgewählt wurden)",
+                        ["Alle", "Bediente Haltestellen", "Keine"],
+                        st.radio,
+                        depends_on_selectors=[
+                            "Linien in der Gemeinde",
+                            "Linien im Bezirk",
+                            "Linien in Ausschreibungsregion",
+                            "Linien im Bundesland",
+                        ],
+                        label_ui="Haltestellen",
+                    ),
+                ],
             ),
             ############################################################################
             # Sonstige Objekte
@@ -332,8 +332,15 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 exclude_from_filename=True,
             ),
         ],
-        # print_layout="ÖV-Überblick Gebiet",
-        print_layout="a3q_vor",
+        # print_layout="ÖV-Überblick Gebiet [extern]",
+        print_layout=(
+            "Kartendarstellung",
+            {
+                "extern": "ÖV-Überblick Gebiet [extern]",
+                "intern": "ÖV-Überblick Gebiet [intern]",
+                "reduziert": "ÖV-Überblick Gebiet [reduziert]",
+            },
+        ),
     ),
     "ÖV-Überblick Linie": MapType(
         name="ÖV-Überblick Linie",
