@@ -503,26 +503,4 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         ],
         print_layout="ÖV-Überblick Haltestelle",
     )
-    # "Test": MapType(
-    #     name="Test",
-    #     description="Hier kann man alles mögliche testen.",
-    #     ui_elements=[
-    #         SelectorSimple("Layout", ["A", "B"], st.radio),
-    #         SelectorSimple("Ebene", ["Gemeinde", "Bezirk"], st.selectbox),
-    #         SelectorSQL(
-    #             "Gemeinde",
-    #             "select distinct gem_name from gem",
-    #             st.selectbox,
-    #             no_value_selected_text="...???...",
-    #             depends_on_selectors={"Ebene": "Gemeinde", "Layout": "A"},
-    #         ),
-    #         SelectorSQL(
-    #             "Bezirk",
-    #             "select distinct bez_name from bez",
-    #             st.selectbox,
-    #             depends_on_selectors={"Ebene": "Bezirk"},
-    #         ),
-    #     ],
-    #     print_layout="test_layout",
-    # ),
 }
