@@ -214,7 +214,7 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             (st.write, "## Layout"),
             SelectorSimple(
                 "Kartendarstellung",
-                ["extern", "intern", "reduziert"],
+                ["extern", "intern"],
                 st.radio,
                 widget_args={
                     "help": "Die Kartendarstellung bestimmt, welche Kartenelemente (z.B. Logos, Legenden) in welcher Form angezeigt werden."
@@ -332,13 +332,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 exclude_from_filename=True,
             ),
         ],
-        # print_layout="ÖV-Überblick Gebiet [extern]",
         print_layout=(
             "Kartendarstellung",
             {
                 "extern": "ÖV-Überblick Gebiet [extern]",
                 "intern": "ÖV-Überblick Gebiet [intern]",
-                "reduziert": "ÖV-Überblick Gebiet [reduziert]",
             },
         ),
     ),
@@ -349,6 +347,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
         "abgrenzbar nach Tagestyp und Zeitfenster. Sollen in einer Karte mehrere "
         "Linien angezeigt werden, bitte den Kartentyp 'ÖV-Überblick Gebiet' wählen.",
         ui_elements=[
+            ############################################################################
+            # Grundeinstellungen
+            ############################################################################
             (st.write, "## Grundeinstellungen"),
             (
                 st.write,
@@ -383,6 +384,9 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Linie auswählen ...",
                 # depends_on_selectors=["Betriebszweig ID"],
             ),
+            ############################################################################
+            # Kartenelemente
+            ############################################################################
             (st.write, "## Kartenelemente"),
             # SelectorSimple(
             #     "Linie oder Kurs",
@@ -392,10 +396,11 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             (st.write, "### Sonstige Objekte"),
             SelectorSimple("Schulen", [], st.checkbox),
             SelectorSimple("Siedlungskerne", [], st.checkbox),
+            ############################################################################
+            # Layout
+            ############################################################################
             (st.write, "## Layout"),
-            SelectorSimple(
-                "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
-            ),
+            SelectorSimple("Kartendarstellung", ["extern", "intern"], st.radio),
             SelectorSimple(
                 "Grundkarte",
                 [
@@ -407,7 +412,13 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
         ],
-        print_layout="ÖV-Überblick Gebiet",
+        print_layout=(
+            "Kartendarstellung",
+            {
+                "extern": "ÖV-Überblick Linie [extern]",
+                "intern": "ÖV-Überblick Linie [intern]",
+            },
+        ),
     ),
     "ÖV-Überblick Haltestelle": MapType(
         name="ÖV-Überblick Haltestelle",
@@ -418,7 +429,8 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             (st.write, "## Grundeinstellungen"),
             (
                 st.write,
-                "Hier kann festgelegt werden, welche Haltestelle in der Karte dargestellt werden soll.",
+                "Hier kann festgelegt werden, welche Haltestelle in der Karte "
+                "dargestellt werden soll.",
             ),
             # SelectorSimple(
             #     "Auswahlmethode",
@@ -484,23 +496,28 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
             ),
             SelectorSimple("Schulen", [], st.checkbox),
             SelectorSimple("Siedlungskerne", [], st.checkbox),
+            ############################################################################
+            # Layout
+            ############################################################################
             (st.write, "## Layout"),
-            SelectorSimple(
-                "Kartendarstellung", ["extern", "intern", "reduziert"], st.radio
-            ),
+            SelectorSimple("Kartendarstellung", ["extern", "intern"], st.radio),
             SelectorSimple(
                 "Grundkarte",
                 [
-                    "basemap.at Vector",
-                    "basemap.at Standard",
-                    "basemap.at Grau",
-                    "basemap.at Stumm Grau",
+                    "basemap.at",
+                    "Luftbild",
                     "OpenStreetMap",
                 ],
                 st.radio,
             ),
             SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
         ],
-        print_layout="ÖV-Überblick Haltestelle",
-    )
+        print_layout=(
+            "Kartendarstellung",
+            {
+                "extern": "ÖV-Überblick Haltestelle [extern]",
+                "intern": "ÖV-Überblick Haltestelle [intern]",
+            },
+        ),
+    ),
 }

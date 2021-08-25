@@ -93,4 +93,4 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
 
     def export_layout(self):
         self._export_print_layout(self.step_data.layout)
-        self.step_data.project.write("/home/automaps/automaps_qgis/ueberblick.qgz")
+        # self.step_data.project.write("/home/automaps/automaps_qgis/ueberblick.qgz")
