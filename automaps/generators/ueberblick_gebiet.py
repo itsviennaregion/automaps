@@ -81,11 +81,9 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
         hst_filter = "stopid is not null"
         if self.data["Haltestellen"] == "Bediente Haltestellen":
             hst_filter = f"stopid in {self.data['Haltestellenfokus']}"
-        elif self.data['Haltestellen'] == "Keine":
+        elif self.data["Haltestellen"] == "Keine":
             hst_filter = "stopid = 0"
-        self._set_map_layer_filter_expression(
-            "Haltestellen", hst_filter
-        )
+        self._set_map_layer_filter_expression("Haltestellen", hst_filter)
         self.step_data.hst_layer_name = "Haltestellenfokus"
 
     def set_extent(self):
