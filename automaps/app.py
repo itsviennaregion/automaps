@@ -30,6 +30,8 @@ class AutoMaps:
                 automaps_path,
             ]
         )
-
-        frontend_stdout, frontend_stderr = frontend.communicate()
-        backend_stdout, backend_stderr = backend.communicate()
+        try:
+            frontend_stdout, frontend_stderr = frontend.communicate()
+            backend_stdout, backend_stderr = backend.communicate()
+        except KeyboardInterrupt:
+            pass
