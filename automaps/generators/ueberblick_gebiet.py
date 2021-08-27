@@ -39,27 +39,27 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
     def filter_layers(self):
         if self.data["Gemeinde"]:
             self._set_map_layer_filter_expression(
-                "bev_gemeinden", f"pg = '{self.data['Gemeinde']}'"
+                "Gemeinde", f"pg = '{self.data['Gemeinde']}'"
             )
-            self.step_data.gebiets_layer_name = "bev_gemeinden"
+            self.step_data.gebiets_layer_name = "Gemeinde"
             self.step_data.all_options_name = "Linien in der Gemeinde OPTIONS"
         elif self.data["Bezirk"]:
             self._set_map_layer_filter_expression(
-                "bev_bezirke", f"pb = '{self.data['Bezirk']}'"
+                "Bezirk", f"pb = '{self.data['Bezirk']}'"
             )
-            self.step_data.gebiets_layer_name = "bev_bezirke"
+            self.step_data.gebiets_layer_name = "Bezirk"
             self.step_data.all_options_name = "Linien im Bezirk OPTIONS"
         elif self.data["Bundesland"]:
             self._set_map_layer_filter_expression(
-                "bev_bundeslaender", f"bl = '{self.data['Bundesland']}'"
+                "Bundesland", f"bl = '{self.data['Bundesland']}'"
             )
-            self.step_data.gebiets_layer_name = "bev_bundeslaender"
+            self.step_data.gebiets_layer_name = "Bundesland"
             self.step_data.all_options_name = "Linien im Bundesland OPTIONS"
         elif self.data["Ausschreibungsregion"]:
             self._set_map_layer_filter_expression(
-                "au_regionen_polygon", f"bl = '{self.data['Ausschreibungsregion']}'"
+                "Ausschreibungsregion", f"bl = '{self.data['Ausschreibungsregion']}'"
             )
-            self.step_data.gebiets_layer_name = "au_regionen_polygon"
+            self.step_data.gebiets_layer_name = "Ausschreibungsregion"
             self.step_data.all_options_name = "Linien in Ausschreibungsregion OPTIONS"
         else:
             raise ValueError
@@ -75,8 +75,13 @@ class MapGeneratorUeberblickGebiet(MapGenerator):
         self._set_map_layer_filter_expression(
             "Linien", f"lineefa in ({self.data['Linienfokus']})"
         )
+        self._set_map_layer_visibility("Linien", True)
+        self._set_map_layer_visibility("Haltestellen", True)
 
         self._set_map_layer_visibility(self.data["Grundkarte"], True)
+
+        self._set_map_layer_visibility("Schulen", self.data["Schulen"])
+        self._set_map_layer_visibility("Siedlungskerne", self.data["Siedlungskerne"])
 
         hst_filter = "stopid is not null"
         if self.data["Haltestellen"] == "Bediente Haltestellen":

@@ -111,12 +111,21 @@ class MapGenerator(ABC):
             node.setItemVisibilityChecked(is_visible)
 
     def _zoom_map_to_layer_extent(
-        self, map_name: str, layer: QgsMapLayer, buffer: float = 200.0
+        self, map_name: str, layer: QgsMapLayer, buffer: float=200.0
     ):
         buffered_layer_extent = layer.extent().buffered(
             buffer
         )  # NL: Unbuffered extent ends at the maps corner. Gives the map more space.
         self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
+
+    def _scale_map_to_layer_extent(
+        self, map_name: str, layer: QgsMapLayer, buffer: float=200.0, scale: float=1000.0
+    ):
+        buffered_layer_extent = layer.extent().buffered(
+            buffer
+        )
+        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
+        self.step_data.layout.itemById(map_name).setScale(scale)
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename, self.data.get("Dateiformat", "pdf"))

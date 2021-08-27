@@ -411,6 +411,36 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 st.radio,
             ),
             SelectorSimple("Dateiformat", ["PDF", "PNG", "SVG"], st.radio),
+            ############################################################################
+            # Haltestellenfokus
+            ############################################################################
+            SelectorSQL(
+                "Haltestellenfokus",
+                """
+                select distinct
+                    hst_id, max(geom), array_agg(lin_id)
+                from (
+                select
+                    fromstopid hst_id,
+                    lineefa lin_id,
+                    st_startpoint(geom) geom
+                from ptlinks_ptl_polyline
+                union
+                select
+                    tostopid hst_id,
+                    lineefa lin_id,
+                    st_endpoint(geom) geom
+                from ptlinks_ptl_polyline
+                ) unioned
+                where
+                    lin_id in ('{{ data["Linie"] if data["Linie"] }}')
+                group by
+                    hst_id""",
+                None,
+                depends_on_selectors=["Linie"],
+                provide_raw_options=False,
+                exclude_from_filename=True,
+            ),
         ],
         print_layout=(
             "Kartendarstellung",
@@ -456,12 +486,14 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Linie auswählen (optional) ...",
                 label_ui="nach Linien Filtern (optional)",
                 optional=True,
+                exclude_from_filename=True,
             ),
             SelectorSQL(
                 "Bezirk ID",
                 """select id from bev_bezirke where pb = '{{ data["Bezirk"] }}'""",
                 None,
                 depends_on_selectors=["Bezirk"],
+                exclude_from_filename=True,
             ),
             SelectorSQL(
                 "Haltestellenname",
@@ -476,24 +508,24 @@ MAPTYPES_AVAIL: Dict[str, MapType] = {
                 no_value_selected_text="Haltestelle auswählen ...",
             ),
             (st.write, "## Kartenelemente"),
-            SelectorSQL(
-                "Linien an Haltestelle",
-                """
-                select pubdivalinnam 
-                from stops_ptlinks
-                where haltestelle_name = '{{ data["Haltestellenname"] }}'""",
-                st.multiselect,
-                depends_on_selectors=["Haltestellenname"],
-                additional_values=["ALLE"],
-                widget_args={"default": ["ALLE"]},
-            ),
+            # SelectorSQL(
+            #     "Linien an Haltestelle",
+            #     """
+            #     select pubdivalinnam 
+            #     from stops_ptlinks
+            #     where haltestelle_name = '{{ data["Haltestellenname"] }}'""",
+            #     st.multiselect,
+            #     depends_on_selectors=["Haltestellenname"],
+            #     additional_values=["ALLE"],
+            #     widget_args={"default": ["ALLE"]},
+            # ),
             (st.write, "### Sonstige Objekte"),
-            SelectorSimple(
-                "Andere Haltestellen",
-                [],
-                st.checkbox,
-                label_ui="Andere Haltestellen",
-            ),
+            # SelectorSimple(
+            #     "Andere Haltestellen",
+            #     [],
+            #     st.checkbox,
+            #     label_ui="Andere Haltestellen",
+            # ),
             SelectorSimple("Schulen", [], st.checkbox),
             SelectorSimple("Siedlungskerne", [], st.checkbox),
             ############################################################################
