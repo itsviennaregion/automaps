@@ -6,15 +6,17 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.engine.url import URL
 import streamlit as st
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db.ini")
+import automapsconf
+
+# CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db.ini")
 
 
-def load_config(config_path: str) -> ConfigParser:
-    conf = ConfigParser()
-    conf.read(config_path)
-    return conf
+# def load_config(config_path: str) -> ConfigParser:
+#     conf = ConfigParser()
+#     conf.read(config_path)
+#     return conf
 
 
 @st.cache(allow_output_mutation=True)
 def get_engine() -> Engine:
-    return create_engine(URL(**dict(load_config(CONFIG_PATH)["db"])))
+    return create_engine(URL(**automapsconf.db))
