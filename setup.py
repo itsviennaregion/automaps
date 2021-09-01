@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.2",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
-    description="Making map with streamlit and QGIS",
+    description="Making maps with streamlit and QGIS",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://gitlab.com/its-vienna-region/digilab/automatisierte-karten",
