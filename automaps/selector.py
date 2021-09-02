@@ -79,6 +79,7 @@ class SelectorSQL(BaseSelector):
         label_ui: Optional[str] = None,
         optional: bool = False,
         exclude_from_filename: bool = False,
+        extract_first_option: bool = False
     ):
         self.label = label
         self.sql = sql
@@ -92,6 +93,7 @@ class SelectorSQL(BaseSelector):
         self.label_ui = label_ui
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
+        self.extract_first_option = extract_first_option
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
@@ -114,6 +116,8 @@ class SelectorSQL(BaseSelector):
         else:
             if len(self.options) == 0:
                 return None
+            elif self.extract_first_option:
+                return self.options[0]
             else:
                 return self.options
 
