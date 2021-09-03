@@ -4,6 +4,7 @@ import sqlalchemy.exc
 
 from automaps.selector import SelectorSQL
 
+
 def test_options(mock_engine):
     sel = SelectorSQL("sel", "select distinct name from cities")
     assert sel.options == ["Achau", "Traiskirchen"]
@@ -33,6 +34,7 @@ def test_options(mock_engine):
         "Traiskirchen",
     ]
 
+
 def test_options_flawed(mock_engine):
     sel = SelectorSQL("sel", "select name from cities where name = 'Berlin'")
     assert sel.options == []
@@ -52,6 +54,8 @@ def test_widget_st(mock_engine):
         widget_args={"index": 1},
     )
     assert sel.widget == "Traiskirchen"
+    sel = SelectorSQL("sel", "select distinct name from cities", st.multiselect)
+    assert sel.widget == []
 
 
 def test_widget_none(mock_engine):
