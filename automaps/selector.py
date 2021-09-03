@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import pandas as pd
 import streamlit as st
 
-from automaps.db import get_engine
+import automaps.db
 
 
 class BaseSelector(ABC):
@@ -79,7 +79,7 @@ class SelectorSQL(BaseSelector):
         label_ui: Optional[str] = None,
         optional: bool = False,
         exclude_from_filename: bool = False,
-        extract_first_option: bool = False
+        extract_first_option: bool = False,
     ):
         self.label = label
         self.sql = sql
@@ -124,7 +124,7 @@ class SelectorSQL(BaseSelector):
 
 @st.cache(show_spinner=False)
 def read_options_sql(sql) -> Iterable[Any]:
-    return sorted(pd.read_sql(sql, get_engine()).iloc[:, 0])
+    return sorted(pd.read_sql(sql, automaps.db.get_engine()).iloc[:, 0])
 
 
 class MultiSelector:
