@@ -2,9 +2,13 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 from copy import copy
 import os
-from typing import Any, OrderedDict
+from typing import Any, List, OrderedDict, Union
 
-from qgis.core import QgsMapLayer, QgsPrintLayout, QgsProject
+from qgis.core import (
+    QgsMapLayer,
+    QgsPrintLayout,
+    QgsProject,
+)
 
 from automaps._qgis.export import export_layout
 from automaps._qgis.layout import get_layout_by_name
@@ -84,6 +88,21 @@ class MapGenerator(ABC):
     def _get_project(self) -> QgsProject:
         return get_project()
 
+    def _init_layers(self):
+        """Initializes all layers.
+
+        This includes:
+           * removing all filter expressions (if applicable)
+           * setting all layers to invisible"""
+        for lyr in self._get_all_map_layers():
+            try:
+                lyr.setSubsetString("")
+            except AttributeError:
+                pass
+        for node in self.step_data.project.layerTreeRoot().children():
+            if isinstance(node, QgsMapLayer):
+                node.setItemVisibilityChecked(False)
+
     def _set_project_variable(self, var_name: str, var_value: Any):
         set_project_variable(self.step_data.project, var_name, var_value)  # type: ignore
 
@@ -95,6 +114,10 @@ class MapGenerator(ABC):
         assert len(layers) == 1
         return layers[0]
 
+    def _get_all_map_layers(self) -> List[QgsMapLayer]:
+        layers = list(self.step_data.project.mapLayers().values())  # type: ignore
+        return layers
+
     def _set_map_layer_filter_expression(self, layer_name: str, filter_expr: str):
         lyr = self._get_map_layer(layer_name)
         lyr.setSubsetString(filter_expr.replace("[", "(").replace("]", ")"))
@@ -103,12 +126,17 @@ class MapGenerator(ABC):
         lyr = self._get_map_layer(layer_name)
         lyr.setSubsetString("")
 
-    def _set_map_layer_visibility(self, layer_name: str, is_visible: bool):
-        layer = self._get_map_layer(layer_name)
-        root = self.step_data.project.layerTreeRoot()  # type: ignore
-        node = root.findLayer(layer.id())
-        if node:
-            node.setItemVisibilityChecked(is_visible)
+    def _set_map_layer_visibility(
+        self, layer_names: Union[str, List[str]], is_visible: bool
+    ):
+        if isinstance(layer_names, str):
+            layer_names = [layer_names]
+        for layer_name in layer_names:
+            layer = self._get_map_layer(layer_name)
+            root = self.step_data.project.layerTreeRoot()  # type: ignore
+            node = root.findLayer(layer.id())
+            if node:
+                node.setItemVisibilityChecked(is_visible)
 
     def _zoom_map_to_layer_extent(
         self, map_name: str, layer: QgsMapLayer, buffer: float = 200.0
