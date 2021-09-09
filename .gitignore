@@ -2,6 +2,7 @@ db.ini
 conf_local.py
 .vscode/
 scratch.py
+tests/cov_html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
