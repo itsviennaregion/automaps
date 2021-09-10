@@ -7,6 +7,10 @@ from automaps.generators.base import StepData
 import automapsconf
 
 
+def _get_generators():
+    return {x[0]: x[1].map_generator for x in automapsconf.MAPTYPES_AVAIL.items()}
+
+
 def start_server():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
@@ -16,14 +20,14 @@ def start_server():
         while True:
             message = socket.recv_json()
             if "init" in message.keys():
-                generator = automapsconf.GENERATORS[message["init"]](
+                generator = _get_generators()[message["init"]](
                     message, automapsconf.BASEPATH_FILESERVER, "", step_data
                 )
                 steps = generator.steps
                 init_message = {"steps": list(steps.keys())}
                 socket.send_json(init_message)
             else:
-                generator = automapsconf.GENERATORS[message["maptype_dict_key"]](
+                generator = _get_generators()[message["maptype_dict_key"]](
                     message,
                     automapsconf.BASEPATH_FILESERVER,
                     message["print_layout"],

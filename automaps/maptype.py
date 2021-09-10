@@ -3,6 +3,7 @@ from typing import Any, Callable, Dict, Iterable, Tuple, Union
 from jinja2 import Template
 import streamlit as st
 
+from automaps.generators.base import MapGenerator
 from automaps.selector import BaseSelector, MultiSelector, SelectorSQL
 
 
@@ -17,11 +18,13 @@ class MapType:
         description: str,
         ui_elements: UIElement,
         print_layout: Union[str, Tuple[str, Dict[str, str]]],
+        map_generator: MapGenerator,
     ):
         self.name = name
         self.description = description
         self.ui_elements = ui_elements
         self.print_layout = print_layout
+        self.map_generator = map_generator
 
     @property
     def selector_values(self) -> Dict[str, Any]:
