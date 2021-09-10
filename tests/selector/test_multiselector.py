@@ -1,5 +1,6 @@
 from automaps.selector import MultiSelector, SelectorSimple, SelectorSQL
 
+
 def test_multiselector():
     sel_simple = SelectorSimple("sel_simple", [500, 530, 42])
     sel_sql = SelectorSQL("sel_sql", "select distinct name from cities")
