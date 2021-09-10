@@ -1,5 +1,6 @@
 import streamlit as st
 
+from automaps.generators.base import MapGenerator
 from automaps.maptype import MapType
 from automaps.selector import MultiSelector, SelectorSimple, SelectorSQL
 
@@ -13,6 +14,7 @@ def test_no_streamlit_widgets(mock_engine):
             SelectorSQL("sel_sql", "select distinct name from cities"),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_simple": [500, 530, 42],
@@ -30,6 +32,7 @@ def test_with_streamlit_widgets(mock_engine):
             SelectorSQL("sel_sql", "select distinct name from cities", st.multiselect),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_simple": 500,
@@ -60,6 +63,7 @@ def test_multiselector(mock_engine):
             )
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_multi": ["Achau", "Traiskirchen"],
@@ -81,6 +85,7 @@ def test_dependencies(mock_engine):
             ),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_sql": [],
@@ -106,6 +111,7 @@ def test_dependencies(mock_engine):
             ),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_sql": ["Achau"],
@@ -130,6 +136,7 @@ def test_dependencies(mock_engine):
             ),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_simple": None,
@@ -154,6 +161,7 @@ def test_dependencies(mock_engine):
             ),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_sql": ["Achau"],
@@ -178,6 +186,7 @@ def test_dependencies(mock_engine):
             ),
         ],
         "my_print_layout",
+        MapGenerator,
     )
     assert maptype.selector_values == {
         "sel_sql": ["Traiskirchen"],
