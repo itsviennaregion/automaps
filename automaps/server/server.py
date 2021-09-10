@@ -8,7 +8,7 @@ import automapsconf
 
 
 def _get_generators():
-    return {x[0]: x[1].map_generator for x in automapsconf.MAPTYPES_AVAIL.items()}
+    return {x.name: x.map_generator for x in automapsconf.MAPTYPES_AVAIL}
 
 
 def start_server():

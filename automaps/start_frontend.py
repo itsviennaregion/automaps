@@ -27,15 +27,25 @@ if not DOWNLOADS_PATH.is_dir():
     )
 
 
+def _get_maptype_names():
+    return [x.name for x in MAPTYPES_AVAIL]
+
+
+def _get_maptype(name: str):
+    for maptype in MAPTYPES_AVAIL:
+        if name == maptype.name:
+            return maptype
+
+
 def start_frontend():
     st.set_page_config(page_title="VOR Karten")
     _hide_footer()
 
     # Show available map types and get selected value
-    maptype_dict_key = st.sidebar.radio("Kartentyp", list(MAPTYPES_AVAIL.keys()))
+    maptype_dict_key = st.sidebar.radio("Kartentyp", _get_maptype_names())
 
     # Instantiate MapType object
-    maptype = MAPTYPES_AVAIL[maptype_dict_key]
+    maptype = _get_maptype(maptype_dict_key)
 
     # Show information about the selected map type
     st.write(f"# {maptype.name}")
