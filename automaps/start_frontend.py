@@ -15,6 +15,7 @@ import streamlit as st
 
 from automaps.fileserver import download_button, download_link
 from automaps.client.client import ask_server_for_steps, send_task_to_server
+import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
 STREAMLIT_STATIC_PATH = pathlib.Path(st.__path__[0]) / "static"
@@ -39,7 +40,8 @@ def _get_maptype(name: str):
 
 def start_frontend():
     st.set_page_config(page_title="VOR Karten")
-    _hide_footer()
+    _show_logo()
+    _add_custom_html()
 
     # Show available map types and get selected value
     maptype_dict_key = st.sidebar.radio("Kartentyp", _get_maptype_names())
@@ -108,14 +110,14 @@ def _show_error_message(exception: Exception):
     st.error(tb)
 
 
-def _hide_footer():
-    custom_css = """
-        <style>
-            footer {
-                visibility: hidden;
-            }
-        </style> """
-    st.markdown(custom_css, unsafe_allow_html=True)
+def _show_logo():
+    if hasattr(automapsconf, "LOGO_PATH") and automapsconf.LOGO_PATH:
+        st.sidebar.image(automapsconf.LOGO_PATH)
+        
+
+def _add_custom_html():
+    if hasattr(automapsconf, "CUSTOM_HTML") and automapsconf.CUSTOM_HTML:
+        st.markdown(automapsconf.CUSTOM_HTML, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
