@@ -39,8 +39,9 @@ def _get_maptype(name: str):
 
 
 def start_frontend():
-    st.set_page_config(page_title="VOR Karten")
+    _set_page_title()
     _show_logo()
+    _show_project_title()
     _add_custom_html()
 
     # Show available map types and get selected value
@@ -84,12 +85,9 @@ def start_frontend():
 
             except Exception as e:
                 _show_error_message(e)
-
-    # Show selected values for all widgets (for debugging)
-    if st.checkbox("Debug"):
-        st.write("## Debug Info")
-        for k, v in selector_values.items():
-            st.write(f"{k}: __{v}__")
+    
+    _show_debug_info(selector_values)
+    
 
 
 def _show_download_link(filename: str):
@@ -113,11 +111,31 @@ def _show_error_message(exception: Exception):
 def _show_logo():
     if hasattr(automapsconf, "LOGO_PATH") and automapsconf.LOGO_PATH:
         st.sidebar.image(automapsconf.LOGO_PATH)
+
+
+def _set_page_title():
+    if hasattr(automapsconf, "PROJECT_TITLE") and automapsconf.PROJECT_TITLE:
+        st.set_page_config(page_title=automapsconf.PROJECT_TITLE)
+
+
+def _show_project_title():
+    if hasattr(automapsconf, "PROJECT_TITLE") and automapsconf.PROJECT_TITLE:
+        st.sidebar.markdown(f"# {automapsconf.PROJECT_TITLE}")
+        st.sidebar.markdown("#")
         
 
 def _add_custom_html():
     if hasattr(automapsconf, "CUSTOM_HTML") and automapsconf.CUSTOM_HTML:
         st.markdown(automapsconf.CUSTOM_HTML, unsafe_allow_html=True)
+
+
+def _show_debug_info(selector_values):
+    if hasattr(automapsconf, "SHOW_DEBUG_INFO") and automapsconf.SHOW_DEBUG_INFO:
+        # Show selected values for all widgets (for debugging)
+        if st.checkbox("Debug"):
+            st.write("## Debug Info")
+            for k, v in selector_values.items():
+                st.write(f"{k}: __{v}__")
 
 
 if __name__ == "__main__":
