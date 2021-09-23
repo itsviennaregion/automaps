@@ -87,11 +87,6 @@ def start_frontend():
                 _show_error_message(e)
     
     _show_debug_info(selector_values)
-    
-
-
-def _show_download_link(filename: str):
-    st.markdown(download_link(filename, "Download"), unsafe_allow_html=True)
 
 
 def _show_download_button(filename: str):
