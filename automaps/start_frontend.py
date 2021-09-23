@@ -15,7 +15,7 @@ import streamlit as st
 
 from automaps.fileserver import download_button, download_link
 from automaps.client.client import ask_server_for_steps, send_task_to_server
-from automaps.confutils import has_config_option
+from automaps.confutils import get_config_value, has_config_option
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
@@ -24,8 +24,8 @@ DOWNLOADS_PATH = STREAMLIT_STATIC_PATH / "downloads"
 if not DOWNLOADS_PATH.is_dir():
     DOWNLOADS_PATH.mkdir()
     print(
-        f"Downloadpfad '{DOWNLOADS_PATH}' wurde erstellt. Eventuell müssen noch die "
-        f"Berechtigungen angepasst werden (z.B. sudo chmod -R a+w {DOWNLOADS_PATH})."
+        f"Download path '{DOWNLOADS_PATH}' has been created. Maybe you need to "
+        f"change the permissions (e.g. sudo chmod -R a+w {DOWNLOADS_PATH})."
     )
 
 
@@ -46,7 +46,9 @@ def start_frontend():
     _add_custom_html()
 
     # Show available map types and get selected value
-    maptype_dict_key = st.sidebar.radio("Kartentyp", _get_maptype_names())
+    maptype_dict_key = st.sidebar.radio(
+        get_config_value("MAPTYPE_TEXT", "Map type"), _get_maptype_names()
+    )
 
     # Instantiate MapType object
     maptype = _get_maptype(maptype_dict_key)
@@ -62,16 +64,29 @@ def start_frontend():
     # Create map
     if st.button("Karte erstellen"):
         if selector_values.get("has_init_values", False):
-            st.info("Bitte alle notwendigen Kartenattribute definieren!")
+            st.info(
+                get_config_value(
+                    "MISSING_ATTRIBUTES_TEXT",
+                    "Please define all required map attributes!",
+                )
+            )
         else:
             try:
                 progress_bar = st.progress(0)
                 progress = 0
-                with st.spinner(f"Warte auf Kartenserver ..."):
+                with st.spinner(
+                    get_config_value(
+                        "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
+                    )
+                ):
                     steps = ask_server_for_steps(maptype_dict_key)
 
                 for step in steps:
-                    with st.spinner(f"Erstelle Karte _{maptype.name}_ ({step})"):
+                    with st.spinner(
+                        get_config_value(
+                            "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
+                        ).format(maptype_name=maptype.name, step=step)
+                    ):
                         step_message = send_task_to_server(
                             maptype_dict_key,
                             selector_values,
@@ -81,12 +96,16 @@ def start_frontend():
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
                 progress_bar.progress(1.0)
-                st.success(f"Karte _{maptype.name}_ fertig")
+                st.success(
+                    get_config_value(
+                        "MAP_READY_TEXT", "Map _{maptype_name}_ ready"
+                    ).format(maptype_name=maptype.name)
+                )
                 _show_download_button(step_message["filename"])
 
             except Exception as e:
                 _show_error_message(e)
-    
+
     _show_debug_info(selector_values)
 
 
@@ -99,7 +118,7 @@ def _show_download_button(filename: str):
 
 
 def _show_error_message(exception: Exception):
-    st.error(f"Leider gab es einen Fehler: {exception}")
+    st.error(f"Sorry, there has been an error: {exception}")
     tb = traceback.format_exc()
     st.error(tb)
 
@@ -118,7 +137,7 @@ def _show_project_title():
     if has_config_option("PROJECT_TITLE"):
         st.sidebar.markdown(f"# {automapsconf.PROJECT_TITLE}")
         st.sidebar.markdown("#")
-        
+
 
 def _add_custom_html():
     if has_config_option("CUSTOM_HTML"):
