@@ -3,6 +3,8 @@ import os
 import uuid
 import re
 
+import automapsconf
+
 
 def download_link(download_filepath, link_text):
     filename = os.path.basename(download_filepath)
@@ -15,36 +17,10 @@ def download_button(download_filepath, button_text):
     button_uuid = str(uuid.uuid4()).replace("-", "")
     button_id = re.sub(r"\d+", "", button_uuid)
 
-    custom_css = f"""
-        <style>
-            #{button_id} {{
-                background-color: #99cc00;
-                color: rgba(0,0,0,0.87);
-                border: 0;
-                padding: 0.25em 0.38em;
-                position: relative;
-                text-decoration: none;
-                border-radius: 0.25rem;
-            }}
-            #{button_id}:hover {{
-                background-color: #649b00;
-                color: rgba(0,0,0,0.87);
-                border: 0;
-                border-radius: 0.25rem;
-            }}
-            #{button_id}:active {{
-                background-color: #99cc00;
-                color: rgba(0,0,0,0.87);
-                border: 0;
-                border-radius: 0.25rem;
-                }}
-            #{button_id}:focus:not(:active) {{
-                background-color: #99cc00;
-                color: rgba(0,0,0,0.87);
-                border: 0;
-                border-radius: 0.25rem;
-                }}
-        </style> """
+    if hasattr(automapsconf, "DOWNLOAD_BUTTON_STYLE") and automapsconf.DOWNLOAD_BUTTON_STYLE:
+        custom_css = automapsconf.DOWNLOAD_BUTTON_STYLE.format(button_id=button_id)
+    else:
+        custom_css = ""
 
     dl_link = (
         custom_css
