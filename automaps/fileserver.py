@@ -3,6 +3,7 @@ import os
 import uuid
 import re
 
+from automaps.confutils import has_config_option
 import automapsconf
 
 
@@ -17,7 +18,7 @@ def download_button(download_filepath, button_text):
     button_uuid = str(uuid.uuid4()).replace("-", "")
     button_id = re.sub(r"\d+", "", button_uuid)
 
-    if hasattr(automapsconf, "DOWNLOAD_BUTTON_STYLE") and automapsconf.DOWNLOAD_BUTTON_STYLE:
+    if has_config_option("DOWNLOAD_BUTTON_STYLE"):
         custom_css = automapsconf.DOWNLOAD_BUTTON_STYLE.format(button_id=button_id)
     else:
         custom_css = ""

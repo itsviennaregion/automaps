@@ -15,6 +15,7 @@ import streamlit as st
 
 from automaps.fileserver import download_button, download_link
 from automaps.client.client import ask_server_for_steps, send_task_to_server
+from automaps.confutils import has_config_option
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
@@ -104,28 +105,28 @@ def _show_error_message(exception: Exception):
 
 
 def _show_logo():
-    if hasattr(automapsconf, "LOGO_PATH") and automapsconf.LOGO_PATH:
+    if has_config_option("LOGO_PATH"):
         st.sidebar.image(automapsconf.LOGO_PATH)
 
 
 def _set_page_title():
-    if hasattr(automapsconf, "PROJECT_TITLE") and automapsconf.PROJECT_TITLE:
+    if has_config_option("PROJECT_TITLE"):
         st.set_page_config(page_title=automapsconf.PROJECT_TITLE)
 
 
 def _show_project_title():
-    if hasattr(automapsconf, "PROJECT_TITLE") and automapsconf.PROJECT_TITLE:
+    if has_config_option("PROJECT_TITLE"):
         st.sidebar.markdown(f"# {automapsconf.PROJECT_TITLE}")
         st.sidebar.markdown("#")
         
 
 def _add_custom_html():
-    if hasattr(automapsconf, "CUSTOM_HTML") and automapsconf.CUSTOM_HTML:
+    if has_config_option("CUSTOM_HTML"):
         st.markdown(automapsconf.CUSTOM_HTML, unsafe_allow_html=True)
 
 
 def _show_debug_info(selector_values):
-    if hasattr(automapsconf, "SHOW_DEBUG_INFO") and automapsconf.SHOW_DEBUG_INFO:
+    if has_config_option("SHOW_DEBUG_INFO"):
         # Show selected values for all widgets (for debugging)
         if st.checkbox("Debug"):
             st.write("## Debug Info")
