@@ -1,10 +1,57 @@
-import base64
 import os
+from pathlib import Path
+from typing import Iterable, List
 import uuid
 import re
+import time
 
 from automaps.confutils import has_config_option
 import automapsconf
+
+
+class DownloadPathJanitor:
+    def __init__(
+        self,
+        download_path: str,
+        max_seconds: int = 3600 * 8,
+        file_extensions: Iterable[str] = ["PDF", "PNG", "SVG"],
+    ):
+        """Deletes old files in download path.
+
+        Args:
+            download_path (str): Path to search for old files. Normally:
+                automapsconf.BASEPATH_FILESERVER
+            max_seconds (int, optional): Only files which are older than this value
+                (in seconds) get deleted. Defaults to 3600*8.
+            file_extensions (Iterable[str], optional): Only files with one of these
+                extensions get deleted. Defaults to ["PDF", "PNG", "SVG"].
+        """
+        self.path = Path(download_path)
+        assert self.path.stem == "downloads"
+        self.max_seconds = max_seconds
+        self.file_extensions = ["." + x.upper() for x in file_extensions]
+
+    def clean(self):
+        """Searches for old files in download path and deletes them."""
+        self._delete_files(self._find_old_files())
+
+    def _find_all_files(self):
+        return (
+            x for x in self.path.iterdir() if x.suffix.upper() in self.file_extensions
+        )
+
+    def _find_old_files(self):
+        now = time.time()
+        return [
+            x
+            for x in self._find_all_files()
+            if x.stat().st_mtime < now - self.max_seconds
+        ]
+
+    @staticmethod
+    def _delete_files(files: Iterable[Path]):
+        for file in files:
+            file.unlink()
 
 
 def download_link(download_filepath, link_text):

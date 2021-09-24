@@ -13,7 +13,7 @@ import traceback
 
 import streamlit as st
 
-from automaps.fileserver import download_button, download_link
+from automaps.fileserver import download_button, DownloadPathJanitor
 from automaps.client.client import ask_server_for_steps, send_task_to_server
 from automaps.confutils import get_config_value, has_config_option
 import automapsconf
@@ -40,6 +40,11 @@ def _get_maptype(name: str):
 
 
 def start_frontend():
+    # Delete old files in download path
+    j = DownloadPathJanitor(automapsconf.BASEPATH_FILESERVER)
+    j.clean()
+
+    # Add custom elements to UI
     _set_page_title()
     _show_logo()
     _show_project_title()
