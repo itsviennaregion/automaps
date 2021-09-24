@@ -14,7 +14,7 @@ def _get_generators():
 def start_server():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
-    socket.bind(f"tcp://*:{automapsconf.PORT}")
+    socket.bind(f"tcp://*:{automapsconf.PORT_MAP_SERVER}")
     step_data = StepData({})
     try:
         while True:

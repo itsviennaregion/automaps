@@ -3,7 +3,7 @@ from typing import List
 from automaps.maptype import MapType
 
 SHOW_DEBUG_INFO: bool
-PORT: int
+PORT_MAP_SERVER: int
 QGIS_INSTALLATION_PATH: str
 BASEPATH_FILESERVER: str
 LOGO_PATH: str
