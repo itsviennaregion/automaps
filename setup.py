@@ -1,13 +1,13 @@
 import setuptools
 
-from automaps import __version__
+# from automaps import __version__
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="automaps",
-    version=__version__,
+    version="0.9",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
     description="Making maps with streamlit and QGIS",
