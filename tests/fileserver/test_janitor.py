@@ -51,17 +51,17 @@ def test_old_files(tmp_path):
     tmp_path = prepare_tmp(tmp_path)
 
     j = DownloadPathJanitor(tmp_path.as_posix())
-    assert len(j._find_old_files()) == 40
+    assert len(list(j._find_old_files())) == 40
     assert all(x.suffix == ".pdf" for x in j._find_old_files())
 
     j = DownloadPathJanitor(tmp_path.as_posix(), max_seconds=3600 * 8)
-    assert len(j._find_old_files()) == 40
+    assert len(list(j._find_old_files())) == 40
 
     j = DownloadPathJanitor(tmp_path.as_posix(), max_seconds=0)
-    assert len(j._find_old_files()) == 48
+    assert len(list(j._find_old_files())) == 48
 
     j = DownloadPathJanitor(tmp_path.as_posix(), max_seconds=3600 * 49)
-    assert len(j._find_old_files()) == 0
+    assert len(list(j._find_old_files())) == 0
 
 
 def test_delete_files(tmp_path):

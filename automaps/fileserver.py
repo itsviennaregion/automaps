@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable, Iterator
 import uuid
 import re
 import time
@@ -35,18 +35,18 @@ class DownloadPathJanitor:
         """Searches for old files in download path and deletes them."""
         self._delete_files(self._find_old_files())
 
-    def _find_all_files(self):
+    def _find_all_files(self) -> Iterator[Path]:
         return (
             x for x in self.path.iterdir() if x.suffix.upper() in self.file_extensions
         )
 
-    def _find_old_files(self):
+    def _find_old_files(self) -> Iterator[Path]:
         now = time.time()
-        return [
+        return (
             x
             for x in self._find_all_files()
             if x.stat().st_mtime < now - self.max_seconds
-        ]
+        )
 
     @staticmethod
     def _delete_files(files: Iterable[Path]):
