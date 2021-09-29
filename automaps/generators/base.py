@@ -155,7 +155,7 @@ class MapGenerator(ABC):
     ):
         buffered_layer_extent = layer.extent().buffered(buffer)
         self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
-        self.step_data.layout.itemById(map_name).setScale(scale)
+        self.step_data.layout.itemById(map_name).setScale(scale)  # type: ignore
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename, self.data.get("Dateiformat", "pdf"))
