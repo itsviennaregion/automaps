@@ -71,14 +71,12 @@ def create_streamlit_download_path():
             f"Download path '{download_path}' has been created. Maybe you need to "
             f"change the permissions (e.g. sudo chmod -R a+w {download_path})."
         )
-    else:
-        print(download_path)
 
 
-def download_link(download_filepath, link_text):
+def download_link(download_filepath, link_text) -> str:
     filename = os.path.basename(download_filepath)
     dl_link = f'<a href="downloads/{filename}" download>{link_text}</a><br></br>'
-    return dl_link
+    return dl_link.strip()
 
 
 def download_button(download_filepath, button_text):
@@ -99,4 +97,4 @@ def download_button(download_filepath, button_text):
         + "</div>"
     )
 
-    return dl_link
+    return dl_link.strip()
