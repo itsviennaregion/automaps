@@ -1,3 +1,4 @@
+import inspect
 from typing import Any
 
 import automapsconf
@@ -14,3 +15,12 @@ def get_config_value(config_option: str, default_value: Any = None) -> Any:
         return default_value
     else:
         return None
+
+
+def get_default_args(func):
+    signature = inspect.signature(func)
+    return {
+        k: v.default
+        for k, v in signature.parameters.items()
+        if v.default is not inspect.Parameter.empty
+    }

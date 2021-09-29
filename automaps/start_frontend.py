@@ -7,26 +7,23 @@ if conf_path not in sys.path:
 if automaps_path not in sys.path:
     sys.path.append(automaps_path)
 
+import logging
 import os
 import pathlib
 import traceback
 
 import streamlit as st
 
-from automaps.fileserver import download_button, DownloadPathJanitor
+from automaps.fileserver import (
+    download_button,
+    DownloadPathJanitor,
+    get_streamlit_download_path,
+    create_streamlit_download_path,
+)
 from automaps.client.client import ask_server_for_steps, send_task_to_server
-from automaps.confutils import get_config_value, has_config_option
+from automaps.confutils import get_config_value, get_default_args, has_config_option
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
-
-STREAMLIT_STATIC_PATH = pathlib.Path(st.__path__[0]) / "static"
-DOWNLOADS_PATH = STREAMLIT_STATIC_PATH / "downloads"
-if not DOWNLOADS_PATH.is_dir():
-    DOWNLOADS_PATH.mkdir()
-    print(
-        f"Download path '{DOWNLOADS_PATH}' has been created. Maybe you need to "
-        f"change the permissions (e.g. sudo chmod -R a+w {DOWNLOADS_PATH})."
-    )
 
 
 def _get_maptype_names():
@@ -40,8 +37,15 @@ def _get_maptype(name: str):
 
 
 def start_frontend():
+    _init()
+
     # Delete old files in download path
-    j = DownloadPathJanitor(automapsconf.BASEPATH_FILESERVER)
+    if hasattr(automapsconf, "DOWNLOADS_RETAIN_TIME"):
+        j = DownloadPathJanitor(
+            get_streamlit_download_path(), automapsconf.DOWNLOADS_RETAIN_TIME
+        )
+    else:
+        j = DownloadPathJanitor(get_streamlit_download_path())
     j.clean()
 
     # Add custom elements to UI
@@ -112,6 +116,25 @@ def start_frontend():
                 _show_error_message(e)
 
     _show_debug_info(selector_values)
+
+
+def _init():
+    if not hasattr(automapsconf, "init_done"):
+        create_streamlit_download_path()
+        # logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
+        logging.info("Automaps initialized!")
+        logging.info(f"  Download path: {get_streamlit_download_path()}")
+        max_seconds = (
+            automapsconf.DOWNLOADS_RETAIN_TIME
+            if hasattr(automapsconf, "DOWNLOADS_RETAIN_TIME")
+            else get_default_args(DownloadPathJanitor.__init__)["max_seconds"]
+        )
+        logging.info(
+            f"  Downloads are retained for {max_seconds} seconds "
+            f"({max_seconds / 3600:.1f} hours)."
+        )
+
+        automapsconf.init_done = True
 
 
 def _show_download_button(filename: str):

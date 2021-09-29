@@ -2,6 +2,7 @@ import time
 import zmq
 
 from automaps._qgis import start_qgis
+from automaps.fileserver import get_streamlit_download_path
 from automaps.generators.base import StepData
 
 import automapsconf
@@ -21,7 +22,7 @@ def start_server():
             message = socket.recv_json()
             if "init" in message.keys():
                 generator = _get_generators()[message["init"]](
-                    message, automapsconf.BASEPATH_FILESERVER, "", step_data
+                    message, str(get_streamlit_download_path()), "", step_data
                 )
                 steps = generator.steps
                 init_message = {"steps": list(steps.keys())}
@@ -29,7 +30,7 @@ def start_server():
             else:
                 generator = _get_generators()[message["maptype_dict_key"]](
                     message,
-                    automapsconf.BASEPATH_FILESERVER,
+                    str(get_streamlit_download_path()),
                     message["print_layout"],
                     step_data,
                 )

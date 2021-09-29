@@ -1,9 +1,12 @@
 import os
+import pathlib
 from pathlib import Path
 from typing import Iterable, Iterator
 import uuid
 import re
 import time
+
+import streamlit as st
 
 from automaps.confutils import has_config_option
 import automapsconf
@@ -52,6 +55,24 @@ class DownloadPathJanitor:
     def _delete_files(files: Iterable[Path]):
         for file in files:
             file.unlink()
+
+
+def get_streamlit_download_path() -> Path:
+    streamlit_static_path = pathlib.Path(st.__path__[0]) / "static"
+    download_path = streamlit_static_path / "downloads"
+    return download_path
+
+
+def create_streamlit_download_path():
+    download_path = get_streamlit_download_path()
+    if not download_path.is_dir():
+        download_path.mkdir()
+        print(
+            f"Download path '{download_path}' has been created. Maybe you need to "
+            f"change the permissions (e.g. sudo chmod -R a+w {download_path})."
+        )
+    else:
+        print(download_path)
 
 
 def download_link(download_filepath, link_text):
