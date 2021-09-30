@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 from copy import copy
 import os
-from typing import Any, List, OrderedDict, Union
+from typing import Any, ForwardRef, List, OrderedDict, Union
 
 from qgis.core import (
     QgsMapLayer,
@@ -26,6 +26,7 @@ class StepData:
 class MapGenerator(ABC):
     name: str
     steps: OrderedDict[str, Step]
+    data_to_exclude_from_filename: List[str] = []
 
     def __init__(
         self,
@@ -60,6 +61,8 @@ class MapGenerator(ABC):
         data.pop("Dateiformat", None)
         option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
         for key in option_keys_to_pop:
+            data.pop(key, None)
+        for key in self.data_to_exclude_from_filename:
             data.pop(key, None)
         file_ext = (
             self.data["Dateiformat"].lower()
