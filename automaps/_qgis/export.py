@@ -1,4 +1,5 @@
 from qgis.core import QgsLayout, QgsLayoutExporter
+from PIL import Image
 
 # import conf_local
 
@@ -20,6 +21,14 @@ def export_layout(layout: QgsLayout, filepath: str, file_format: str):
         image_settings = QgsLayoutExporter.ImageExportSettings()
         image_settings.cropToContents = True
         exporter.exportToImage(filepath, image_settings)
+
+        # Remove transparent margins
+        # See https://docs.qgis.org/3.16/en/docs/user_manual/print_composer/create_output.html#export-as-image 
+        # "When exporting with the Crop to content option, the resulting image may 
+        # therefore extend beyond the paper extent."
+        with Image.open(filepath) as im:
+            im = im.crop(im.getbbox())
+            im.save(filepath)
     elif file_format.lower() == "svg":
         svg_settings = QgsLayoutExporter.SvgExportSettings()
         svg_settings.cropToContents = True

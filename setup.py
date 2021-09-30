@@ -20,6 +20,7 @@ setuptools.setup(
         "psycopg2>=2.8.4",
         "streamlit>=0.80.0",
         "SQLAlchemy>=1.4.7",
+        "Pillow>=8.3.1"
         "pyzmq>=22.0.3",
     ],
     packages=["automaps", "automaps.client", "automaps.generators", "automaps.server"],
