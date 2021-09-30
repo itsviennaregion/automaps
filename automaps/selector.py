@@ -19,6 +19,7 @@ class BaseSelector(ABC):
     label_ui: Optional[str]
     optional: bool
     exclude_from_filename: bool
+    use_for_file_format: bool
 
     @abstractmethod
     def widget(self):
@@ -37,6 +38,7 @@ class SelectorSimple(BaseSelector):
         label_ui: Optional[str] = None,
         optional: bool = False,
         exclude_from_filename: bool = False,
+        use_for_file_format: bool = False,
     ):
         self.label = label
         self.options = list(options)
@@ -49,6 +51,7 @@ class SelectorSimple(BaseSelector):
         self.label_ui = label_ui
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
+        self.use_for_file_format = use_for_file_format
 
     @property
     def widget(self):
@@ -80,6 +83,7 @@ class SelectorSQL(BaseSelector):
         optional: bool = False,
         exclude_from_filename: bool = False,
         extract_first_option: bool = False,
+        use_for_file_format: bool = False,
     ):
         self.label = label
         self.sql = sql
@@ -94,6 +98,7 @@ class SelectorSQL(BaseSelector):
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
         self.extract_first_option = extract_first_option
+        self.use_for_file_format = use_for_file_format
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
@@ -133,7 +138,9 @@ class MultiSelector:
         label: str,
         selectors: List[BaseSelector],
         exclude_from_filename: bool = False,
+        use_for_file_format: bool = False,
     ):
         self.label = label
         self.selectors = selectors
         self.exclude_from_filename = exclude_from_filename
+        self.use_for_file_format = use_for_file_format

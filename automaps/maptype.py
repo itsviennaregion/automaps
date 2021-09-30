@@ -127,6 +127,13 @@ class MapType:
         _selector_values[element.label] = element.widget
         if element.provide_raw_options:
             _selector_values[f"{element.label} OPTIONS"] = element.options_raw
+        if element.use_for_file_format:
+            if "!FILEFORMAT!" in _selector_values.keys():
+                raise ValueError(
+                    f"Only one selector of MapType '{self.name}' may be "
+                    "used to set the file format"
+                )
+            _selector_values["!FILEFORMAT!"] = _selector_values[element.label]
         return _selector_values
 
     def _process_other_ui_element(self, element: Tuple[Callable, str]):

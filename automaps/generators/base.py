@@ -34,11 +34,15 @@ class MapGenerator(ABC):
         basepath_fileserver: str,
         print_layout: str,
         step_data: StepData,
+        default_file_format: str = "pdf",
     ):
         self.data = data
         self.basepath_fileserver = basepath_fileserver
         self.print_layout = print_layout
         self.step_data = step_data
+        self.file_format = self.data.pop("!FILEFORMAT!", default_file_format).lower()
+        if self.file_format not in ["pdf", "png", "svg"]:
+            raise ValueError(f"Unsupported export file format: {self.file_format}")
         self.step_data.message_to_client["filename"] = self.filename
         try:
             self.step_data.project  # type: ignore
@@ -58,23 +62,18 @@ class MapGenerator(ABC):
         data.pop("maptype_dict_key", None)
         data.pop("step", None)
         data.pop("print_layout", None)
-        data.pop("Dateiformat", None)
+        data.pop("!FILEFORMAT!", None)
         option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
         for key in option_keys_to_pop:
             data.pop(key, None)
         for key in self.data_to_exclude_from_filename:
             data.pop(key, None)
-        file_ext = (
-            self.data["Dateiformat"].lower()
-            if self.data.get("Dateiformat", None)
-            else "pdf"
-        )
         return os.path.join(
             self.basepath_fileserver,
             f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}".replace(
                 " ", "_"
             ).replace(".", "_")
-            + f".{file_ext}",
+            + f".{self.file_format}",
         )
 
     @abstractmethod
@@ -161,4 +160,4 @@ class MapGenerator(ABC):
         self.step_data.layout.itemById(map_name).setScale(scale)  # type: ignore
 
     def _export_print_layout(self, layout: QgsPrintLayout):
-        return export_layout(layout, self.filename, self.data.get("Dateiformat", "pdf"))
+        return export_layout(layout, self.filename, self.file_format)

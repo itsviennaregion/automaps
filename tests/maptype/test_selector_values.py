@@ -1,3 +1,4 @@
+import pytest
 import streamlit as st
 
 from automaps.generators.base import MapGenerator
@@ -12,6 +13,7 @@ def test_no_streamlit_widgets(mock_engine):
         [
             SelectorSimple("sel_simple", [500, 530, 42]),
             SelectorSQL("sel_sql", "select distinct name from cities"),
+            SelectorSimple("File Format", ["PDF"], use_for_file_format=True),
         ],
         "my_print_layout",
         MapGenerator,
@@ -20,6 +22,8 @@ def test_no_streamlit_widgets(mock_engine):
         "sel_simple": [500, 530, 42],
         "sel_sql": ["Achau", "Traiskirchen"],
         "selectors_to_exclude_from_filename": [],
+        "File Format": ["PDF"],
+        "!FILEFORMAT!": ["PDF"],
     }
 
 
@@ -30,6 +34,7 @@ def test_with_streamlit_widgets(mock_engine):
         [
             SelectorSimple("sel_simple", [500, 530, 42], st.selectbox),
             SelectorSQL("sel_sql", "select distinct name from cities", st.multiselect),
+            SelectorSimple("File Format", ["PDF"], use_for_file_format=True),
         ],
         "my_print_layout",
         MapGenerator,
@@ -39,6 +44,8 @@ def test_with_streamlit_widgets(mock_engine):
         "sel_sql": [],
         "selectors_to_exclude_from_filename": [],
         "has_init_values": True,
+        "File Format": ["PDF"],
+        "!FILEFORMAT!": ["PDF"],
     }
 
 
@@ -69,6 +76,44 @@ def test_multiselector(mock_engine):
         "sel_multi": ["Achau", "Traiskirchen"],
         "selectors_to_exclude_from_filename": [],
     }
+
+
+def test_multiselector_file_format(mock_engine):
+    maptype = MapType(
+        "maptype",
+        "My Description",
+        [
+            MultiSelector(
+                "File Format",
+                [
+                    SelectorSimple("File Format", ["PDF"], use_for_file_format=True),
+                    SelectorSimple("File Format", ["PDF"], use_for_file_format=True),
+                ],
+            )
+        ],
+        "my_print_layout",
+        MapGenerator,
+    )
+    assert maptype.selector_values == {
+        "File Format": ["PDF"],
+        "!FILEFORMAT!": ["PDF"],
+        "selectors_to_exclude_from_filename": [],
+    }
+
+
+def test_too_many_file_formats(mock_engine):
+    maptype = MapType(
+        "maptype",
+        "My Description",
+        [
+            SelectorSimple("File Format", ["PDF"], use_for_file_format=True),
+            SelectorSimple("File Format invalid", ["PDF"], use_for_file_format=True),
+        ],
+        "my_print_layout",
+        MapGenerator,
+    )
+    with pytest.raises(ValueError):
+        maptype.selector_values
 
 
 def test_dependencies(mock_engine):

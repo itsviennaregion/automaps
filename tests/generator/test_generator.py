@@ -2,9 +2,11 @@ from collections import OrderedDict
 import os
 from typing import get_args
 
+import pytest
 from qgis.core import QgsPrintLayout, QgsProject
 
 import automapsconf
+
 automapsconf.QGIS_INSTALLATION_PATH = "/usr"
 PATH = os.path.abspath(os.path.join(os.getcwd(), "tests", "qgis", "test_project.qgz"))
 automapsconf.FILEPATH_QGIS_PROJECT = PATH
@@ -14,6 +16,7 @@ from automaps.generators.base import MapGenerator, Step, StepData
 
 DATA = {"city": "Achau", "export_format": "pdf", "funny_value": 123123123123}
 
+
 class MyMapGenerator(MapGenerator):
     name = "My Map Generator"
 
@@ -21,7 +24,7 @@ class MyMapGenerator(MapGenerator):
         self.steps = OrderedDict(
             {
                 "Initialize": Step(self.initialize, 1),
-                "Set variables": Step(self.set_variables, 2)
+                "Set variables": Step(self.set_variables, 2),
             }
         )
 
@@ -29,9 +32,8 @@ class MyMapGenerator(MapGenerator):
         pass
 
     def set_variables(self):
-        self._set_project_variable(
-            "city", self.data["city"]
-        ) 
+        self._set_project_variable("city", self.data["city"])
+
 
 class MyFancyMapGenerator(MyMapGenerator):
     data_to_exclude_from_filename = ["funny_value"]
@@ -47,6 +49,7 @@ def test_init(tmp_path):
     assert isinstance(g.step_data.project, QgsProject)
     assert isinstance(g.step_data.layout, QgsPrintLayout)
     assert g.total_weight == 3.0
+    assert g.file_format == "pdf"
 
 
 def test_exclude_from_filename(tmp_path):
@@ -61,3 +64,24 @@ def test_run_step(tmp_path):
     g.run_step("Set variables")
     assert g.step_data.project.customVariables() == {"city": g.data["city"]}
 
+
+def test_file_format(tmp_path):
+    data = {}
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    assert g.file_format == "pdf"
+    g = MyMapGenerator(
+        data, tmp_path, "myLayout", StepData({}), default_file_format="svg"
+    )
+    assert g.file_format == "svg"
+    data = {"!FILEFORMAT!": "pdf"}
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    assert g.file_format == "pdf"
+    data = {"!FILEFORMAT!": "png"}
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    assert g.file_format == "png"
+    data = {"!FILEFORMAT!": "PNG"}
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    assert g.file_format == "png"
+    with pytest.raises(ValueError):
+        data = {"!FILEFORMAT!": "bmp"}
+        g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
