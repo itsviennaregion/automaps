@@ -22,8 +22,7 @@ class DownloadPathJanitor:
         """Deletes old files in download path.
 
         Args:
-            download_path (str): Path to search for old files. Normally:
-                automapsconf.BASEPATH_FILESERVER
+            download_path (str): Path to search for old files.
             max_seconds (int, optional): Only files which are older than this value
                 (in seconds) get deleted. Defaults to 3600*8.
             file_extensions (Iterable[str], optional): Only files with one of these
