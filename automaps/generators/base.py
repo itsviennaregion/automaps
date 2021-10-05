@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
 from collections import namedtuple
 from copy import copy
+import logging
 import os
 from typing import Any, ForwardRef, List, OrderedDict, Union
 
 from qgis.core import (
+    QgsLayerTreeGroup,
+    QgsLayerTreeLayer,
     QgsMapLayer,
     QgsPrintLayout,
     QgsProject,
@@ -72,7 +75,7 @@ class MapGenerator(ABC):
             self.basepath_fileserver,
             f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}".replace(
                 " ", "_"
-            ).replace(".", "_")
+            ).replace(".", "_").replace("/", "_")
             + f".{self.file_format}",
         )
 
@@ -102,8 +105,8 @@ class MapGenerator(ABC):
             except AttributeError:
                 pass
         for node in self.step_data.project.layerTreeRoot().children():
-            if isinstance(node, QgsMapLayer):
-                node.setItemVisibilityChecked(False)
+            if isinstance(node, QgsLayerTreeLayer):
+                node.setItemVisibilityCheckedRecursive(False)
 
     def _set_project_variable(self, var_name: str, var_value: Any):
         set_project_variable(self.step_data.project, var_name, var_value)  # type: ignore
@@ -113,7 +116,12 @@ class MapGenerator(ABC):
 
     def _get_map_layer(self, layer_name: str) -> QgsMapLayer:
         layers = self.step_data.project.mapLayersByName(layer_name)  # type: ignore
-        assert len(layers) == 1
+        if len(layers) == 0:
+            raise ValueError(f"Could not find layer {layer_name}.")
+        elif len(layers) > 1:
+            raise ValueError(
+                f"Found multiple ({len(layers)}) layers with name {layer_name}."
+            )
         return layers[0]
 
     def _get_all_map_layers(self) -> List[QgsMapLayer]:
@@ -122,7 +130,9 @@ class MapGenerator(ABC):
 
     def _set_map_layer_filter_expression(self, layer_name: str, filter_expr: str):
         lyr = self._get_map_layer(layer_name)
-        lyr.setSubsetString(filter_expr.replace("[", "(").replace("]", ")"))
+        filter_expr = filter_expr.replace("[", "(").replace("]", ")")
+        # logging.debug(f"Filter on layer '{layer_name}': {filter_expr}")
+        lyr.setSubsetString(filter_expr)
 
     def _remove_map_layer_filter_expression(self, layer_name: str):
         lyr = self._get_map_layer(layer_name)
@@ -156,8 +166,13 @@ class MapGenerator(ABC):
         scale: float = 1000.0,
     ):
         buffered_layer_extent = layer.extent().buffered(buffer)
-        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
-        self.step_data.layout.itemById(map_name).setScale(scale)  # type: ignore
+        print(self.step_data.layout.itemById(map_name).scale())  # type: ignore
+        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)
+        print(self.step_data.layout.itemById(map_name).scale())
+        #if self.step_data.layout.itemById(map_name).scale() > scale:# type: ignore
+        self.step_data.layout.itemById(map_name).setScale(scale) 
+        print(self.step_data.layout.itemById(map_name).scale())
+        print(self.step_data.layout.itemById(map_name).isDrawing())
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename, self.file_format)
