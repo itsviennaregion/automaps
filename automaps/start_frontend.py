@@ -173,7 +173,7 @@ def _add_custom_html():
 
 
 def _show_debug_info(selector_values):
-    if has_config_option("SHOW_DEBUG_INFO"):
+    if get_config_value("SHOW_DEBUG_INFO"):
         # Show selected values for all widgets (for debugging)
         if st.checkbox("Debug"):
             st.write("## Debug Info")
