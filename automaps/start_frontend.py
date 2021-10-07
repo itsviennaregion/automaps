@@ -121,7 +121,6 @@ def start_frontend():
 def _init():
     if not hasattr(automapsconf, "init_done"):
         create_streamlit_download_path()
-        # logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
         logging.info("Automaps initialized!")
         logging.info(f"  Download path: {get_streamlit_download_path()}")
         max_seconds = (
