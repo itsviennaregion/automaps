@@ -74,7 +74,9 @@ class MapGenerator(ABC):
             self.basepath_fileserver,
             f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}".replace(
                 " ", "_"
-            ).replace(".", "_").replace("/", "_")
+            )
+            .replace(".", "_")
+            .replace("/", "_")
             + f".{self.file_format}",
         )
 
@@ -149,6 +151,10 @@ class MapGenerator(ABC):
             if node:
                 node.setItemVisibilityChecked(is_visible)
 
+    def _set_layer_labels_visibility(self, layer_name: str, is_visible: bool):
+        lyr = self._get_map_layer(layer_name)
+        lyr.setLabelsEnabled(is_visible)
+
     def _zoom_map_to_layer_extent(
         self, map_name: str, layer: QgsMapLayer, buffer: float = 200.0
     ):
@@ -165,13 +171,8 @@ class MapGenerator(ABC):
         scale: float = 1000.0,
     ):
         buffered_layer_extent = layer.extent().buffered(buffer)
-        print(self.step_data.layout.itemById(map_name).scale())  # type: ignore
-        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)
-        print(self.step_data.layout.itemById(map_name).scale())
-        #if self.step_data.layout.itemById(map_name).scale() > scale:# type: ignore
-        self.step_data.layout.itemById(map_name).setScale(scale) 
-        print(self.step_data.layout.itemById(map_name).scale())
-        print(self.step_data.layout.itemById(map_name).isDrawing())
+        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
+        self.step_data.layout.itemById(map_name).setScale(scale)  # type: ignore
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename, self.file_format)

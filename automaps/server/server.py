@@ -35,7 +35,9 @@ def start_server():
 
             else:
                 if map_type_name:
-                    data_log = {k: v if isinstance(v, str) else v for k, v in message.items()}
+                    data_log = {
+                        k: v if isinstance(v, str) else v for k, v in message.items()
+                    }
                     data_log["map_type_name"] = map_type_name
                     logger.debug(data_log)
                     map_type_name = None
