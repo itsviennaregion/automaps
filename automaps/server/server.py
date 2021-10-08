@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 import zmq
@@ -36,10 +37,10 @@ def start_server():
             else:
                 if map_type_name:
                     data_log = {
-                        k: v if isinstance(v, str) else v for k, v in message.items()
+                        k: v for k, v in message.items() if "FOKUS" not in k.upper()  # TODO: move to configuration!
                     }
                     data_log["map_type_name"] = map_type_name
-                    logger.debug(data_log)
+                    logger.debug(json.dumps(data_log))
                     map_type_name = None
                 generator = _get_generators()[message["maptype_dict_key"]](
                     message,
