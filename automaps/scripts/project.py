@@ -68,6 +68,11 @@ def init_demo_project():
     for filename in resource_filenames:
         source_path = resource_filename("automaps", "data/demo/" + filename)
         shutil.copy(source_path, project_name)
+    os.mkdir(os.path.join(os.getcwd(), project_name, ".streamlit"))
+    shutil.copy(
+        resource_filename("automaps", "data/demo/.streamlit/config.toml"),
+        os.path.join(os.getcwd(), project_name, ".streamlit")
+    )
 
     print(f"Demo project successfully created in {project_path}. Enter "
           "'automaps run ./automaps-demo/app.py' to start it.")
