@@ -7,9 +7,13 @@ from typing import Optional
 class AutoMaps:
     def __init__(self, conf_path: Optional[str] = None):
         if not conf_path:
-            conf_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+            conf_path = os.path.dirname(os.path.join(os.getcwd(), os.path.realpath(sys.argv[-1])))
         else:
-            conf_path = os.path.dirname(os.path.abspath(conf_path))
+            if os.path.isabs(conf_path):
+                conf_path = os.path.dirname(conf_path)
+            else:
+                conf_path = os.path.realpath(os.path.dirname(os.path.join(os.getcwd(), os.path.dirname(sys.argv[-1]), conf_path)))
+        os.chdir(conf_path)
         automaps_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         automaps_run_path = os.path.join(automaps_path, "automaps")
         frontend = subprocess.Popen(

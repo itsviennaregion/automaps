@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="automaps",
-    version="0.9",
+    version="0.9.1",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
     description="Making maps with streamlit and QGIS",
@@ -23,6 +23,14 @@ setuptools.setup(
         "Pillow>=8.3.1",
         "pyzmq>=22.0.3",
     ],
-    packages=["automaps", "automaps.client", "automaps.generators", "automaps.server"],
+    packages=setuptools.find_packages(),  # ["automaps", "automaps.client", "automaps.generators", "automaps.server", "automaps.scripts"],
     python_requires=">=3.8",
+    package_data={
+        "automaps":
+            ["data/demo/*",]
+    },
+    entry_points="""
+        [console_scripts]
+        automaps=automaps.scripts.project:cli
+    """
 )
