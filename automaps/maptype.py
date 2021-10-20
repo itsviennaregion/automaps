@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, Tuple, Type, Union
 
 from jinja2 import Template
 import streamlit as st
@@ -18,7 +18,7 @@ class MapType:
         description: str,
         ui_elements: UIElement,
         print_layout: Union[str, Tuple[str, Dict[str, str]]],
-        map_generator: MapGenerator,
+        map_generator: Type[MapGenerator],
     ):
         self.name = name
         self.description = description
