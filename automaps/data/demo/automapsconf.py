@@ -17,6 +17,7 @@ DOWNLOADS_RETAIN_TIME = 3600 * 12
 PROJECT_TITLE = "Automaps Demo Project"
 # MAPTYPE_TEXT = ""
 # MISSING_ATTRIBUTES_TEXT = ""
+# CREATE_MAP_BUTTON_TEXT = ""
 # WAITING_FOR_SERVER_TEXT = "Warte auf Kartenserver ..."
 # SPINNER_TEXT = "Creating map _{maptype_name}_ ({step})"
 # MAP_READY_TEXT = "🎉 🗺 🧭 🚌 🚊 🚂 🚂 🚊 🚌 🧭 🗺 🎉\n\Map _{maptype_name}_ is ready\n\n🎉 🗺 🧭 🚌 🚊 🚂 🚂 🚊 🚌 🧭 🗺 🎉"

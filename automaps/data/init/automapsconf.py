@@ -25,9 +25,10 @@ PORT_MAP_SERVER = 5656
 # LOGO_PATH = ""
 # MAPTYPE_TEXT = ""
 # MISSING_ATTRIBUTES_TEXT = ""
+# CREATE_MAP_BUTTON_TEXT = ""
 # WAITING_FOR_SERVER_TEXT = "Waiting for map server ..."
 # SPINNER_TEXT = "Creating map _{maptype_name}_ ({step})"
-# MAP_READY_TEXT = "🎉 🗺 🧭 🚌 🚊 🚂 🚂 🚊 🚌 🧭 🗺 🎉\n\Map _{maptype_name}_ is ready\n\n🎉 🗺 🧭 🚌 🚊 🚂 🚂 🚊 🚌 🧭 🗺 🎉"
+# MAP_READY_TEXT = "Map _{maptype_name}_ is ready"
 # SHOW_DEBUG_INFO = True
 # CUSTOM_HTML = """
 #     <style>

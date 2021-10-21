@@ -71,7 +71,7 @@ def start_frontend():
     selector_values = maptype.selector_values
 
     # Create map
-    if st.button("Karte erstellen"):
+    if st.button(get_config_value("CREATE_MAP_BUTTON_TEXT", "Create map")):
         if selector_values.get("has_init_values", False):
             st.info(
                 get_config_value(
