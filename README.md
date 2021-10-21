@@ -1,4 +1,4 @@
-(Documentation)[https://its-vienna-region.gitlab.io/digilab/automatisierte-karten]
+[Documentation](https://its-vienna-region.gitlab.io/digilab/automatisierte-karten)
 
 
 # Automatische Karten
