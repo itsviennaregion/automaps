@@ -46,7 +46,7 @@ Then start the demo app by running the following command:
 automaps run ./automaps-demo/app.py
 ``` 
 
-Open up `http://http://127.0.0.1:8506/automaps-demo/` in your browser, and you'll see
+Open up `http://127.0.0.1:8506/automaps-demo/` in your browser, and you'll see
 the frontend of the demo project being displayed:
 ![Demo Frontend](img/demo_frontend.png)
 
