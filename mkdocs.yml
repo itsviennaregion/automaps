@@ -2,5 +2,19 @@ site_name: AutoMaps
 nav:
     - Home: index.md
     - Getting Started: getting_started.md
+    - User guide: user_guide.md
     - About: about.md
-theme: readthedocs
+theme: 
+    name: material
+    palette:
+        scheme: slate
+    features:
+        - content.code.annotate 
+markdown_extensions:
+    - toc:
+        permalink: "#"
+    - admonition
+    - pymdownx.details
+    - pymdownx.highlight
+    - pymdownx.snippets
+    - pymdownx.superfences
