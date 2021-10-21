@@ -1,13 +1,20 @@
 # Getting Started with autoMaps
 
+Work through this tutorial to get your feets wet with autoMaps. 
+
+For further details on using autoMaps, please refer to the [User Guide](user_guide.md).
+
 ## Installation
 !!! warning
 
     Only tested on Ubuntu 20.04!
 
-autoMaps uses QGIS to generate maps. Get it on the 
+autoMaps uses [QGIS](https://qgis.org/), a free and open source geographic information
+system, to generate maps. Get it on the 
 [QGIS downloads page](https://qgis.org/en/site/forusers/download.html) and install it
-first.
+first. You probably should be familiar with QGIS and at least a little bit of `PyQGIS`
+to get most out of autoMaps. Check out the
+[QGIS documentation](https://qgis.org/en/docs/index.html), if necessary.
 
 Then open your command line and clone the autoMaps repository:
 ```bash
@@ -25,7 +32,7 @@ python3 -m pip install .
 ```
 
 ## Creating a demo project
-Do get a feeling for the functionality and configuration of autoMaps you should first
+To get a feeling for the functionality and configuration of autoMaps you should first
 create a demo project.
 
 On the command line, `cd` into a directory where you want to place the demo project.
@@ -88,6 +95,17 @@ map creation process, it is updated to hold the selected value of the drop down 
 called `District name`.
 * Another label holding the data source information. This is just some static text.
 
+### The streamlit configuration (`./streamlit/config.toml`)
+autoMaps uses [Streamlit](https://streamlit.io/) as its frontend. Streamlit can be
+configured using the `config.toml` file, as described in the 
+[docs](https://docs.streamlit.io/library/advanced-features/configuration). In the case 
+of our demo project, it looks like this:
+``` ini
+[server]
+port = 8506
+baseUrlPath = "automaps-demo"
+``` 
+
 ### The main entry point (`app.py`)
 The `app.py` file serves as the canonical entry point for running an autoMaps project.
 
@@ -98,6 +116,7 @@ from automaps.app import AutoMaps
 
 app = AutoMaps()
 ```
+
 
 ### The main configuration (`automapsconf.py`, `automapsconf_poly.py`, `db.py`)
 The main configuration is defined in a Python file, which typically is called 
@@ -253,6 +272,13 @@ of the `districts` layer.
 or SVG). It also writes the specific QGIS project file to the defined location, which
 can be handy for debugging your own autoMaps projects. Take a look at `poly_out.qgz` in
 QGIS, inspect the filter expressions and the `poly` print layout!
+
+The step methods use various helper methods, inherited from the `MapGenerator` base 
+class, such as `_set_map_layer_visibility()` or `_export_print_layout()`. Take a look
+at the [`User Guide`](user_guide.md#the-mapgenerator-class) for a list of these helper
+methods. You don't have to use them in your own projects, you could directly go for
+the respective `PyQGIS`-calls instead. But they save you a lof of typing for the most
+common tasks.
 
 After running through all processing steps, the download button shows up on the 
 frontend and the map is ready to be used.

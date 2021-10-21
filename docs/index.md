@@ -1,22 +1,24 @@
 # Welcome to autoMaps
-Automatically generate cusomized and ready to print maps 
+Automatically generate customized and ready to print maps 
 
 ---
 
-With autoMaps, you can 
+With autoMaps, you can:
 
-* prepare your map layouts in QGIS and 
-* let your users define map parameters in a Streamlit web frontend 
-* to receive beautiful, ready to print maps as PDFs or in other file formats. 
+* prepare your map layouts in QGIS
+* let your users define map parameters in a nice web frontend
+* receive beautiful, ready to print maps as PDFs or in other file formats
+
+__Give your domain experts the power to create maps like a GIS pro!__
 
 Start by reading the 
-[getting started tutorial](getting_started.md), then check the 
+[Getting started tutorial](getting_started.md), then check the 
 [User Guide](user_guide.md) for more details.
 
 ---
 
 # Features
-## Pre-define your map layouts, let your users define the map parameters
+## Pre-define your map layouts, let your users set the map parameters
+## Use the power of a GIS, serve the maps over the web
 ## Easy to configure
 ## Builds on reliable open source projects
-QGIS, Streamlit, 0MQ
