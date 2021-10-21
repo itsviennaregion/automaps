@@ -8,24 +8,9 @@ __TODO__
 ## Architecture
 __TODO__
 
-## Installation
-* Install QGIS (https://qgis.org/en/site/forusers/download.html)
-* Clone this repository:
-
-    `git clone https://gitlab.com/its-vienna-region/digilab/automatisierte-karten`
-
-* Change into the cloned directory:
-
-    `cd automatisierte-karten`
-
-* Install the `automaps` package (__for the Python interpreter used by QGIS!__): 
-
-    `python3 -m pip install .`
 
 
-## Create a demo project
 
-__TODO__
 
 ## Start the Streamlit frontend + QGIS backend.
 Execute from:
@@ -83,7 +68,7 @@ QGIS project file (see `/conf_local.py`).
         area [reduced]"})`
 
 Example:
-``python
+```python
 MAPTYPES_AVAIL: Dict[str, MapType] = {.
     "Public transport overview": MapType(
         name="ÖV-Überblick",

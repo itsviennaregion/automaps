@@ -1,0 +1,6 @@
+site_name: AutoMaps
+nav:
+    - Home: index.md
+    - Getting Started: getting_started.md
+    - About: about.md
+theme: readthedocs
