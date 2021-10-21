@@ -27,7 +27,8 @@ setuptools.setup(
     python_requires=">=3.8",
     package_data={
         "automaps":
-            ["data/demo/*",]
+            ["data/demo/*",
+             "data/demo/.streamlit/*"]
     },
     entry_points="""
         [console_scripts]
