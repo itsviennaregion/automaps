@@ -7,12 +7,14 @@ nav:
     - Getting Started: getting_started.md
     - User Guide: 
         - Overview: user_guide/overview.md
+        - Installation: user_guide/installation.md
         - Command Line Interface: user_guide/cli.md
         - Main Configuration: user_guide/main_config.md
         - Streamlit Configuration: user_guide/streamlit_config.md
         - The MapType Class: user_guide/map_type.md
         - User Interface Elements: user_guide/ui_elements.md
         - The MapGenerator Class: user_guide/map_generator.md
+        - Architecture: user_guide/architecture.md
     - About: about.md
 theme: 
     name: material
