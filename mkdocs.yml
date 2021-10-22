@@ -1,8 +1,18 @@
-site_name: AutoMaps
+site_name: autoMaps
+
+repo_url: https://gitlab.com/its-vienna-region/digilab/automatisierte-karten
+
 nav:
     - Home: index.md
     - Getting Started: getting_started.md
-    - User guide: user_guide.md
+    - User Guide: 
+        - Overview: user_guide/overview.md
+        - Command Line Interface: user_guide/cli.md
+        - Main Configuration: user_guide/main_config.md
+        - Streamlit Configuration: user_guide/streamlit_config.md
+        - The MapType Class: user_guide/map_type.md
+        - User Interface Elements: user_guide/ui_elements.md
+        - The MapGenerator Class: user_guide/map_generator.md
     - About: about.md
 theme: 
     name: material

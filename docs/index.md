@@ -12,8 +12,8 @@ With autoMaps, you can:
 __Give your domain experts the power to create maps like a GIS pro!__
 
 Start by reading the 
-[Getting started tutorial](getting_started.md), then check the 
-[User Guide](user_guide.md) for more details.
+[Getting Started Tutorial](getting_started.md), then check the 
+[User Guide](user_guide/overview.md) for more details.
 
 ---
 

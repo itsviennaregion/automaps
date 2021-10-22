@@ -1,0 +1,138 @@
+# `Selector` objects
+The configuration of the selection options displayed in the UI is done with the help of
+`Selector` objects.
+
+__`BaseSelector` classes__
+
+Two selector classes derived from `selector.BaseSelector` are available:
+
+* `SelectorSimple`: For lists of choices (e.g. "bus" or "train"),
+which are defined directly in `conf.py`.
+* `SelectorSQL`: For lists of selections that are formed based on a database
+database query.
+
+These `Selector` classes share the following parameters for initialization:
+
+* `label (str)`: name of the selector. Displayed in the UI. Furthermore
+the label can be used to define dependencies between the selectors of a `MapType` (see parameter `depend
+(see `depends_on_selectors` parameter).
+* `widget_method (Callable, optional)`: One of the widgets provided by streamlit 
+(e.g. st.radio or st.selectbox). If no argument or `None` is passed, no widget will be used in the
+UI, no widget for selecting values will be displayed. The list of options created (e.g. by an SQL query)
+will still be available and can be edited via the `self.data` attribute. 
+`self.data` attribute of the associated `MapType`. With this mechanism
+can be used to execute SQL queries in the background, the results of which cannot be
+visible and selectable in the UI, but can be used by subsequent selectors. 
+selectors.
+* `widget_args (dict, optional)`: dictionary of arguments passed to initialize the widget object.
+of the widget object (e.g. `{"help"="help text"}`).
+* `no_value_selected_text (str, optional)`: selection option to be displayed,
+before a value has been selected (e.g. "Select spatial layer ...").
+* `depends_on_selectors (Union[List[str], Dict[str, Any]], optional)`: 
+This can be used to define conditions that must be met for the widget to be
+is displayed. This can be used to define dependencies between selectors. 
+Either a list or a dictionary can be passed:
+
+    * __Dictionary__: 
+As keys must be the labels
+of selectors also defined for the same `MapType` must be used as keys, as
+Values the values that must be selected for the corresponding selector. If
+e.g. the value "line" must be selected for the selector with the label "spatial layer", then `depends
+then `depends_on_selectors={"Spatial layer": "Line"}` must be set. Currently
+can only be checked for equality. If the dictionary contains more than one key/value pairs
+only one of the conditions must be met (OR operation).
+
+    * __list__:
+A list of selector labels of selectors of the same `MapType`. If the 
+corresponding selectors contain either `None` or the default text 
+(`no_value_selected_text`) as value, the widget will not be displayed.
+For example, a selector for public transport lines can only be displayed if first
+a municipality has been selected (`depends_on_selectors=["municipality"]`). If the list
+list contains multiple selector labels, the widget will be displayed as soon as one of the listed
+listed selectors has a value selected (OR operation).
+
+* `label_ui (str, optional)`: Alternative label of the widget to be displayed in the UI.
+should be displayed.
+* `optional (bool, optional, default False)`: Indicates whether the widget is optional, i.e. whether
+map generation can be started even though the widget has the default value of
+(`no_value_selected_text`) or an empty list as result. Has influence
+on setting the `has init values` flag in the associated `MapType`.
+* `exclude_from_filename (bool, optional, default False)`: If `True` then the
+value(s) of the selector will not be used to generate the filename. 
+
+The `SelectorSimple` class is also initialized with the following parameter 
+initialized:
+
+* `options (Iterable[Any])`: iterable of selectors.
+
+The `SelectorSQL` class additionally has the following 
+initialization parameters:
+
+* `sql (str)`: SQL statement that is sent to the database defined in `db.ini
+and should return a list of selections, for example: `"select distinct 
+linenumber from lines"`. The string can be 
+[Jinja2](https://pypi.org/project/Jinja2/)-expressions to read the 
+`data` dictionary with the selecting UI options. 
+This allows the selected values of a selector defined in `MapType` as `ui_element` to be used in the SQL 
+can be used in the SQL query of another selector. In 
+the selection of bus lines can be limited to those lines that intersect the selected municipality. 
+which intersect the selected municipality. For an example see above at 
+`MapType`. 
+* `additional_values (Iterable[Any], optional)`: iterable of additional 
+choices that are prepended to the values obtained via SQL,
+e.g. `["ALL"]`.
+* `provide_raw_options (Boolean, optional)`: The data dictionary of the associated
+MapType` a new entry can be added. This has as key the 
+selector with appended `" OPTIONS"` as key and all available options as value. 
+options available, regardless of which one was selected in the UI. Default `False`. 
+
+__`MultiSelector` class__
+
+In addition to the two classes derived from `BaseSelector` there is the
+MultiSelector` is available. This can be used to combine multiple selectors.
+These selectors should have mutually exclusive dependencies (defined with `depends 
+with `depends_on_selectors`). The first selector passed via the `selectors` list,
+which returns a value not equal to `None` is used to create an entry in the `data` dictionary
+with the `label` of the `MultiSelector` as key.
+
+The `MultiSelector` class is initialized with the following parameters:
+* `label (str)`: name of the selector. Will be displayed in the UI. 
+* `selectors (List[BaseSelector])`: list of `BaseSelector` objects, see above.
+* `exclude_from_filename (bool, optional, default False)`: If `True`, then the selector's
+value(s) of the selector will not be used to generate the filename. 
+
+Example:
+
+```python
+MultiSelector(
+    "`stops`,
+    [
+        SelectorSimple(
+        "Stops a",
+        ["All", "None"],
+        st.radio,
+        depends_on_selectors={
+            "Lines in the municipality": [],
+            "lines in district": [],
+            "lines in tender region": [],
+            "Lines in State": [],
+        },
+        label_ui="stops",
+    ),
+    SelectorSimple(
+        "Stops b",
+        ["All", "Stops served", "None"],
+        st.radio,
+        depends_on_selectors=[
+            "Lines in the municipality",
+            "Lines in district",
+            "Lines in tender region",
+            "lines in state",
+        ],
+        label_ui="Stops",
+    ),
+],
+),
+```
+### Others
+

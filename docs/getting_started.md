@@ -2,7 +2,8 @@
 
 Work through this tutorial to get your feets wet with autoMaps. 
 
-For further details on using autoMaps, please refer to the [User Guide](user_guide.md).
+For further details on using autoMaps, please refer to the 
+[User Guide](user_guide/overview.md).
 
 ## Installation
 !!! warning
@@ -26,7 +27,7 @@ Change into the cloned directory:
 cd automatisierte-karten
 ```
 
-Install the `automaps` package __for the Python interpreter used by QGIS!__, for 
+Install the `automaps` package __for the Python interpreter used by QGIS__, for 
 example like this:
 ```bash
 /usr/bin/python3 -m pip install .
@@ -289,7 +290,7 @@ QGIS, inspect the filter expressions and the `poly` print layout!
 
 The step methods use various helper methods, inherited from the `MapGenerator` base 
 class, such as `_set_map_layer_visibility()` or `_export_print_layout()`. Take a look
-at the [`User Guide`](user_guide.md#the-mapgenerator-class) for a list of these helper
+at the [`User Guide`](user_guide/map_generator.md) for a list of these helper
 methods. You don't have to use them in your own projects, you could directly go for
 the respective `PyQGIS`-calls instead. But they save you a lof of typing for the most
 common tasks.
@@ -300,7 +301,8 @@ frontend and the map is ready to be used.
 Feel free to play around with the demo project to get better acquainted with the overall
 structure of an autoMaps project.
 
-For further details on using autoMaps, please refer to the [User Guide](user_guide.md)!
+For further details on using autoMaps, please refer to the 
+[User Guide](user_guide/overview.md)!
 
 ## Creating a template for your own project
 You can now go back to the command line and create your first autoMaps project from 
