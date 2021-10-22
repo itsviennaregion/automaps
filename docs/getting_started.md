@@ -26,10 +26,24 @@ Change into the cloned directory:
 cd automatisierte-karten
 ```
 
-Install the `automaps` package (__for the Python interpreter used by QGIS!__): 
+Install the `automaps` package __for the Python interpreter used by QGIS!__, for 
+example like this:
 ```bash
-python3 -m pip install .
+/usr/bin/python3 -m pip install .
 ```
+
+!!! info
+
+    If you are not sure, which Python interpreter is used by QGIS, open the QGIS GUI and
+    run the following commands in the Python console: 
+        
+        import sys
+        sys.executable
+
+    This may return something like `/usr/bin/python3`. Use the path to this Python
+    interpreter in the command above.
+
+
 
 ## Creating a demo project
 To get a feeling for the functionality and configuration of autoMaps you should first
