@@ -28,7 +28,7 @@ class AutoMaps:
         )
         backend = subprocess.Popen(
             [
-                "python3",
+                sys.executable,
                 os.path.join(automaps_run_path, "start_qgis_server.py"),
                 conf_path,
                 automaps_path,
