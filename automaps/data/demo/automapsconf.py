@@ -15,6 +15,7 @@ DOWNLOADS_RETAIN_TIME = 3600 * 12
 
 # LOGO_PATH = ""
 PROJECT_TITLE = "Automaps Demo Project"
+PAGE_TITLE = "Automaps Demo Project"
 # MAPTYPE_TEXT = ""
 # MISSING_ATTRIBUTES_TEXT = ""
 # CREATE_MAP_BUTTON_TEXT = ""

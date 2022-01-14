@@ -18,6 +18,9 @@ LOG_PATH = "./some_file_name.log"
 # TODO: Add a project title
 PROJECT_TITLE = "Some project title"
 
+# TODO: Add page title
+PAGE_TITLE = "Some page title"
+
 PORT_MAP_SERVER = 5656
 
 # LOG_LEVEL_SERVER = "DEBUG"

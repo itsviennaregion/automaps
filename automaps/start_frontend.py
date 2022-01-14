@@ -156,8 +156,8 @@ def _show_logo():
 
 
 def _set_page_title():
-    if has_config_option("PROJECT_TITLE"):
-        st.set_page_config(page_title=automapsconf.PROJECT_TITLE)
+    if has_config_option("PAGE_TITLE"):
+        st.set_page_config(page_title=automapsconf.PAGE_TITLE)
 
 
 def _show_project_title():
