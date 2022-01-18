@@ -129,7 +129,7 @@ class SelectorSQL(BaseSelector):
 
 @st.cache(show_spinner=False)
 def read_options_sql(sql) -> Iterable[Any]:
-    return sorted(pd.read_sql(sql, automaps.db.get_engine()).iloc[:, 0])
+    return list(pd.read_sql(sql, automaps.db.get_engine()).iloc[:, 0])
 
 
 class MultiSelector:
