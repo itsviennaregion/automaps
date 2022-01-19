@@ -104,7 +104,7 @@ class SelectorSQL(BaseSelector):
     def options(self) -> Iterable[Any]:  # type: ignore
         options = read_options_sql(self.sql)
         self.options_raw = options
-        if len(self.additional_values) > 0:
+        if (len(self.additional_values) > 0) and (len(options) > 0):
             options = list(self.additional_values) + options
         if len(self.no_value_selected_text) > 0:
             options = [self.no_value_selected_text] + options

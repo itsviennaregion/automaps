@@ -33,6 +33,21 @@ def test_options(mock_engine):
         "Achau",
         "Traiskirchen",
     ]
+    sel = SelectorSQL(
+        "sel",
+        "select distinct name from cities where name = 'Hamburg'",
+        no_value_selected_text="Choose city ...",
+        additional_values=["Himberg", "Baden"],
+    )
+    assert sel.options == [
+        "Choose city ...",
+    ]
+    sel = SelectorSQL(
+        "sel",
+        "select distinct name from cities where name = 'Hamburg'",
+        additional_values=["Himberg", "Baden"],
+    )
+    assert sel.options == []
 
 
 def test_options_flawed(mock_engine):

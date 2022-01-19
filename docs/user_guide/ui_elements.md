@@ -80,7 +80,8 @@ which intersect the selected municipality. For an example see above at
 `MapType`. 
 * `additional_values (Iterable[Any], optional)`: iterable of additional 
 choices that are prepended to the values obtained via SQL,
-e.g. `["ALL"]`.
+e.g. `["ALL"]`. Condition: the SQL statement returns at least one element.
+Otherwise, the additional values are not prepended.
 * `provide_raw_options (Boolean, optional)`: The data dictionary of the associated
 MapType` a new entry can be added. This has as key the 
 selector with appended `" OPTIONS"` as key and all available options as value. 

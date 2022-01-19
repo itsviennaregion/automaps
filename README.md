@@ -212,7 +212,7 @@ werden, welche die ausgewählte Gemeinde schneiden. Für ein Beispiel siehe oben
 `MapType`. 
 * `additional_values (Iterable[Any], optional)`: Iterable von zusätzlichen 
 Auswahlmöglichkeiten, die den per SQL gewonnenen Werten vorangestellt werden,
-z.B. `["ALLE"]`.
+z.B. `["ALLE"]`. Voraussetzung: das SQL-Statement liefert zumindest einen Wert.
 * `provide_raw_options (Boolean, optional)`: Dem Data Dictionary des zugehörigen
 `MapType` kann damit ein neuer Eintrag hinzugefügt werden. Dieser hat als Key den 
 Namen des Selektors mit angehängtem `" OPTIONS"` und als Value alle zur Auswahl 
