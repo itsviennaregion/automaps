@@ -154,7 +154,7 @@ def _show_logo():
     if has_config_option("LOGO_PATH"):
         st.sidebar.write(f"""
         <a href="./">
-            <img src="{automapsconf.LOGO_PATH}" alt="Logo">
+            <img src="{automapsconf.LOGO_PATH}" alt="Logo" style="margin-bottom: 3rem;">
         </a>
         """, 
         unsafe_allow_html=True)
