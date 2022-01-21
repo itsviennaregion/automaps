@@ -152,7 +152,12 @@ def _show_error_message(exception: Exception):
 
 def _show_logo():
     if has_config_option("LOGO_PATH"):
-        st.sidebar.image(automapsconf.LOGO_PATH)
+        st.sidebar.write(f"""
+        <a href="./">
+            <img src="{automapsconf.LOGO_PATH}" alt="Logo">
+        </a>
+        """, 
+        unsafe_allow_html=True)
 
 
 def _set_page_title():
