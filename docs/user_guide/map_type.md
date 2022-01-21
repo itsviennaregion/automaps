@@ -1,7 +1,8 @@
 MapType is initialized with the following arguments: 
 
 * `name (str)`: Name of the map type. This must be used as a key in the variable `GENERATORS`. 
-in `/conf_server.py` (see below).
+in `/conf_server.py` (see below). The name will be shown as main heading in the UI. It is
+also used to generate the radio button values for the available map types in the sidebar.
 * `description (str)`: Description of the map type. Will be displayed in the frontend.
 * `ui_elements (Iterable[Union[MultiSelector, BaseSelector, Tuple[Callable, str]])`: 
 Iterable of UI elements, being either `selector` objects or tuples of 
@@ -24,6 +25,8 @@ QGIS project file (see `/conf_local.py`).
         * Example: `print_layout=("map layout", {"external": "public transport overview area 
         [external]", "internal": "Public transport overview area [internal]", "reduced": "Public transport overview
         area [reduced]"})`
+* `html_beneath_name (str, optional)`: This String can be used, to add arbitrary html code in 
+the UI, right beneath the `MapType` name heading (e.g. to add custom links to a help page).
 
 Example:
 ```python

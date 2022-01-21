@@ -19,12 +19,14 @@ class MapType:
         ui_elements: UIElement,
         print_layout: Union[str, Tuple[str, Dict[str, str]]],
         map_generator: Type[MapGenerator],
+        html_beneath_name: str = "",
     ):
         self.name = name
         self.description = description
         self.ui_elements = ui_elements
         self.print_layout = print_layout
         self.map_generator = map_generator
+        self.html_beneath_name = html_beneath_name
 
     @property
     def selector_values(self) -> Dict[str, Any]:

@@ -63,8 +63,8 @@ def start_frontend():
     maptype = _get_maptype(maptype_dict_key)
 
     # Show information about the selected map type
-    st.write(f"# {maptype.name}")
-    st.write(f"{maptype.description}")
+    st.write(f"# {maptype.name}{maptype.html_beneath_name}", unsafe_allow_html=True)
+    st.write(f"{maptype.description}", unsafe_allow_html=True)
 
     # Show widgets if conditions defined by Selector argument `depends_on_selectors`
     # are satisfied) and get selected values
