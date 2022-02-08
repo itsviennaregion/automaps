@@ -155,6 +155,10 @@ class MapGenerator(ABC):
         lyr = self._get_map_layer(layer_name)
         lyr.setLabelsEnabled(is_visible)
 
+    def _set_layer_style(self, layer_name: str, style_name: str):
+        lyr = self._get_map_layer(layer_name)
+        lyr.styleManager().setCurrentStyle(style_name)
+
     def _zoom_map_to_layer_extent(
         self, map_name: str, layer: QgsMapLayer, buffer: float = 200.0
     ):
