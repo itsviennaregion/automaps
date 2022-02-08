@@ -49,7 +49,7 @@ def start_frontend():
     j.clean()
 
     # Add custom elements to UI
-    _set_page_title()
+    _set_page_config()
     _show_logo()
     _show_project_title()
     _add_custom_html()
@@ -160,9 +160,10 @@ def _show_logo():
         unsafe_allow_html=True)
 
 
-def _set_page_title():
-    if has_config_option("PAGE_TITLE"):
-        st.set_page_config(page_title=automapsconf.PAGE_TITLE)
+def _set_page_config():
+    favicon_path = get_config_value("FAVICON_PATH", None)
+    page_title = get_config_value("PAGE_TITLE", None)
+    st.set_page_config(page_title=page_title, page_icon=favicon_path)
 
 
 def _show_project_title():

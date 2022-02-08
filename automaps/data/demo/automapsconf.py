@@ -14,6 +14,7 @@ LOG_LEVEL_SERVER = "DEBUG"
 DOWNLOADS_RETAIN_TIME = 3600 * 12
 
 # LOGO_PATH = ""
+# FAVICON_PATH = ""
 PROJECT_TITLE = "Automaps Demo Project"
 PAGE_TITLE = "Automaps Demo Project"
 # MAPTYPE_TEXT = ""
