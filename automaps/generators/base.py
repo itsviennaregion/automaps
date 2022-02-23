@@ -160,12 +160,32 @@ class MapGenerator(ABC):
         lyr.styleManager().setCurrentStyle(style_name)
 
     def _zoom_map_to_layer_extent(
-        self, map_name: str, layer: QgsMapLayer, buffer: float = 200.0
+        self,
+        map_name: str,
+        layer: QgsMapLayer,
+        buffer: float = None,
+        relative_buffer: float = None,
     ):
-        buffered_layer_extent = layer.extent().buffered(
-            buffer
-        )  # NL: Unbuffered extent ends at the maps corner. Gives the map more space.
-        self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
+        """Centers a map to the given layer and zooms to its extent. The extent can be
+        increased by adding a buffer.
+
+        Args:
+            map_name (str): Name of the map to modify
+            layer (QgsMapLayer): Layer to get extent from
+            buffer (float, optional): Absolute value (in map units) of the buffer.
+                Defaults to None.
+            relative_buffer (float, optional): Relative value of the buffer. To increase
+                the map extent by 10 %, use the value 0.1. Defaults to None.
+        """
+        extent = layer.extent()
+        if buffer is not None:
+            extent = extent.buffered(buffer)
+        self.step_data.layout.itemById(map_name).zoomToExtent(extent)  # type: ignore
+        if relative_buffer is not None:
+            scale_padded = self.step_data.layout.itemById(map_name).scale() * (
+                1 + relative_buffer
+            )
+            self.step_data.layout.itemById(map_name).setScale(scale_padded)
 
     def _scale_map_to_layer_extent(
         self,
