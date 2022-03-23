@@ -31,7 +31,6 @@ def export_layout(layout: QgsLayout, filepath: str, file_format: str):
             im.save(filepath)
     elif file_format.lower() == "svg":
         svg_settings = QgsLayoutExporter.SvgExportSettings()
-        svg_settings.cropToContents = True
         svg_settings.forceVectorOutput = True
         svg_settings.simplifyGeometries = True
         svg_settings.exportLabelsToSeparateLayers = True
