@@ -5,7 +5,12 @@ from automaps.confutils import get_config_value
 
 logger = logging.getLogger("server")
 logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+formatter = logging.Formatter(
+    get_config_value(
+        "LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)

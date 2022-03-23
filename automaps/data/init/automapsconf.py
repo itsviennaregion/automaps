@@ -1,11 +1,10 @@
-
 from db import db
 
 # TODO: Add your MapType objects
 MAPTYPES_AVAIL = []
 
 # TODO: Add your QGIS installation path, e.g. '/usr'
-# The path can be determined by opening up the QGIS GUI and running 
+# The path can be determined by opening up the QGIS GUI and running
 # QgsApplication.prefixPath() in the Python console.
 QGIS_INSTALLATION_PATH = ""
 
@@ -24,6 +23,7 @@ PAGE_TITLE = "Some page title"
 PORT_MAP_SERVER = 5656
 
 # LOG_LEVEL_SERVER = "DEBUG"
+# LOG_FORMAT = ""
 # DOWNLOADS_RETAIN_TIME = 3600 * 12
 # LOGO_PATH = ""
 # FAVICON_PATH = ""

@@ -1,4 +1,3 @@
-
 from automapsconf_poly import maptype_poly
 from db import db
 
@@ -9,6 +8,7 @@ PORT_MAP_SERVER = 5656
 QGIS_INSTALLATION_PATH = "/usr"
 FILEPATH_QGIS_PROJECT = "./demo_project.qgz"
 LOG_PATH = "./demo_project.log"
+# LOG_FORMAT = "%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s"
 LOG_LEVEL_SERVER = "DEBUG"
 
 DOWNLOADS_RETAIN_TIME = 3600 * 12

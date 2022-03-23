@@ -4,6 +4,7 @@ from automaps.maptype import MapType
 
 SHOW_DEBUG_INFO: bool
 LOG_PATH: str
+LOG_FORMAT: str
 LOG_LEVEL_SERVER: str
 PORT_MAP_SERVER: int
 QGIS_INSTALLATION_PATH: str
