@@ -1,3 +1,5 @@
+# The `MapType` class
+
 MapType is initialized with the following arguments: 
 
 * `name (str)`: Name of the map type. This must be used as a key in the variable `GENERATORS`. 
