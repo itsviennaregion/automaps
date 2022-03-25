@@ -140,6 +140,7 @@ def _show_download_button(filename: str):
     download_button_str = download_button(
         os.path.basename(filename),
         "Download",
+        filename_for_user="_".join(os.path.basename(filename).split("_")[1:]),
     )
     st.markdown(download_button_str, unsafe_allow_html=True)
 
@@ -152,12 +153,14 @@ def _show_error_message(exception: Exception):
 
 def _show_logo():
     if has_config_option("LOGO_PATH"):
-        st.sidebar.write(f"""
+        st.sidebar.write(
+            f"""
         <a href="./">
             <img src="{automapsconf.LOGO_PATH}" alt="Logo" style="margin-bottom: 3rem;">
         </a>
-        """, 
-        unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
 
 def _set_page_config():

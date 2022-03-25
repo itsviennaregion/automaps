@@ -78,8 +78,9 @@ def download_link(download_filepath, link_text) -> str:
     return dl_link.strip()
 
 
-def download_button(download_filepath, button_text):
+def download_button(download_filepath, button_text, filename_for_user: str = ""):
     filename = os.path.basename(download_filepath)
+    filename_for_user = filename_for_user if len(filename_for_user) > 0 else filename
     button_uuid = str(uuid.uuid4()).replace("-", "")
     button_id = re.sub(r"\d+", "", button_uuid)
 
@@ -91,7 +92,7 @@ def download_button(download_filepath, button_text):
     dl_link = (
         custom_css
         + '<div class="row-widget stButton">'
-        + f'<a download="{filename}" id="{button_id}" '
+        + f'<a download="{filename_for_user}" id="{button_id}" '
         + f'href="downloads/{filename}">{button_text}</a><br></br>'
         + "</div>"
     )

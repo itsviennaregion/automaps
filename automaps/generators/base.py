@@ -3,6 +3,7 @@ from collections import namedtuple
 from copy import copy
 import os
 from typing import Any, ForwardRef, List, OrderedDict, Union
+import uuid
 
 from qgis.core import (
     QgsLayerTreeGroup,
@@ -45,6 +46,8 @@ class MapGenerator(ABC):
         self.file_format = self.data.pop("!FILEFORMAT!", default_file_format).lower()
         if self.file_format not in ["pdf", "png", "svg"]:
             raise ValueError(f"Unsupported export file format: {self.file_format}")
+        if not hasattr(self.step_data, "uuid"):
+            self.step_data.uuid = str(uuid.uuid1())  # type: ignore
         self.step_data.message_to_client["filename"] = self.filename
         try:
             self.step_data.project  # type: ignore
@@ -72,9 +75,9 @@ class MapGenerator(ABC):
             data.pop(key, None)
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.name}_{'_'.join(str(x) for x in data.values() if x)}".replace(
-                " ", "_"
-            )
+            f"{self.step_data.uuid}_"  # type: ignore
+            f"{self.name}_"
+            f"{'_'.join(str(x) for x in data.values() if x)}".replace(" ", "_")
             .replace(".", "_")
             .replace("/", "_")
             + f".{self.file_format}",
