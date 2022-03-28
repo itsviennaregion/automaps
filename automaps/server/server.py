@@ -21,11 +21,11 @@ def start_server():
     socket = context.socket(zmq.REP)
     socket.bind(f"tcp://*:{automapsconf.PORT_MAP_SERVER}")
     map_type_name = None
-    step_data = StepData({})
     try:
         while True:
             message = socket.recv_json()
             if "init" in message.keys():
+                step_data = StepData({})
                 generator = _get_generators()[message["init"]](
                     message,
                     str(get_streamlit_download_path()),
