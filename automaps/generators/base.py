@@ -37,17 +37,17 @@ class MapGenerator(ABC):
         basepath_fileserver: str,
         print_layout: str,
         step_data: StepData,
+        job_uuid: str,
         default_file_format: str = "pdf",
     ):
         self.data = data
         self.basepath_fileserver = basepath_fileserver
         self.print_layout = print_layout
         self.step_data = step_data
+        self.job_uuid = job_uuid
         self.file_format = self.data.pop("!FILEFORMAT!", default_file_format).lower()
         if self.file_format not in ["pdf", "png", "svg"]:
             raise ValueError(f"Unsupported export file format: {self.file_format}")
-        if not hasattr(self.step_data, "uuid"):
-            self.step_data.uuid = str(uuid.uuid1())  # type: ignore
         self.step_data.message_to_client["filename"] = self.filename
         try:
             self.step_data.project  # type: ignore
@@ -66,6 +66,7 @@ class MapGenerator(ABC):
         data.pop("selectors_to_exclude_from_filename", None)
         data.pop("maptype_dict_key", None)
         data.pop("step", None)
+        data.pop("job_uuid", None)
         data.pop("print_layout", None)
         data.pop("!FILEFORMAT!", None)
         option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
@@ -75,7 +76,7 @@ class MapGenerator(ABC):
             data.pop(key, None)
         return os.path.join(
             self.basepath_fileserver,
-            f"{self.step_data.uuid}_"  # type: ignore
+            f"{self.job_uuid}_"
             f"{self.name}_"
             f"{'_'.join(str(x) for x in data.values() if x)}".replace(" ", "_")
             .replace(".", "_")

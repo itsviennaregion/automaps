@@ -20,14 +20,18 @@ def start_server():
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind(f"tcp://*:{automapsconf.PORT_MAP_SERVER}")
-    step_data = StepData({})
     map_type_name = None
+    step_data = StepData({})
     try:
         while True:
             message = socket.recv_json()
             if "init" in message.keys():
                 generator = _get_generators()[message["init"]](
-                    message, str(get_streamlit_download_path()), "", step_data
+                    message,
+                    str(get_streamlit_download_path()),
+                    "",
+                    step_data,
+                    message["job_uuid"],
                 )
                 steps = generator.steps
                 init_message = {"steps": list(steps.keys())}
@@ -37,7 +41,9 @@ def start_server():
             else:
                 if map_type_name:
                     data_log = {
-                        k: v for k, v in message.items() if "FOKUS" not in k.upper()  # TODO: move to configuration!
+                        k: v
+                        for k, v in message.items()
+                        if "FOKUS" not in k.upper()  # TODO: move to configuration!
                     }
                     data_log["map_type_name"] = map_type_name
                     logger.debug(json.dumps(data_log))
@@ -47,6 +53,7 @@ def start_server():
                     str(get_streamlit_download_path()),
                     message["print_layout"],
                     step_data,
+                    message["job_uuid"],
                 )
                 step_data = generator.run_step(message["step"])
                 step_message = step_data.message_to_client

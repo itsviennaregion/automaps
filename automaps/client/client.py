@@ -6,12 +6,12 @@ import zmq
 import automapsconf
 
 
-def ask_server_for_steps(maptype_dict_key: str) -> Iterable[str]:
+def ask_server_for_steps(maptype_dict_key: str, job_uuid: str) -> Iterable[str]:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
 
-    socket.send_json({"init": maptype_dict_key})
+    socket.send_json({"init": maptype_dict_key, "job_uuid": job_uuid})
 
     message_from_server = socket.recv_json()
 
@@ -23,6 +23,7 @@ def send_task_to_server(
     data: dict,
     print_layout: Union[str, Tuple[str, Dict[str, str]]],
     step: str,
+    job_uuid: str,
 ) -> dict:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
@@ -31,6 +32,7 @@ def send_task_to_server(
     data = copy(data)
     data["maptype_dict_key"] = maptype_dict_key
     data["step"] = step
+    data["job_uuid"] = job_uuid
 
     if isinstance(print_layout, str):
         data["print_layout"] = print_layout

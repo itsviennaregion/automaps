@@ -1,5 +1,6 @@
 # Prepare sys.path to allow loading user config with 'import automapsconf'
 import sys
+import uuid
 
 conf_path, automaps_path = sys.argv[1:]
 if conf_path not in sys.path:
@@ -88,7 +89,10 @@ def start_frontend():
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
                     )
                 ):
-                    steps = ask_server_for_steps(maptype_dict_key)
+                    job_uuid = uuid.uuid1()
+                    logging.info(f"Frontend initialized job {job_uuid}")
+                    steps = ask_server_for_steps(maptype_dict_key, str(job_uuid))
+                    logging.info(f"Server initialized job {job_uuid}")
 
                 for step in steps:
                     with st.spinner(
@@ -101,6 +105,7 @@ def start_frontend():
                             selector_values,
                             maptype.print_layout,
                             step,
+                            str(job_uuid),
                         )
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
@@ -111,6 +116,7 @@ def start_frontend():
                     ).format(maptype_name=maptype.name)
                 )
                 _show_download_button(step_message["filename"])
+                logging.info(f"Frontend received results of finished job {job_uuid}")
 
             except Exception as e:
                 _show_error_message(e)
