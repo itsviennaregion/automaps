@@ -11,11 +11,25 @@ def ask_server_for_steps(maptype_dict_key: str, job_uuid: str) -> Iterable[str]:
     socket = context.socket(zmq.REQ)
     socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
 
-    socket.send_json({"init": maptype_dict_key, "job_uuid": job_uuid})
+    socket.send_json(
+        {"event": "init_job", "init": maptype_dict_key, "job_uuid": job_uuid}
+    )
 
     message_from_server = socket.recv_json()
 
     return message_from_server["steps"]
+
+
+def send_job_finished_confirmation_to_server(job_uuid: str):
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
+
+    socket.send_json({"event": "job_finished", "job_uuid": job_uuid})
+
+    message_from_server = socket.recv_json()
+
+    return message_from_server
 
 
 def send_task_to_server(
@@ -33,6 +47,7 @@ def send_task_to_server(
     data["maptype_dict_key"] = maptype_dict_key
     data["step"] = step
     data["job_uuid"] = job_uuid
+    data["event"] = "process_step"
 
     if isinstance(print_layout, str):
         data["print_layout"] = print_layout

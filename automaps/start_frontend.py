@@ -1,5 +1,5 @@
-# Prepare sys.path to allow loading user config with 'import automapsconf'
 import sys
+import time
 import uuid
 
 conf_path, automaps_path = sys.argv[1:]
@@ -21,7 +21,11 @@ from automaps.fileserver import (
     get_streamlit_download_path,
     create_streamlit_download_path,
 )
-from automaps.client.client import ask_server_for_steps, send_task_to_server
+from automaps.client.client import (
+    ask_server_for_steps,
+    send_job_finished_confirmation_to_server,
+    send_task_to_server,
+)
 from automaps.confutils import get_config_value, get_default_args, has_config_option
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
@@ -89,9 +93,9 @@ def start_frontend():
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
                     )
                 ):
-                    job_uuid = uuid.uuid1()
+                    job_uuid = "JOB-" + str(uuid.uuid1())
                     logging.info(f"Frontend initialized job {job_uuid}")
-                    steps = ask_server_for_steps(maptype_dict_key, str(job_uuid))
+                    steps = ask_server_for_steps(maptype_dict_key, job_uuid)
                     logging.info(f"Server initialized job {job_uuid}")
 
                 for step in steps:
@@ -109,6 +113,7 @@ def start_frontend():
                         )
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
+                print(send_job_finished_confirmation_to_server(job_uuid))
                 progress_bar.progress(1.0)
                 st.success(
                     get_config_value(
