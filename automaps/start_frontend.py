@@ -1,6 +1,6 @@
 import sys
 import time
-import uuid
+from uuid import uuid1
 
 conf_path, automaps_path = sys.argv[1:]
 if conf_path not in sys.path:
@@ -22,6 +22,7 @@ from automaps.fileserver import (
     create_streamlit_download_path,
 )
 from automaps.client.client import (
+    ask_registry_for_idle_worker,
     ask_server_for_steps,
     send_job_finished_confirmation_to_server,
     send_task_to_server,
@@ -93,10 +94,21 @@ def start_frontend():
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
                     )
                 ):
-                    job_uuid = "JOB-" + str(uuid.uuid1())
-                    logging.info(f"Frontend initialized job {job_uuid}")
-                    steps = ask_server_for_steps(maptype_dict_key, job_uuid)
-                    logging.info(f"Server initialized job {job_uuid}")
+                    worker_port = ask_registry_for_idle_worker()["idle_worker_port"]
+                    while worker_port is None:
+                        time.sleep(0.5)
+                        worker_port = ask_registry_for_idle_worker()["idle_worker_port"]
+
+                    job_uuid = "JOB-" + str(uuid1())
+                    logging.info(
+                        f"Frontend {st.session_state['frontend_uuid']} initialized job {job_uuid} for worker on port {worker_port}"
+                    )
+                    steps = ask_server_for_steps(
+                        maptype_dict_key, job_uuid, worker_port
+                    )
+                    logging.info(
+                        f"Worker on port {worker_port} initialized job {job_uuid}"
+                    )
 
                 for step in steps:
                     with st.spinner(
@@ -110,10 +122,11 @@ def start_frontend():
                             maptype.print_layout,
                             step,
                             str(job_uuid),
+                            worker_port,
                         )
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
-                print(send_job_finished_confirmation_to_server(job_uuid))
+                send_job_finished_confirmation_to_server(job_uuid, worker_port)
                 progress_bar.progress(1.0)
                 st.success(
                     get_config_value(
@@ -121,7 +134,9 @@ def start_frontend():
                     ).format(maptype_name=maptype.name)
                 )
                 _show_download_button(step_message["filename"])
-                logging.info(f"Frontend received results of finished job {job_uuid}")
+                logging.info(
+                    f"Frontend {st.session_state['frontend_uuid']} received results of finished job {job_uuid} from worker on port {worker_port}"
+                )
 
             except Exception as e:
                 _show_error_message(e)
@@ -130,6 +145,11 @@ def start_frontend():
 
 
 def _init():
+    if "frontend_uuid" not in st.session_state:
+        st.session_state["frontend_uuid"] = "FRONTEND-" + str(uuid1())
+        logging.info(
+            f"Frontend initalized with uuid {st.session_state['frontend_uuid']}"
+        )
     if not hasattr(automapsconf, "init_done"):
         create_streamlit_download_path()
         logging.info("Automaps initialized!")

@@ -4,6 +4,8 @@ from db import db
 MAPTYPES_AVAIL = [maptype_poly]
 
 PORT_MAP_SERVER = 5656
+PORTS_WORKERS = [5656, 5657]
+PORT_REGISTRY = 5757
 
 QGIS_INSTALLATION_PATH = "/usr"
 FILEPATH_QGIS_PROJECT = "./demo_project.qgz"

@@ -32,6 +32,10 @@ written, e.g. `"./some_file_name.log"`.
 the communication between frontend and backend processes. If you have no reason to 
 change it, leave the default as it is.
 
+* `PORTS_WORKERS`: TODO
+
+* `PORT_REGISTRY`: TODO
+
 ## Optional configuration
 ### User Interface
 * `PROJECT_TITLE (str)`: This string variable sets the project title. The title will be

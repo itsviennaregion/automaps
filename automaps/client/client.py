@@ -6,10 +6,24 @@ import zmq
 import automapsconf
 
 
-def ask_server_for_steps(maptype_dict_key: str, job_uuid: str) -> Iterable[str]:
+def ask_registry_for_idle_worker():
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
+    socket.connect(f"tcp://localhost:{automapsconf.PORT_REGISTRY}")
+
+    socket.send_json({"command": "get_idle_worker"})
+
+    message_from_server = socket.recv_json()
+
+    return message_from_server
+
+
+def ask_server_for_steps(
+    maptype_dict_key: str, job_uuid: str, worker_port: int
+) -> Iterable[str]:
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.connect(f"tcp://localhost:{worker_port}")
 
     socket.send_json(
         {"event": "init_job", "init": maptype_dict_key, "job_uuid": job_uuid}
@@ -20,10 +34,10 @@ def ask_server_for_steps(maptype_dict_key: str, job_uuid: str) -> Iterable[str]:
     return message_from_server["steps"]
 
 
-def send_job_finished_confirmation_to_server(job_uuid: str):
+def send_job_finished_confirmation_to_server(job_uuid: str, worker_port: int):
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
+    socket.connect(f"tcp://localhost:{worker_port}")
 
     socket.send_json({"event": "job_finished", "job_uuid": job_uuid})
 
@@ -38,10 +52,11 @@ def send_task_to_server(
     print_layout: Union[str, Tuple[str, Dict[str, str]]],
     step: str,
     job_uuid: str,
+    worker_port: int,
 ) -> dict:
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect(f"tcp://localhost:{automapsconf.PORT_MAP_SERVER}")
+    socket.connect(f"tcp://localhost:{worker_port}")
 
     data = copy(data)
     data["maptype_dict_key"] = maptype_dict_key
