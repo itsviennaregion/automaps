@@ -28,6 +28,7 @@ from automaps.client.client import (
     send_task_to_server,
 )
 from automaps.confutils import get_config_value, get_default_args, has_config_option
+import automaps.logutils as lu
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
@@ -94,20 +95,26 @@ def start_frontend():
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
                     )
                 ):
-                    worker_port = ask_registry_for_idle_worker()["idle_worker_port"]
+                    worker_info = ask_registry_for_idle_worker()
+                    worker_port = worker_info["idle_worker_port"]
                     while worker_port is None:
                         time.sleep(0.5)
-                        worker_port = ask_registry_for_idle_worker()["idle_worker_port"]
+                        worker_info = ask_registry_for_idle_worker()
+                        worker_port = worker_info["idle_worker_port"]
 
                     job_uuid = "JOB-" + str(uuid1())
-                    logging.info(
-                        f"Frontend {st.session_state['frontend_uuid']} initialized job {job_uuid} for worker on port {worker_port}"
+                    logging.getLogger("frontend").info(
+                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])}"
+                        f" initialized job {lu.shorten_uuid(job_uuid)} for worker "
+                        f"{lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port "
+                        f"{worker_port}"
                     )
                     steps = ask_server_for_steps(
                         maptype_dict_key, job_uuid, worker_port
                     )
-                    logging.info(
-                        f"Worker on port {worker_port} initialized job {job_uuid}"
+                    logging.getLogger("frontend").info(
+                        f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port {worker_port} accepted job "
+                        f"{lu.shorten_uuid(job_uuid)}"
                     )
 
                 for step in steps:
@@ -116,6 +123,7 @@ def start_frontend():
                             "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
                         ).format(maptype_name=maptype.name, step=step)
                     ):
+                        logging.getLogger("frontend").debug(f"Requesting step '{step}'")
                         step_message = send_task_to_server(
                             maptype_dict_key,
                             selector_values,
@@ -134,8 +142,10 @@ def start_frontend():
                     ).format(maptype_name=maptype.name)
                 )
                 _show_download_button(step_message["filename"])
-                logging.info(
-                    f"Frontend {st.session_state['frontend_uuid']} received results of finished job {job_uuid} from worker on port {worker_port}"
+                logging.getLogger("frontend").info(
+                    f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                    f"received results of finished job {lu.shorten_uuid(job_uuid)} "
+                    f"from worker on port {worker_port}"
                 )
 
             except Exception as e:
@@ -147,20 +157,27 @@ def start_frontend():
 def _init():
     if "frontend_uuid" not in st.session_state:
         st.session_state["frontend_uuid"] = "FRONTEND-" + str(uuid1())
-        logging.info(
-            f"Frontend initalized with uuid {st.session_state['frontend_uuid']}"
+        logging.getLogger("frontend").info(
+            "Frontend initalized with uuid "
+            f"{lu.shorten_uuid(st.session_state['frontend_uuid'])}"
         )
     if not hasattr(automapsconf, "init_done"):
         create_streamlit_download_path()
-        logging.info("Automaps initialized!")
-        logging.info(f"  Download path: {get_streamlit_download_path()}")
+        logging.getLogger("frontend").setLevel(
+            get_config_value("LOG_LEVEL_SERVER", logging.INFO)
+        )
+        lu.add_file_handler(logging.getLogger("frontend"))
+        logging.getLogger("frontend").info("Automaps initialized!")
+        logging.getLogger("frontend").info(
+            f"Download path: {get_streamlit_download_path()}"
+        )
         max_seconds = (
             automapsconf.DOWNLOADS_RETAIN_TIME
             if hasattr(automapsconf, "DOWNLOADS_RETAIN_TIME")
             else get_default_args(DownloadPathJanitor.__init__)["max_seconds"]
         )
-        logging.info(
-            f"  Downloads are retained for {max_seconds} seconds "
+        logging.getLogger("frontend").info(
+            f"Downloads are retained for {max_seconds} seconds "
             f"({max_seconds / 3600:.1f} hours)."
         )
 

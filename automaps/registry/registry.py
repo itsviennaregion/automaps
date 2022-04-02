@@ -5,32 +5,30 @@ import json
 import logging
 from typing import Dict, List, Optional, Union
 from uuid import uuid1
+import streamlit
 import zmq
 
-import automaps.logutils
-from automaps.server.server import State
+from automaps.confutils import get_config_value
+import automaps.logutils as lu
+from automaps.worker.worker import State
 
 import automapsconf
 
 
 @dataclass
 class Worker:
+    id: int
     uuid: str
     port: int
     state: str
     last_update: str
 
 
-@dataclass
-class ServerRequest:
-    server_uuid: str
-    command: str
-    state: str
-
-
 class Registry:
     def __init__(self):
         self.logger = logging.getLogger("registry")
+        self.logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
+        lu.add_file_handler(self.logger)
 
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
@@ -47,14 +45,14 @@ class Registry:
     @property
     def workers(self):
         return {
-            server_uuid: str(worker) for server_uuid, worker in self._workers.items()
+            worker_uuid: str(worker) for worker_uuid, worker in self._workers.items()
         }
 
     @property
     def idle_workers(self) -> Dict[str, Worker]:
         return {
-            server_uuid: worker
-            for server_uuid, worker in self._workers.items()
+            worker_uuid: worker
+            for worker_uuid, worker in self._workers.items()
             if worker.state == str(State.IDLE)
         }
 
@@ -64,6 +62,10 @@ class Registry:
             return list(self.idle_workers.values())[0]
         else:
             return None
+
+    @property
+    def worker_states_short(self) -> Dict[str, str]:
+        return {lu.shorten_uuid(k): v.state for k, v in self._workers.items()}
 
     def listen(self):
         try:
@@ -81,22 +83,32 @@ class Registry:
         finally:
             self.socket.close()
             self.context.term()
+            self.logger.info(f"Registry shut down")
 
     def _update_state(self, message: dict):
-        self._workers[message["server_uuid"]] = Worker(
-            message["server_uuid"],
+        self._workers[message["worker_uuid"]] = Worker(
+            message["worker_id"],
+            message["worker_uuid"],
             message["server_port"],
             message["state"],
             datetime.now(timezone.utc).isoformat(),
         )
 
         self.socket.send_json(self.workers)
-        # self.logger.info(f"Registry sent message {self.workers}")
+        self.logger.debug(
+            f"State updated: worker{message['worker_id']:03d} {lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}"
+        )
 
     def _get_idle_worker(self, message: dict):
+        self.logger.debug(
+            f"Frontend is asking for idle workers. Worker states: {self.worker_states_short}"
+        )
         if self.idle_worker is not None:
-            message = {"idle_worker_port": self.idle_worker.port}
+            message = {
+                "idle_worker_uuid": self.idle_worker.uuid,
+                "idle_worker_port": self.idle_worker.port,
+            }
         else:
             message = {"idle_worker_port": None}
+        self.logger.debug(f"Result of idle worker search: {message}")
         self.socket.send_json(message)
-        # self.logger.info(f"Registry sent message {message}")

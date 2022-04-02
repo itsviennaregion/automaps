@@ -1,23 +1,22 @@
 import logging
+from typing import Union
+from uuid import UUID
 
 from automaps.confutils import get_config_value
 
+BASIC_FORMAT = "%(asctime)s -- %(levelname)-7s -- %(name)s -- %(message)s"
 
-logger = logging.getLogger("server")
-logger.setLevel(logging.INFO)
+FORMATTER_LOGFILE = logging.Formatter(get_config_value("LOG_FORMAT", BASIC_FORMAT))
 
-formatter = logging.Formatter(
-    get_config_value(
-        "LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
-)
-# ch = logging.StreamHandler()
-# ch.setLevel(logging.DEBUG)
-# ch.setFormatter(formatter)
-# logger.addHandler(ch)
 
-if get_config_value("LOG_PATH"):
-    fh = logging.FileHandler(get_config_value("LOG_PATH"))
-    fh.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+def add_file_handler(logger_):
+    if get_config_value("LOG_PATH"):
+        fh = logging.FileHandler(get_config_value("LOG_PATH"))
+        fh.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
+        fh.setFormatter(FORMATTER_LOGFILE)
+        logger_.addHandler(fh)
+
+
+def shorten_uuid(uuid: Union[UUID, str]):
+    uuid = str(uuid)
+    return uuid.split("-")[1]

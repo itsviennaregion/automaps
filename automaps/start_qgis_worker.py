@@ -9,7 +9,7 @@ if conf_path not in sys.path:
 if automaps_path not in sys.path:
     sys.path.append(automaps_path)
 
-from automaps.server.server import QgisWorker
+from automaps.worker.worker import QgisWorker
 
 if __name__ == "__main__":
     worker_id = int(worker_id_str)
