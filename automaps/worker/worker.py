@@ -27,6 +27,7 @@ class QgisWorker:
         "init_job": State.INITIALIZED,
         "process_step": State.PROCESSING,
         "job_finished": State.IDLE,
+        "job_cancelled": State.IDLE,
     }
 
     def __init__(self, worker_id: int):
@@ -43,6 +44,7 @@ class QgisWorker:
             "init_job": self._init_job,
             "process_step": self._process_step,
             "job_finished": self._finish_job,
+            "job_cancelled": self._cancel_job,
         }
 
         self._context = zmq.Context()
@@ -105,7 +107,7 @@ class QgisWorker:
 
     def _init_job(self, message: dict):
         self.state = self.state_on_event[message["event"]]
-        self._logger.debug(f"Initializing job {message['job_uuid']}")
+        self._logger.debug(f"Initializing job {lu.shorten_uuid(message['job_uuid'])}")
 
         self._step_data = StepData({})
         generator = self._get_generators()[message["init"]](
@@ -159,6 +161,21 @@ class QgisWorker:
         }
         self._logger.info(f"Finished job {lu.shorten_uuid(message['job_uuid'])}")
         self._socket.send_json(job_finished_message)
+
+    def _cancel_job(self, message: dict):
+        if self.state != State.IDLE:
+            self.state = self.state_on_event[message["event"]]
+            self._step_data = StepData({})
+            self._logger.debug(f"Cancelled job {lu.shorten_uuid(message['job_uuid'])}")
+        else:
+            self._logger.debug(
+                f"Tried to cancel job {lu.shorten_uuid(message['job_uuid'])}, but worker already idle."
+            )
+        job_cancelled_message = {
+            "worker_uuid": self.uuid,
+            "server_state": str(self.state),
+        }
+        self._socket.send_json(job_cancelled_message)
 
     def _unknown_message(self, message: dict):
         unknown_event_message = {

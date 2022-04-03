@@ -6,12 +6,12 @@ import zmq
 import automapsconf
 
 
-def ask_registry_for_idle_worker():
+def ask_registry_for_idle_worker(frontend_uuid: str):
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.connect(f"tcp://localhost:{automapsconf.PORT_REGISTRY}")
 
-    socket.send_json({"command": "get_idle_worker"})
+    socket.send_json({"frontend_uuid": frontend_uuid, "command": "get_idle_worker"})
 
     message_from_server = socket.recv_json()
 
@@ -40,6 +40,18 @@ def send_job_finished_confirmation_to_server(job_uuid: str, worker_port: int):
     socket.connect(f"tcp://localhost:{worker_port}")
 
     socket.send_json({"event": "job_finished", "job_uuid": job_uuid})
+
+    message_from_server = socket.recv_json()
+
+    return message_from_server
+
+
+def send_job_cancellation_to_worker(job_uuid: str, worker_port: int):
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.connect(f"tcp://localhost:{worker_port}")
+
+    socket.send_json({"event": "job_cancelled", "job_uuid": job_uuid})
 
     message_from_server = socket.recv_json()
 

@@ -96,19 +96,21 @@ class Registry:
 
         self.socket.send_json(self.workers)
         self.logger.debug(
-            f"State updated: worker{message['worker_id']:03d} {lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}"
+            f"State updated: worker{message['worker_id']:03d} "
+            f"{lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}"
         )
 
     def _get_idle_worker(self, message: dict):
         self.logger.debug(
-            f"Frontend is asking for idle workers. Worker states: {self.worker_states_short}"
+            f"Frontend {lu.shorten_uuid(message['frontend_uuid'])} is asking for idle "
+            f"workers. Worker states: {self.worker_states_short}"
         )
         if self.idle_worker is not None:
-            message = {
+            return_message = {
                 "idle_worker_uuid": self.idle_worker.uuid,
                 "idle_worker_port": self.idle_worker.port,
             }
         else:
-            message = {"idle_worker_port": None}
-        self.logger.debug(f"Result of idle worker search: {message}")
-        self.socket.send_json(message)
+            return_message = {"idle_worker_port": None}
+        self.logger.debug(f"Result of idle worker search: {return_message}")
+        self.socket.send_json(return_message)

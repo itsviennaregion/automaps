@@ -24,6 +24,7 @@ from automaps.fileserver import (
 from automaps.client.client import (
     ask_registry_for_idle_worker,
     ask_server_for_steps,
+    send_job_cancellation_to_worker,
     send_job_finished_confirmation_to_server,
     send_task_to_server,
 )
@@ -79,6 +80,10 @@ def start_frontend():
 
     # Create map
     if st.button(get_config_value("CREATE_MAP_BUTTON_TEXT", "Create map")):
+        if st.session_state.get("active_job", None) is not None:
+            send_job_cancellation_to_worker(
+                st.session_state["active_job"], st.session_state["active_worker_port"]
+            )
         if selector_values.get("has_init_values", False):
             st.info(
                 get_config_value(
@@ -95,14 +100,20 @@ def start_frontend():
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
                     )
                 ):
-                    worker_info = ask_registry_for_idle_worker()
+                    worker_info = ask_registry_for_idle_worker(
+                        st.session_state["frontend_uuid"]
+                    )
                     worker_port = worker_info["idle_worker_port"]
                     while worker_port is None:
                         time.sleep(0.5)
-                        worker_info = ask_registry_for_idle_worker()
+                        worker_info = ask_registry_for_idle_worker(
+                            st.session_state["frontend_uuid"]
+                        )
                         worker_port = worker_info["idle_worker_port"]
 
                     job_uuid = "JOB-" + str(uuid1())
+                    st.session_state["active_job"] = job_uuid
+                    st.session_state["active_worker_port"] = worker_port
                     logging.getLogger("frontend").info(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])}"
                         f" initialized job {lu.shorten_uuid(job_uuid)} for worker "
@@ -135,6 +146,7 @@ def start_frontend():
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
                 send_job_finished_confirmation_to_server(job_uuid, worker_port)
+                st.session_state["active_job"] = None
                 progress_bar.progress(1.0)
                 st.success(
                     get_config_value(
@@ -147,7 +159,6 @@ def start_frontend():
                     f"received results of finished job {lu.shorten_uuid(job_uuid)} "
                     f"from worker on port {worker_port}"
                 )
-
             except Exception as e:
                 _show_error_message(e)
 
