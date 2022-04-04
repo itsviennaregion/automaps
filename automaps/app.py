@@ -51,14 +51,14 @@ class AutoMaps:
             ]
         )
         workers = []
-        for i, _ in enumerate(automapsconf.PORTS_WORKERS):
+        for port in automapsconf.PORTS_WORKERS:
             worker = subprocess.Popen(
                 [
                     sys.executable,
                     os.path.join(automaps_run_path, "start_qgis_worker.py"),
                     conf_path,
                     automaps_path,
-                    str(i),
+                    str(port),
                 ]
             )
             workers.append(worker)

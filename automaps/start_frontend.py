@@ -114,7 +114,7 @@ def start_frontend():
                         )
                         worker_port = worker_info["idle_worker_port"]
 
-                    job_uuid = "JOB-" + str(uuid1())
+                    job_uuid = "J-" + str(uuid1())
                     st.session_state["active_job"] = job_uuid
                     st.session_state["active_worker_port"] = worker_port
                     logging.getLogger("frontend").info(
@@ -188,7 +188,7 @@ def start_frontend():
 
 def _init():
     if "frontend_uuid" not in st.session_state:
-        st.session_state["frontend_uuid"] = "FRONTEND-" + str(uuid1())
+        st.session_state["frontend_uuid"] = "F-" + str(uuid1())
         logging.getLogger("frontend").info(
             "Frontend initalized with uuid "
             f"{lu.shorten_uuid(st.session_state['frontend_uuid'])}"

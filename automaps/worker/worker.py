@@ -1,8 +1,9 @@
 from enum import Enum
 import json
 import logging
-import time
+from typing import Optional
 from uuid import uuid1
+
 import zmq
 
 from automaps._qgis import start_qgis
@@ -30,13 +31,14 @@ class QgisWorker:
         "job_cancelled": State.IDLE,
     }
 
-    def __init__(self, worker_id: int):
-        self.id = worker_id
-        self.uuid = "WORKER-" + str(uuid1())
-        self.port = automapsconf.PORTS_WORKERS[worker_id]
+    def __init__(self, port: int):
+        self._uuid = "W-" + str(uuid1())
+        self.port = port
 
-        self._uuid_short = lu.shorten_uuid(self.uuid)
-        self._logger = logging.getLogger(f"worker{self.id:02d}")
+        self._uuid_short = lu.shorten_uuid(self._uuid)
+        self._logger = logging.getLogger(
+            f"worker{lu.shorten_uuid(self._uuid, extra_short=True)}"
+        )
         self._logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
         lu.add_file_handler(self._logger)
 
@@ -49,7 +51,7 @@ class QgisWorker:
 
         self._context = zmq.Context()
         self._socket = self._context.socket(zmq.REP)
-        self._socket.setsockopt(zmq.IDENTITY, bytes(self.uuid, "utf-8"))
+        self._socket.setsockopt(zmq.IDENTITY, bytes(self._uuid, "utf-8"))
         self._socket.bind(f"tcp://*:{self.port}")
 
         self._socket_registry = self._context.socket(zmq.REQ)
@@ -98,8 +100,7 @@ class QgisWorker:
     def _send_state_to_registry(self):
         message_to_registry = {
             "command": "update_state",
-            "worker_id": self.id,
-            "worker_uuid": self.uuid,
+            "worker_uuid": self._uuid,
             "server_port": self.port,
             "state": str(self.state),
         }
@@ -120,7 +121,7 @@ class QgisWorker:
         )
         steps = generator.steps
         init_message = {
-            "worker_uuid": self.uuid,
+            "worker_uuid": self._uuid,
             "server_state": str(self.state),
             "job_uuid": message["job_uuid"],
             "steps": list(steps.keys()),
@@ -156,14 +157,14 @@ class QgisWorker:
         self._step_data = generator.run_step(message["step"])
         step_message = self._step_data.message_to_client
         step_message["server_state"] = str(self.state)
-        step_message["worker_uuid"] = self.uuid
+        step_message["worker_uuid"] = self._uuid
         self._socket.send_json(step_message)
 
     def _finish_job(self, message: dict):
         self.state = self.state_on_event[message["event"]]
         self._step_data = StepData({})
         job_finished_message = {
-            "worker_uuid": self.uuid,
+            "worker_uuid": self._uuid,
             "server_state": str(self.state),
         }
         self._logger.info(f"Finished job {lu.shorten_uuid(message['job_uuid'])}")
@@ -180,14 +181,14 @@ class QgisWorker:
                 f"worker is already idle."
             )
         job_cancelled_message = {
-            "worker_uuid": self.uuid,
+            "worker_uuid": self._uuid,
             "server_state": str(self.state),
         }
         self._socket.send_json(job_cancelled_message)
 
     def _unknown_message(self, message: dict):
         unknown_event_message = {
-            "worker_uuid": self.uuid,
+            "worker_uuid": self._uuid,
             "error": f"Unknown Event: {message['event']}",
             "server_state": str(self.state),
         }

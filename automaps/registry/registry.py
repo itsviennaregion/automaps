@@ -17,7 +17,6 @@ import automapsconf
 
 @dataclass
 class Worker:
-    id: int
     uuid: str
     port: int
     state: str
@@ -87,7 +86,6 @@ class Registry:
 
     def _update_state(self, message: dict):
         self._workers[message["worker_uuid"]] = Worker(
-            message["worker_id"],
             message["worker_uuid"],
             message["server_port"],
             message["state"],
@@ -96,7 +94,7 @@ class Registry:
 
         self.socket.send_json(self.workers)
         self.logger.debug(
-            f"State updated: worker{message['worker_id']:03d} "
+            f"State updated: worker "
             f"{lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}"
         )
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Optional, Union
 from uuid import UUID
 
 from automaps.confutils import get_config_value
@@ -17,9 +17,10 @@ def add_file_handler(logger_):
         logger_.addHandler(fh)
 
 
-def shorten_uuid(uuid: Union[UUID, str]):
+def shorten_uuid(uuid: Union[UUID, str], extra_short: Optional[bool] = False):
     uuid = str(uuid)
     try:
-        return uuid.split("-")[1]
+        prefix = "" if extra_short else uuid.split("-")[0]
+        return prefix + uuid.split("-")[1]
     except IndexError:
         return uuid
