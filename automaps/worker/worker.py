@@ -83,13 +83,14 @@ class QgisWorker:
                 message = self._socket.recv_json()
                 event = message["event"]
                 self._task_on_event.get(event, self._unknown_message)(message)
-        except KeyboardInterrupt:
-            pass
         finally:
             self.state = State.SHUTDOWN
             self._socket.close()
             self._socket_registry.close()
             self._context.term()
+            self._logger.info(
+                f"Worker {self._uuid_short} on port {self.port} shutdown."
+            )
 
     def _get_generators(self):
         return {x.name: x.map_generator for x in automapsconf.MAPTYPES_AVAIL}
@@ -136,9 +137,12 @@ class QgisWorker:
                 if "FOKUS" not in k.upper()  # TODO: move to configuration!
             }
             data_log["map_type_name"] = self._map_type_name
-            self._logger.debug(f"Received job: {json.dumps(data_log)}")
+            self._logger.debug(f"Beginning to process job: {json.dumps(data_log)}")
             self._map_type_name = None
-        self._logger.debug(f"Processing step '{message['step']}'")
+        self._logger.debug(
+            f"Processing job {lu.shorten_uuid(message['job_uuid'])}, "
+            f"step '{message['step']}'"
+        )
         generator = self._get_generators()[message["maptype_dict_key"]](
             message,
             str(get_streamlit_download_path()),
@@ -169,7 +173,8 @@ class QgisWorker:
             self._logger.debug(f"Cancelled job {lu.shorten_uuid(message['job_uuid'])}")
         else:
             self._logger.debug(
-                f"Tried to cancel job {lu.shorten_uuid(message['job_uuid'])}, but worker already idle."
+                f"Tried to cancel job {lu.shorten_uuid(message['job_uuid'])}, but "
+                f"worker is already idle."
             )
         job_cancelled_message = {
             "worker_uuid": self.uuid,
