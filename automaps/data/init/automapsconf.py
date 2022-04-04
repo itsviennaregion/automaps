@@ -33,6 +33,7 @@ PORT_REGISTRY = 5757
 # MISSING_ATTRIBUTES_TEXT = ""
 # CREATE_MAP_BUTTON_TEXT = ""
 # WAITING_FOR_SERVER_TEXT = "Waiting for map server ..."
+# NO_SERVER_AVAILABLE_TEXT = "Kartenserver ist ausgelastet. Bitte später noch einmal probieren!"
 # SPINNER_TEXT = "Creating map _{maptype_name}_ ({step})"
 # MAP_READY_TEXT = "Map _{maptype_name}_ is ready"
 # SHOW_DEBUG_INFO = True
