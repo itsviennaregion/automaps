@@ -1,6 +1,7 @@
 from enum import Enum
 import json
 import logging
+import sys
 from typing import Optional
 from uuid import uuid1
 
@@ -66,9 +67,6 @@ class QgisWorker:
 
         self._listen()
 
-    def __del__(self):
-        self.state = State.SHUTDOWN
-
     @property
     def state(self):
         return self._state
@@ -104,8 +102,13 @@ class QgisWorker:
             "server_port": self.port,
             "state": str(self.state),
         }
-        self._socket_registry.send_json(message_to_registry)
-        self._socket_registry.recv_json()
+        try:
+            self._socket_registry.send_json(message_to_registry)
+            self._socket_registry.recv_json()
+        except KeyboardInterrupt:
+            self._socket.close()
+            self._context.term()
+            sys.exit()
 
     def _init_job(self, message: dict):
         self.state = self.state_on_event[message["event"]]
