@@ -11,7 +11,7 @@ def ask_registry_for_idle_worker(frontend_uuid: str):
     socket = context.socket(zmq.REQ)
     socket.connect(f"tcp://localhost:{automapsconf.PORT_REGISTRY}")
 
-    socket.send_json({"frontend_uuid": frontend_uuid, "command": "get_idle_worker"})
+    socket.send_json({"command": "get_idle_worker", "frontend_uuid": frontend_uuid})
 
     message_from_server = socket.recv_json()
 

@@ -127,7 +127,8 @@ def start_frontend():
                         maptype_dict_key, job_uuid, worker_port
                     )
                     logging.getLogger("frontend").info(
-                        f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port {worker_port} accepted job "
+                        f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} "
+                        f"on port {worker_port} accepted job "
                         f"{lu.shorten_uuid(job_uuid)}"
                     )
 
@@ -137,7 +138,13 @@ def start_frontend():
                             "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
                         ).format(maptype_name=maptype.name, step=step)
                     ):
-                        logging.getLogger("frontend").debug(f"Requesting step '{step}'")
+                        logging.getLogger("frontend").debug(
+                            f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                            f"is requesting step '{step}' "
+                            f"for job {lu.shorten_uuid(job_uuid)} from worker "
+                            f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                            f"on port {worker_port}"
+                        )
                         step_message = send_task_to_server(
                             maptype_dict_key,
                             selector_values,

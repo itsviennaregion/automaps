@@ -71,7 +71,7 @@ class Registry:
         try:
             while True:
                 message = self.socket.recv_json()
-                # self.logger.info(f"Registry received {message}")
+                self.logger.debug(f"Registry received {message}")
 
                 if message["command"] == "update_state":
                     self._update_state(message)

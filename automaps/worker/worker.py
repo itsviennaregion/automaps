@@ -36,7 +36,7 @@ class QgisWorker:
         self.port = automapsconf.PORTS_WORKERS[worker_id]
 
         self._uuid_short = lu.shorten_uuid(self.uuid)
-        self._logger = logging.getLogger(f"worker{self.id:03d}")
+        self._logger = logging.getLogger(f"worker{self.id:02d}")
         self._logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
         lu.add_file_handler(self._logger)
 
@@ -97,10 +97,10 @@ class QgisWorker:
 
     def _send_state_to_registry(self):
         message_to_registry = {
+            "command": "update_state",
             "worker_id": self.id,
             "worker_uuid": self.uuid,
             "server_port": self.port,
-            "command": "update_state",
             "state": str(self.state),
         }
         self._socket_registry.send_json(message_to_registry)
@@ -137,7 +137,10 @@ class QgisWorker:
                 if "FOKUS" not in k.upper()  # TODO: move to configuration!
             }
             data_log["map_type_name"] = self._map_type_name
-            self._logger.debug(f"Beginning to process job: {json.dumps(data_log)}")
+            self._logger.info(
+                f"Beginning to process job "
+                f"{lu.shorten_uuid(message['job_uuid'])}: {json.dumps(data_log)}"
+            )
             self._map_type_name = None
         self._logger.debug(
             f"Processing job {lu.shorten_uuid(message['job_uuid'])}, "
