@@ -265,6 +265,7 @@ def _show_debug_info(selector_values):
         # Show selected values for all widgets (for debugging)
         if st.checkbox("Debug"):
             st.write("## Debug Info")
+            st.write(f"Frontend UUID: `{st.session_state['frontend_uuid']}`")
             for k, v in selector_values.items():
                 st.write(f"{k}: __{v}__")
 
