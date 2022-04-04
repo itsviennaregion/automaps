@@ -95,7 +95,8 @@ class Registry:
         self.socket.send_json(self.workers)
         self.logger.debug(
             f"State updated: worker "
-            f"{lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}"
+            f"{lu.shorten_uuid(message['worker_uuid'])} -> {message['state']}. "
+            f"States are now: {self.worker_states_short}"
         )
 
     def _get_idle_worker(self, message: dict):
