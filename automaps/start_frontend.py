@@ -33,6 +33,9 @@ import automaps.logutils as lu
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
+PING_FOR_IDLE_WORKER_EVERY_N_SECONDS = 0.5
+MAX_PINGS = 100
+
 
 def _get_maptype_names():
     return [x.name for x in MAPTYPES_AVAIL]
@@ -78,12 +81,17 @@ def start_frontend():
     # are satisfied) and get selected values
     selector_values = maptype.selector_values
 
-    # Create map
+    # Create map TODO: Refactoring
     if st.button(get_config_value("CREATE_MAP_BUTTON_TEXT", "Create map")):
+
+        # If there is an active job for this frontend, cancel it.
+        # This prevents workers from keep hanging in states INITIALIZATION or PROCESSING.
         if st.session_state.get("active_job", None) is not None:
             send_job_cancellation_to_worker(
                 st.session_state["active_job"], st.session_state["active_worker_port"]
             )
+
+        # If there are required selections missing, inform user.
         if selector_values.get("has_init_values", False):
             st.info(
                 get_config_value(
@@ -91,6 +99,8 @@ def start_frontend():
                     "Please define all required map attributes!",
                 )
             )
+
+        # Otherwise: Try to start processing
         else:
             job_uuid = ""
             worker_info = {}
@@ -98,6 +108,8 @@ def start_frontend():
             try:
                 progress_bar = st.progress(0)
                 progress = 0
+
+                # Search for idle workers
                 with st.spinner(
                     get_config_value(
                         "WAITING_FOR_SERVER_TEXT", "Waiting for map server ..."
@@ -107,80 +119,110 @@ def start_frontend():
                         st.session_state["frontend_uuid"]
                     )
                     worker_port = worker_info["idle_worker_port"]
-                    while worker_port is None:
-                        time.sleep(0.5)
+                    i = 0
+                    while worker_port is None and i < MAX_PINGS:
+                        i += 1
+                        time.sleep(PING_FOR_IDLE_WORKER_EVERY_N_SECONDS)
                         worker_info = ask_registry_for_idle_worker(
                             st.session_state["frontend_uuid"]
                         )
                         worker_port = worker_info["idle_worker_port"]
 
-                    job_uuid = "J-" + str(uuid1())
-                    st.session_state["active_job"] = job_uuid
-                    st.session_state["active_worker_port"] = worker_port
-                    logging.getLogger("frontend").info(
-                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])}"
-                        f" initialized job {lu.shorten_uuid(job_uuid)} for worker "
-                        f"{lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port "
-                        f"{worker_port}"
+                    if worker_port is not None:
+                        job_uuid = "J-" + str(uuid1())
+                        st.session_state["active_job"] = job_uuid
+                        st.session_state["active_worker_port"] = worker_port
+                        logging.getLogger("frontend").info(
+                            f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])}"
+                            f" initialized job {lu.shorten_uuid(job_uuid)} for worker "
+                            f"{lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port "
+                            f"{worker_port}"
+                        )
+                        steps = ask_server_for_steps(
+                            maptype_dict_key, job_uuid, worker_port
+                        )
+                        logging.getLogger("frontend").info(
+                            f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} "
+                            f"on port {worker_port} accepted job "
+                            f"{lu.shorten_uuid(job_uuid)}"
+                        )
+
+                # Idle worker has been found
+                if worker_port is not None:
+                    for step in steps:
+                        with st.spinner(
+                            get_config_value(
+                                "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
+                            ).format(maptype_name=maptype.name, step=step)
+                        ):
+                            logging.getLogger("frontend").debug(
+                                f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                                f"is requesting step '{step}' "
+                                f"for job {lu.shorten_uuid(job_uuid)} from worker "
+                                f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                                f"on port {worker_port}"
+                            )
+                            step_message = send_task_to_server(
+                                maptype_dict_key,
+                                selector_values,
+                                maptype.print_layout,
+                                step,
+                                str(job_uuid),
+                                worker_port,
+                            )
+                            progress += float(step_message["rel_weight"])
+                            progress_bar.progress(progress)
+                    progress_bar.progress(1.0)
+                    st.success(
+                        get_config_value(
+                            "MAP_READY_TEXT", "Map _{maptype_name}_ ready"
+                        ).format(maptype_name=maptype.name)
                     )
-                    steps = ask_server_for_steps(
-                        maptype_dict_key, job_uuid, worker_port
-                    )
-                    logging.getLogger("frontend").info(
-                        f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} "
-                        f"on port {worker_port} accepted job "
-                        f"{lu.shorten_uuid(job_uuid)}"
+                    _show_download_button(step_message["filename"])
+                    logging.getLogger("frontend").debug(
+                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                        f"received results of finished job "
+                        f"{lu.shorten_uuid(job_uuid)} from worker "
+                        f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                        f"on port {worker_port}"
                     )
 
-                for step in steps:
-                    with st.spinner(
+                # No idle worker has been found
+                else:
+                    st.info(
                         get_config_value(
-                            "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
-                        ).format(maptype_name=maptype.name, step=step)
-                    ):
-                        logging.getLogger("frontend").debug(
-                            f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
-                            f"is requesting step '{step}' "
-                            f"for job {lu.shorten_uuid(job_uuid)} from worker "
-                            f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
-                            f"on port {worker_port}"
+                            "NO_SERVER_AVAILABLE_TEXT",  # TODO: automapsconf.py
+                            "Map server is busy, please retry later!",
                         )
-                        step_message = send_task_to_server(
-                            maptype_dict_key,
-                            selector_values,
-                            maptype.print_layout,
-                            step,
-                            str(job_uuid),
-                            worker_port,
-                        )
-                        progress += float(step_message["rel_weight"])
-                        progress_bar.progress(progress)
-                progress_bar.progress(1.0)
-                st.success(
-                    get_config_value(
-                        "MAP_READY_TEXT", "Map _{maptype_name}_ ready"
-                    ).format(maptype_name=maptype.name)
-                )
-                _show_download_button(step_message["filename"])
-                logging.getLogger("frontend").debug(
-                    f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
-                    f"received results of finished job "
-                    f"{lu.shorten_uuid(job_uuid)} from worker "
-                    f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
-                    f"on port {worker_port}"
-                )
+                    )
+
             except Exception as e:
                 _show_error_message(e)
+
             finally:
-                logging.getLogger("frontend").info(
-                    f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
-                    f"is sending job finished confirmation for job "
-                    f"{lu.shorten_uuid(job_uuid)} "
-                    f"to worker "
-                    f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
-                    f"on port {worker_port}"
-                )
-                send_job_finished_confirmation_to_server(job_uuid, worker_port)
+                # If idle worker has been found:
+                # Send job finished confirmation to server in any case, even if
+                # Browser is closed or job restarted before worker has finished it.
+                if worker_port is not None:
+                    logging.getLogger("frontend").info(
+                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                        f"is sending job finished confirmation for job "
+                        f"{lu.shorten_uuid(job_uuid)} "
+                        f"to worker "
+                        f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                        f"on port {worker_port}"
+                    )
+                    send_job_finished_confirmation_to_server(job_uuid, worker_port)
+
+                # No idle worker has been found:
+                # just do some logging
+                else:
+                    logging.getLogger("frontend").warning(
+                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                        f"could not find idle worker. Job cancelled before "
+                        f"initialization."
+                    )
+
                 st.session_state["active_job"] = None
 
     _show_debug_info(selector_values)
