@@ -105,6 +105,7 @@ def start_frontend():
             job_uuid = ""
             worker_info = {}
             worker_port = None
+            job_finished = False
             try:
                 progress_bar = st.progress(0)
                 progress = 0
@@ -186,6 +187,7 @@ def start_frontend():
                         f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
                         f"on port {worker_port}"
                     )
+                    job_finished = True
 
                 # No idle worker has been found
                 else:
@@ -199,11 +201,12 @@ def start_frontend():
             except Exception as e:
                 _show_error_message(e)
 
+            # All this is done, even if the browser window is closed
             finally:
-                # If idle worker has been found:
-                # Send job finished confirmation to server in any case, even if
-                # Browser is closed or job restarted before worker has finished it.
-                if worker_port is not None:
+
+                # If idle worker has been found and job is finished:
+                # Send job finished confirmation
+                if worker_port is not None and job_finished:
                     logging.getLogger("frontend").info(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                         f"is sending job finished confirmation for job "
@@ -213,6 +216,19 @@ def start_frontend():
                         f"on port {worker_port}"
                     )
                     send_job_finished_confirmation_to_server(job_uuid, worker_port)
+
+                # If idle worker has been found, but job has not been finished
+                # Send job cancellation to worker
+                elif worker_port is not None and not job_finished:
+                    logging.getLogger("frontend").info(
+                        f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                        f"is sending job cancellation for job "
+                        f"{lu.shorten_uuid(job_uuid)} "
+                        f"to worker "
+                        f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                        f"on port {worker_port}"
+                    )
+                    send_job_cancellation_to_worker(job_uuid, worker_port)
 
                 # No idle worker has been found:
                 # just do some logging
