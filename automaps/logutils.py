@@ -19,4 +19,7 @@ def add_file_handler(logger_):
 
 def shorten_uuid(uuid: Union[UUID, str]):
     uuid = str(uuid)
-    return uuid.split("-")[1]
+    try:
+        return uuid.split("-")[1]
+    except IndexError:
+        return uuid

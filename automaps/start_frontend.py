@@ -92,6 +92,9 @@ def start_frontend():
                 )
             )
         else:
+            job_uuid = ""
+            worker_info = {}
+            worker_port = None
             try:
                 progress_bar = st.progress(0)
                 progress = 0
@@ -145,8 +148,6 @@ def start_frontend():
                         )
                         progress += float(step_message["rel_weight"])
                         progress_bar.progress(progress)
-                send_job_finished_confirmation_to_server(job_uuid, worker_port)
-                st.session_state["active_job"] = None
                 progress_bar.progress(1.0)
                 st.success(
                     get_config_value(
@@ -154,13 +155,26 @@ def start_frontend():
                     ).format(maptype_name=maptype.name)
                 )
                 _show_download_button(step_message["filename"])
-                logging.getLogger("frontend").info(
+                logging.getLogger("frontend").debug(
                     f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
-                    f"received results of finished job {lu.shorten_uuid(job_uuid)} "
-                    f"from worker on port {worker_port}"
+                    f"received results of finished job "
+                    f"{lu.shorten_uuid(job_uuid)} from worker "
+                    f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                    f"on port {worker_port}"
                 )
             except Exception as e:
                 _show_error_message(e)
+            finally:
+                send_job_finished_confirmation_to_server(job_uuid, worker_port)
+                logging.getLogger("frontend").info(
+                    f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
+                    f"sent job finished confirmation for job "
+                    f"{lu.shorten_uuid(job_uuid)} "
+                    f"to worker "
+                    f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
+                    f"on port {worker_port}"
+                )
+                st.session_state["active_job"] = None
 
     _show_debug_info(selector_values)
 
