@@ -33,8 +33,11 @@ import automaps.logutils as lu
 import automapsconf
 from automapsconf import MAPTYPES_AVAIL
 
+PING_FOR_IDLE_WORKER_MAX_N_SECONDS_IN_TOTAL = 60
 PING_FOR_IDLE_WORKER_EVERY_N_SECONDS = 0.5
-MAX_PINGS = 100
+MAX_PINGS = int(
+    PING_FOR_IDLE_WORKER_MAX_N_SECONDS_IN_TOTAL / PING_FOR_IDLE_WORKER_EVERY_N_SECONDS
+)
 
 
 def _get_maptype_names():
@@ -122,12 +125,12 @@ def start_frontend():
                     worker_port = worker_info["idle_worker_port"]
                     i = 0
                     while worker_port is None and i < MAX_PINGS:
-                        i += 1
                         time.sleep(PING_FOR_IDLE_WORKER_EVERY_N_SECONDS)
                         worker_info = ask_registry_for_idle_worker(
                             st.session_state["frontend_uuid"]
                         )
                         worker_port = worker_info["idle_worker_port"]
+                        i += 1
 
                     if worker_port is not None:
                         job_uuid = "J-" + str(uuid1())
