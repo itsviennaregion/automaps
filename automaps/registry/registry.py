@@ -85,13 +85,22 @@ class Registry:
             self.logger.info(f"Registry shut down")
 
     def _update_state(self, message: dict):
+        if message["worker_uuid"] not in self._workers.keys():
+            self.logger.info(
+                f"New worker {lu.shorten_uuid(message['worker_uuid'])} registered."
+            )
         self._workers[message["worker_uuid"]] = Worker(
             message["worker_uuid"],
             message["server_port"],
             message["state"],
             datetime.now(timezone.utc).isoformat(),
         )
-
+        if message["state"] == str(State.SHUTDOWN):
+            del self._workers[message["worker_uuid"]]
+            self.logger.info(
+                f"Worker {lu.shorten_uuid(message['worker_uuid'])} was shut down and "
+                f"has been deregistered."
+            )
         self.socket.send_json(self.workers)
         self.logger.debug(
             f"State updated: worker "
