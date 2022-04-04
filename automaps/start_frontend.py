@@ -172,15 +172,15 @@ def start_frontend():
             except Exception as e:
                 _show_error_message(e)
             finally:
-                send_job_finished_confirmation_to_server(job_uuid, worker_port)
                 logging.getLogger("frontend").info(
                     f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
-                    f"sent job finished confirmation for job "
+                    f"is sending job finished confirmation for job "
                     f"{lu.shorten_uuid(job_uuid)} "
                     f"to worker "
                     f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
                     f"on port {worker_port}"
                 )
+                send_job_finished_confirmation_to_server(job_uuid, worker_port)
                 st.session_state["active_job"] = None
 
     _show_debug_info(selector_values)
