@@ -38,12 +38,35 @@ def run_registry(config_file):
 
 @run.command(name="worker")
 @click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
-@click.argument("port", type=int)
-def run_worker(config_file, port):
+@click.option("-p", "--port", type=int)
+@click.option("-w", "--worker_number_in_config", type=int)
+def run_worker(config_file, port, worker_number_in_config):
     _process_config_file(config_file)
     from automaps.worker.worker import QgisWorker
+    import automapsconf
 
-    QgisWorker(port)
+    if (port is None) and (worker_number_in_config is None):
+        raise ValueError(
+            "Either option -p / --port or -w / --worker_number_in_config needs to be "
+            "set"
+        )
+    elif (port is not None) and (worker_number_in_config is not None):
+        raise ValueError(
+            "Either option -p / --port or -w / --worker_number_in_config may be set, "
+            "not both."
+        )
+    elif port is not None:
+        QgisWorker(port)
+    elif worker_number_in_config is not None:
+        if worker_number_in_config == 0:
+            raise ValueError("Worker numbers start from 1, you entered 0.")
+        elif (worker_number_in_config) > len(automapsconf.PORTS_WORKERS):
+            raise ValueError(
+                f"Trying to read worker port index {worker_number_in_config} from "
+                f"config, but only {len(automapsconf.PORTS_WORKERS)} ports are "
+                f"configured in PORTS_WORKERS ({automapsconf.PORTS_WORKERS})."
+            )
+        QgisWorker(automapsconf.PORTS_WORKERS[worker_number_in_config - 1])
 
 
 @run.command(name="frontend")
@@ -71,14 +94,13 @@ def run_frontend(config_file):
         frontend.kill()
 
 
-@cli.command(name="run-dev")
-@click.argument("app-file")
-def run_dev(app_file):
-    module_name = "automaps_project"
-    spec = importlib.util.spec_from_file_location(module_name, app_file)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
+@run.command(name="dev")
+@click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
+def run_dev(config_file):
+    _process_config_file(config_file)
+    from automaps.app import AutoMaps
+
+    app = AutoMaps()
 
 
 @cli.command(name="init-project")
