@@ -1,4 +1,5 @@
 import logging
+import logging.handlers
 from typing import Optional, Union
 from uuid import UUID
 
@@ -11,7 +12,9 @@ FORMATTER_LOGFILE = logging.Formatter(get_config_value("LOG_FORMAT", BASIC_FORMA
 
 def add_file_handler(logger_):
     if get_config_value("LOG_PATH"):
-        fh = logging.FileHandler(get_config_value("LOG_PATH"))
+        fh = logging.handlers.TimedRotatingFileHandler(
+            get_config_value("LOG_PATH"), when="W0"
+        )
         fh.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
         fh.setFormatter(FORMATTER_LOGFILE)
         logger_.addHandler(fh)
