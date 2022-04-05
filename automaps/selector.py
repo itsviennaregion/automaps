@@ -83,6 +83,7 @@ class SelectorSQL(BaseSelector):
         optional: bool = False,
         exclude_from_filename: bool = False,
         extract_first_option: bool = False,
+        retrieve_as_dictionary: bool = False,  # TODO: documentation & tests
         use_for_file_format: bool = False,
     ):
         self.label = label
@@ -98,11 +99,12 @@ class SelectorSQL(BaseSelector):
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
         self.extract_first_option = extract_first_option
+        self.retrieve_as_dictionary = retrieve_as_dictionary
         self.use_for_file_format = use_for_file_format
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
-        options = read_options_sql(self.sql)
+        options = read_options_sql(self.sql, self.retrieve_as_dictionary)
         self.options_raw = options
         if (len(self.additional_values) > 0) and (len(options) > 0):
             options = list(self.additional_values) + options
@@ -128,7 +130,9 @@ class SelectorSQL(BaseSelector):
 
 
 @st.cache(show_spinner=False)
-def read_options_sql(sql) -> Iterable[Any]:
+def read_options_sql(sql, as_dict=False) -> Iterable[Any]:
+    if as_dict:
+        return pd.read_sql(sql, automaps.db.get_engine()).to_dict(orient="records")
     return list(pd.read_sql(sql, automaps.db.get_engine()).iloc[:, 0])
 
 
