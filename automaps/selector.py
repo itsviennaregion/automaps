@@ -20,6 +20,7 @@ class BaseSelector(ABC):
     optional: bool
     exclude_from_filename: bool
     use_for_file_format: bool
+    debug: bool  # TODO: documentation & tests
 
     @abstractmethod
     def widget(self):
@@ -39,6 +40,7 @@ class SelectorSimple(BaseSelector):
         optional: bool = False,
         exclude_from_filename: bool = False,
         use_for_file_format: bool = False,
+        debug: bool = False,
     ):
         self.label = label
         self.options = list(options)
@@ -52,6 +54,7 @@ class SelectorSimple(BaseSelector):
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
         self.use_for_file_format = use_for_file_format
+        self.debug = debug  # TODO: documentation & tests
 
     @property
     def widget(self):
@@ -85,6 +88,7 @@ class SelectorSQL(BaseSelector):
         extract_first_option: bool = False,
         retrieve_as_dictionary: bool = False,  # TODO: documentation & tests
         use_for_file_format: bool = False,
+        debug: bool = False,  # TODO: documentation & tests
     ):
         self.label = label
         self.sql = sql
@@ -101,6 +105,7 @@ class SelectorSQL(BaseSelector):
         self.extract_first_option = extract_first_option
         self.retrieve_as_dictionary = retrieve_as_dictionary
         self.use_for_file_format = use_for_file_format
+        self.debug = debug
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
