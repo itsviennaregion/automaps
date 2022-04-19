@@ -12,6 +12,7 @@ FILEPATH_QGIS_PROJECT = "./demo_project.qgz"
 LOG_PATH = "./demo_project.log"
 # LOG_FORMAT = "%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s"
 LOG_LEVEL_SERVER = "DEBUG"
+# STATIC_PATH = ""
 
 DOWNLOADS_RETAIN_TIME = 3600 * 12
 

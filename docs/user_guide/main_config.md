@@ -52,6 +52,8 @@ the log level defaults to `DEBUG`.
 
 * `LOG_FORMAT (str)`: TODO
 
+* `STATIC_PATH (str)`: TODO
+
 
 from typing import List
 

@@ -16,6 +16,7 @@ import traceback
 import streamlit as st
 
 from automaps.fileserver import (
+    copy_static_content,
     download_button,
     DownloadPathJanitor,
     get_streamlit_download_path,
@@ -273,6 +274,13 @@ def _init():
             f"Downloads are retained for {max_seconds} seconds "
             f"({max_seconds / 3600:.1f} hours)."
         )
+
+        if get_config_value("STATIC_PATH"):
+            project_static_path, streamlit_static_path = copy_static_content()
+            logging.getLogger("frontend").info(
+                f"Static content copied from {project_static_path} to "
+                f"frontend static content path {streamlit_static_path}"
+            )
 
         automapsconf.init_done = True
 

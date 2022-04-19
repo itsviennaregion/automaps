@@ -1,6 +1,7 @@
 import os
 import pathlib
 from pathlib import Path
+import shutil
 from typing import Iterable, Iterator
 import uuid
 import re
@@ -8,7 +9,7 @@ import time
 
 import streamlit as st
 
-from automaps.confutils import has_config_option
+from automaps.confutils import get_config_value, has_config_option
 import automapsconf
 
 
@@ -54,6 +55,18 @@ class DownloadPathJanitor:
     def _delete_files(files: Iterable[Path]):
         for file in files:
             file.unlink()
+
+
+def copy_static_content():
+    project_static_path = pathlib.Path(get_config_value("STATIC_PATH")).absolute()
+    streamlit_static_path = pathlib.Path(st.__path__[0]) / "static" / "static_automaps"
+    shutil.copytree(
+        project_static_path,
+        streamlit_static_path,
+        dirs_exist_ok=True,
+        copy_function=shutil.copy,
+    )
+    return project_static_path, streamlit_static_path
 
 
 def get_streamlit_download_path() -> Path:
