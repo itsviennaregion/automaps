@@ -9,6 +9,8 @@ import sys
 
 import click
 
+from automaps.confutils import check_config_options
+
 
 def _process_config_file(config_file):
     config_path = str(Path(config_file).absolute().parent)
@@ -30,6 +32,7 @@ def run():
 @click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
 def run_registry(config_file):
     _process_config_file(config_file)
+    # check_config_options()
     from automaps.registry.registry import Registry
 
     registry = Registry()
