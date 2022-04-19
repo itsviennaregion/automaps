@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="automaps",
-    version="0.9.2",
+    version="0.9.3",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
     description="Making maps with streamlit and QGIS",
