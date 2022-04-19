@@ -1,29 +1,30 @@
-from typing import List
+from typing import List, Optional
 
 from automaps.maptype import MapType
 
-SHOW_DEBUG_INFO: bool
 LOG_PATH: str
-LOG_FORMAT: str
-LOG_LEVEL_SERVER: str
 PORT_MAP_SERVER: int
-PORTS_WORKERS: List[int]
 PORT_REGISTRY: int
-QGIS_INSTALLATION_PATH: str
-DOWNLOADS_RETAIN_TIME: int
-LOGO_PATH: str
-FAVICON_PATH: str
-PROJECT_TITLE: str
+PORTS_WORKERS: List[int]
 PAGE_TITLE: str
-MAPTYPE_TEXT: str
-MISSING_ATTRIBUTES_TEXT: str
-CREATE_MAP_BUTTON_TEXT: str
-WAITING_FOR_SERVER_TEXT: str
-NO_SERVER_AVAILABLE_TEXT: str
-SPINNER_TEXT: str
-MAP_READY_TEXT: str
-CUSTOM_HTML: str
-DOWNLOAD_BUTTON_STYLE: str
 FILEPATH_QGIS_PROJECT: str
 MAPTYPES_AVAIL: List[MapType]
+QGIS_INSTALLATION_PATH: str
 db: dict
+
+PROJECT_TITLE: Optional[str]
+SHOW_DEBUG_INFO: Optional[bool]
+LOG_FORMAT: Optional[str]
+LOG_LEVEL_SERVER: Optional[str]
+DOWNLOADS_RETAIN_TIME: Optional[int]
+LOGO_PATH: Optional[str]
+FAVICON_PATH: Optional[str]
+MAPTYPE_TEXT: Optional[str]
+MISSING_ATTRIBUTES_TEXT: Optional[str]
+CREATE_MAP_BUTTON_TEXT: Optional[str]
+WAITING_FOR_SERVER_TEXT: Optional[str]
+NO_SERVER_AVAILABLE_TEXT: Optional[str]
+SPINNER_TEXT: Optional[str]
+MAP_READY_TEXT: Optional[str]
+CUSTOM_HTML: Optional[str]
+DOWNLOAD_BUTTON_STYLE: Optional[str]
