@@ -5,7 +5,9 @@ import json
 import logging
 from typing import Dict, List, Optional, Union
 from uuid import uuid1
+import signal
 import streamlit
+import sys
 import zmq
 
 from automaps.confutils import get_config_value
@@ -37,9 +39,14 @@ class Registry:
 
         self.logger.info(f"Started Registry on port {automapsconf.PORT_REGISTRY}")
 
-    def __del__(self):
+        signal.signal(signal.SIGTERM, self._cleanup)
+        signal.signal(signal.SIGINT, self._cleanup)
+
+    def _cleanup(self, *args):
         self.socket.close()
         self.context.term()
+        self.logger.info(f"Stopped Registry on port {automapsconf.PORT_REGISTRY}")
+        sys.exit()
 
     @property
     def workers(self):
@@ -67,22 +74,15 @@ class Registry:
         return {lu.shorten_uuid(k): v.state for k, v in self._workers.items()}
 
     def listen(self):
-        try:
-            while True:
-                message = self.socket.recv_json()
-                self.logger.debug(f"Registry received {message}")
+        while True:
+            message = self.socket.recv_json()
+            self.logger.debug(f"Registry received {message}")
 
-                if message["command"] == "update_state":
-                    self._update_state(message)
+            if message["command"] == "update_state":
+                self._update_state(message)
 
-                if message["command"] == "get_idle_worker":
-                    self._get_idle_worker(message)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            self.socket.close()
-            self.context.term()
-            self.logger.info(f"Registry shut down")
+            if message["command"] == "get_idle_worker":
+                self._get_idle_worker(message)
 
     def _update_state(self, message: dict):
         if message["worker_uuid"] not in self._workers.keys():
