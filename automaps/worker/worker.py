@@ -1,6 +1,7 @@
 from enum import Enum
 import json
 import logging
+import signal
 import sys
 from typing import Optional
 from uuid import uuid1
@@ -65,7 +66,18 @@ class QgisWorker:
 
         self._logger.info(f"Started worker {self._uuid_short} at port {self.port}")
 
+        signal.signal(signal.SIGTERM, self._cleanup)
+        signal.signal(signal.SIGINT, self._cleanup)
+
         self._listen()
+
+    def _cleanup(self, *args):
+        self.state = State.SHUTDOWN
+        self._socket.close()
+        self._socket_registry.close()
+        self._context.term()
+        self._logger.info(f"Worker {self._uuid_short} on port {self.port} shutdown.")
+        sys.exit()
 
     @property
     def state(self):
@@ -78,19 +90,10 @@ class QgisWorker:
         self._send_state_to_registry()
 
     def _listen(self):
-        try:
-            while True:
-                message = self._socket.recv_json()
-                event = message["event"]
-                self._task_on_event.get(event, self._unknown_message)(message)
-        finally:
-            self.state = State.SHUTDOWN
-            self._socket.close()
-            self._socket_registry.close()
-            self._context.term()
-            self._logger.info(
-                f"Worker {self._uuid_short} on port {self.port} shutdown."
-            )
+        while True:
+            message = self._socket.recv_json()
+            event = message["event"]
+            self._task_on_event.get(event, self._unknown_message)(message)
 
     def _get_generators(self):
         return {x.name: x.map_generator for x in automapsconf.MAPTYPES_AVAIL}
