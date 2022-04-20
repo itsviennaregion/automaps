@@ -58,7 +58,10 @@ class DownloadPathJanitor:
 
 
 def copy_static_content():
-    project_static_path = pathlib.Path(get_config_value("STATIC_PATH")).absolute()
+    project_static_path = (
+        pathlib.Path(automapsconf.__file__).parent
+        / pathlib.Path(get_config_value("STATIC_PATH"))
+    ).absolute()
     streamlit_static_path = pathlib.Path(st.__path__[0]) / "static" / "static_automaps"
     shutil.copytree(
         project_static_path,
