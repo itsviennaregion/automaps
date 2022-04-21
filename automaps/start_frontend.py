@@ -65,6 +65,7 @@ def start_frontend():
 
     # Add custom elements to UI
     _set_page_config()
+    _copy_static_content()
     _show_logo()
     _show_project_title()
     _add_custom_html()
@@ -257,6 +258,7 @@ def _init():
         )
     if not hasattr(automapsconf, "init_done"):
         create_streamlit_download_path()
+        # _copy_static_content()
         logging.getLogger("frontend").setLevel(
             get_config_value("LOG_LEVEL_SERVER", logging.INFO)
         )
@@ -275,14 +277,17 @@ def _init():
             f"({max_seconds / 3600:.1f} hours)."
         )
 
-        if get_config_value("STATIC_PATH"):
-            project_static_path, streamlit_static_path = copy_static_content()
-            logging.getLogger("frontend").info(
-                f"Static content copied from {project_static_path} to "
-                f"frontend static content path {streamlit_static_path}"
-            )
-
         automapsconf.init_done = True
+
+
+@st.cache
+def _copy_static_content():
+    if get_config_value("STATIC_PATH"):
+        project_static_path, streamlit_static_path = copy_static_content()
+        logging.getLogger("frontend").info(
+            f"Static content copied from {project_static_path} to "
+            f"frontend static content path {streamlit_static_path}"
+        )
 
 
 def _show_download_button(filename: str):
