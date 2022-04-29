@@ -263,7 +263,7 @@ your `MapGenerator` depends on your use case. Just take notice, that the progres
 processing task is visualized in the frontend as a progress bar. You can call your 
 methods however you want.
 
-So what happens here? 
+So what happens here?
 
 * `init_project()` initializes all map layers, making them invisible and removing all
 filter conditions. It copies the `self.data` dictionary as project variable into the 
@@ -294,12 +294,15 @@ structure of an autoMaps project.
 For further details on using autoMaps, please refer to the 
 [User Guide](user_guide/overview.md)!
 
-## Creating a template for your own project
-You can now go back to the command line and create your first autoMaps project from 
+## Creating your own project
+
+You can now go back to the command line and create your first autoMaps project from
 scratch. Run the following command:
+
 ```bash
 automaps init-project PROJECT_NAME
-``` 
+```
+
 Replace `PROJECT_NAME` with the desired name.
 
 This will create a new directory with some stub files as starting point for your own
