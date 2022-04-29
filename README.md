@@ -13,9 +13,9 @@ With autoMaps, you can:
 __Give your domain experts the power to create maps like a GIS pro!__
 
 Start by reading the
-[documentation](https://its-vienna-region.gitlab.io/digilab/automatisierte-karten/)
+[documentation](https://its-vienna-region.gitlab.io/digilab/automaps/)
 , including the
-[Getting Started Tutorial](https://its-vienna-region.gitlab.io/digilab/automatisierte-karten/getting_started/).
+[Getting Started Tutorial](https://its-vienna-region.gitlab.io/digilab/automaps/getting_started/).
 
 ---
 
