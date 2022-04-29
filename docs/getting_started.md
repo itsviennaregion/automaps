@@ -6,23 +6,26 @@ For further details on using autoMaps, please refer to the
 [User Guide](user_guide/overview.md).
 
 ## Installation
+
 !!! warning
 
     Only tested on Ubuntu 20.04!
 
 autoMaps uses [QGIS](https://qgis.org/), a free and open source geographic information
-system, to generate maps. Get it on the 
+system, to generate maps. Get it on the
 [QGIS downloads page](https://qgis.org/en/site/forusers/download.html) and install it
 first. You probably should be familiar with QGIS and at least a little bit of `PyQGIS`
 to get most out of autoMaps. Check out the
 [QGIS documentation](https://qgis.org/en/docs/index.html), if necessary.
 
 Then open your command line and clone the autoMaps repository:
+
 ```bash
 git clone https://gitlab.com/its-vienna-region/digilab/automatisierte-karten
 ```
 
 Change into the cloned directory:
+
 ```bash
 cd automatisierte-karten
 ```
@@ -58,7 +61,7 @@ automaps init-demo
 
 Then start the demo app by running the following command:
 ```bash
-automaps run ./automaps-demo/app.py
+automaps run dev -c ./automaps-demo/automapsconf.py
 ``` 
 
 Open up `http://127.0.0.1:8506/automaps-demo/` in your browser, and you'll see
@@ -79,8 +82,7 @@ your first automatically generated map.
 ## Exploring the demo project
 The demo project consists of the following files:
 
-![Demo Files](img/demo_files.png)
-
+![Demo Files](img/demo_files.png)  
 
 ### Geodata (`demo_data.gpkg`, `demo_project.qgz`)
 Let's take a look at the geodata first. It is stored in the 
@@ -120,18 +122,6 @@ of our demo project, it looks like this:
 port = 8506
 baseUrlPath = "automaps-demo"
 ``` 
-
-### The main entry point (`app.py`)
-The `app.py` file serves as the canonical entry point for running an autoMaps project.
-
-Typically, it is quite short, like this:
-
-``` python
-from automaps.app import AutoMaps
-
-app = AutoMaps()
-```
-
 
 ### The main configuration (`automapsconf.py`, `automapsconf_poly.py`, `db.py`)
 The main configuration is defined in a Python file, which typically is called 
@@ -310,11 +300,8 @@ scratch. Run the following command:
 ```bash
 automaps init-project PROJECT_NAME
 ``` 
-Replace `PROJECT_NAME` with the desired name. 
+Replace `PROJECT_NAME` with the desired name.
 
 This will create a new directory with some stub files as starting point for your own
 project. Maybe you like to start with editing `automapsconf.py` which includes some
 hopefully helpful comments to get you started.
-
-
-

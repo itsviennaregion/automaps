@@ -119,7 +119,6 @@ def init_project(project_name):
         )
         sys.exit()
     resource_filenames = [
-        "app.py",
         "automapsconf.py",
         "automapsconf_poly.py",
         "db.py",
@@ -145,7 +144,6 @@ def init_demo_project():
         )
         sys.exit()
     resource_filenames = [
-        "app.py",
         "automapsconf.py",
         "automapsconf_poly.py",
         "db.py",
@@ -164,7 +162,7 @@ def init_demo_project():
 
     print(
         f"Demo project successfully created in {project_path}. Enter "
-        "'automaps run ./automaps-demo/app.py' to start it."
+        "'automaps run dev -c ./automaps-demo/automapsconf.py' to start it."
     )
 
 
