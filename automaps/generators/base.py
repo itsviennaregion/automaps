@@ -11,6 +11,8 @@ from qgis.core import (
     QgsMapLayer,
     QgsPrintLayout,
     QgsProject,
+    QgsLayoutItemLegend,
+    QgsMapLayerLegendUtils,
 )
 
 from automaps._qgis.export import export_layout
@@ -24,6 +26,7 @@ Step = namedtuple("Step", "func weight")
 class StepData:
     def __init__(self, message: dict):
         self.message_to_client = message
+        self.layout: QgsPrintLayout
 
 
 class MapGenerator(ABC):
@@ -204,3 +207,15 @@ class MapGenerator(ABC):
 
     def _export_print_layout(self, layout: QgsPrintLayout):
         return export_layout(layout, self.filename, self.file_format)
+
+    def _remove_legend_node(self, layer_name: str):
+        legend = next(
+            item
+            for item in self.step_data.layout.items()
+            if isinstance(item, QgsLayoutItemLegend)
+        )
+        model = legend.model()
+        layer = self._get_map_layer(layer_name)
+        layerNode = model.rootGroup().findLayer(layer)
+        QgsMapLayerLegendUtils.setLegendNodeOrder(layerNode, [])
+        model.refreshLayerLegend(layerNode)
