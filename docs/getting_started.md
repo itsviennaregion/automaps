@@ -9,7 +9,7 @@ For further details on using autoMaps, please refer to the
 
 !!! warning
 
-    Only tested on Ubuntu 20.04!
+    Only tested on Ubuntu 20.04! Installation on Windows is experimental.
 
 autoMaps uses [QGIS](https://qgis.org/), a free and open source geographic information
 system, to generate maps. Get it on the
@@ -46,6 +46,13 @@ example like this:
 
     This may return something like `/usr/bin/python3`. Use the path to this Python
     interpreter in the command above.
+
+!!! info
+
+    If you are trying to install `autoMaps` on Windows, the method to find the Python
+    interpreter described above may not work, as it yields only the path to the
+    `qgis.exe` as a result. Try to locate a file called `python-qgis.bat` in the same
+    directory as `qgis.exe` and use it to start the correct Python interpreter.
 
 
 
