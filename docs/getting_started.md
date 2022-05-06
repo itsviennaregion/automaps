@@ -27,7 +27,7 @@ git clone https://github.com/itsviennaregion/automaps.git
 Change into the cloned directory:
 
 ```bash
-cd automatisierte-karten
+cd automaps
 ```
 
 Install the `automaps` package __for the Python interpreter used by QGIS__, for 

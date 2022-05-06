@@ -59,12 +59,12 @@ to get most out of autoMaps. Check out the
 # Installing autoMaps
 Open your command line and clone the autoMaps repository:
 ```bash
-git clone https://gitlab.com/its-vienna-region/digilab/automatisierte-karten
+git clone https://github.com/itsviennaregion/automaps.git
 ```
 
 Change into the cloned directory:
 ```bash
-cd automatisierte-karten
+cd automaps
 ```
 
 Install the `automaps` package __for the Python interpreter used by QGIS__, for 
