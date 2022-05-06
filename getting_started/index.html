@@ -608,7 +608,7 @@
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Only tested on Ubuntu 20.04!</p>
+<p>Only tested on Ubuntu 20.04! Installation on Windows is experimental.</p>
 </div>
 <p>autoMaps uses <a href="https://qgis.org/">QGIS</a>, a free and open source geographic information
 system, to generate maps. Get it on the
@@ -635,6 +635,13 @@ sys.executable
 </code></pre></div>
 <p>This may return something like <code>/usr/bin/python3</code>. Use the path to this Python
 interpreter in the command above.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you are trying to install <code>autoMaps</code> on Windows, the method to find the Python
+interpreter described above may not work, as it yields only the path to the
+<code>qgis.exe</code> as a result. Try to locate a file called <code>python-qgis.bat</code> in the same
+directory as <code>qgis.exe</code> and use it to start the correct Python interpreter.</p>
 </div>
 <h2 id="creating-a-demo-project">Creating a demo project<a class="headerlink" href="#creating-a-demo-project" title="Permanent link">#</a></h2>
 <p>To get a feeling for the functionality and configuration of autoMaps you should first

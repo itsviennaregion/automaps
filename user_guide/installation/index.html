@@ -523,7 +523,7 @@
 
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Only tested on Ubuntu 20.04!</p>
+<p>Only tested on Ubuntu 20.04! Installation on Windows is experimental.</p>
 </div>
 <h1 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">#</a></h1>
 <p>autoMaps requires a recent version of <a href="https://www.python.org/">Python</a>, the Python 
@@ -582,6 +582,13 @@ sys.executable
 </code></pre></div>
 <p>This may return something like <code>/usr/bin/python3</code>. Use the path to this Python
 interpreter in the command above.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you are trying to install <code>autoMaps</code> on Windows, the method to find the Python
+interpreter described above may not work, as it yields only the path to the
+<code>qgis.exe</code> as a result. Try to locate a file called <code>python-qgis.bat</code> in the same
+directory as <code>qgis.exe</code> and use it to start the correct Python interpreter.</p>
 </div>
 
               
