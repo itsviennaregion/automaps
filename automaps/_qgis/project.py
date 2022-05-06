@@ -2,7 +2,10 @@ from typing import Any
 
 from qgis.core import QgsExpressionContextUtils, QgsProject
 
-import automapsconf
+try:
+    import automapsconf
+except ModuleNotFoundError:
+    pass
 
 
 def get_project() -> QgsProject:

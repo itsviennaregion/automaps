@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import pandas as pd
 import streamlit as st
 
-from automaps.db import get_engine
+import automaps.db
 
 
 class BaseSelector(ABC):
@@ -19,6 +19,8 @@ class BaseSelector(ABC):
     label_ui: Optional[str]
     optional: bool
     exclude_from_filename: bool
+    use_for_file_format: bool
+    debug: bool  # TODO: documentation & tests
 
     @abstractmethod
     def widget(self):
@@ -37,6 +39,8 @@ class SelectorSimple(BaseSelector):
         label_ui: Optional[str] = None,
         optional: bool = False,
         exclude_from_filename: bool = False,
+        use_for_file_format: bool = False,
+        debug: bool = False,
     ):
         self.label = label
         self.options = list(options)
@@ -49,6 +53,8 @@ class SelectorSimple(BaseSelector):
         self.label_ui = label_ui
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
+        self.use_for_file_format = use_for_file_format
+        self.debug = debug  # TODO: documentation & tests
 
     @property
     def widget(self):
@@ -79,6 +85,10 @@ class SelectorSQL(BaseSelector):
         label_ui: Optional[str] = None,
         optional: bool = False,
         exclude_from_filename: bool = False,
+        extract_first_option: bool = False,
+        retrieve_as_dictionary: bool = False,  # TODO: documentation & tests
+        use_for_file_format: bool = False,
+        debug: bool = False,  # TODO: documentation & tests
     ):
         self.label = label
         self.sql = sql
@@ -92,12 +102,16 @@ class SelectorSQL(BaseSelector):
         self.label_ui = label_ui
         self.optional = optional
         self.exclude_from_filename = exclude_from_filename
+        self.extract_first_option = extract_first_option
+        self.retrieve_as_dictionary = retrieve_as_dictionary
+        self.use_for_file_format = use_for_file_format
+        self.debug = debug
 
     @property
     def options(self) -> Iterable[Any]:  # type: ignore
-        options = read_options_sql(self.sql)
+        options = read_options_sql(self.sql, self.retrieve_as_dictionary)
         self.options_raw = options
-        if len(self.additional_values) > 0:
+        if (len(self.additional_values) > 0) and (len(options) > 0):
             options = list(self.additional_values) + options
         if len(self.no_value_selected_text) > 0:
             options = [self.no_value_selected_text] + options
@@ -114,13 +128,17 @@ class SelectorSQL(BaseSelector):
         else:
             if len(self.options) == 0:
                 return None
+            elif self.extract_first_option:
+                return self.options[0]
             else:
                 return self.options
 
 
 @st.cache(show_spinner=False)
-def read_options_sql(sql) -> Iterable[Any]:
-    return sorted(pd.read_sql(sql, get_engine()).iloc[:, 0])
+def read_options_sql(sql, as_dict=False) -> Iterable[Any]:
+    if as_dict:
+        return pd.read_sql(sql, automaps.db.get_engine()).to_dict(orient="records")
+    return list(pd.read_sql(sql, automaps.db.get_engine()).iloc[:, 0])
 
 
 class MultiSelector:
@@ -129,7 +147,9 @@ class MultiSelector:
         label: str,
         selectors: List[BaseSelector],
         exclude_from_filename: bool = False,
+        use_for_file_format: bool = False,
     ):
         self.label = label
         self.selectors = selectors
         self.exclude_from_filename = exclude_from_filename
+        self.use_for_file_format = use_for_file_format

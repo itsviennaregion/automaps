@@ -6,7 +6,10 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.engine.url import URL
 import streamlit as st
 
-import automapsconf
+try:
+    import automapsconf
+except ModuleNotFoundError:
+    pass
 
 # CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "db.ini")
 

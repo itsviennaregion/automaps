@@ -1,8 +1,12 @@
-from typing import Any, Callable, Dict, Iterable, Tuple, Union
+import logging
+from typing import Any, Callable, Dict, Iterable, Tuple, Type, Union
 
 from jinja2 import Template
 import streamlit as st
 
+from automaps.confutils import get_config_value
+from automaps.generators.base import MapGenerator
+import automaps.logutils as lu
 from automaps.selector import BaseSelector, MultiSelector, SelectorSQL
 
 
@@ -16,12 +20,20 @@ class MapType:
         name: str,
         description: str,
         ui_elements: UIElement,
-        print_layout: str,
+        print_layout: Union[str, Tuple[str, Dict[str, str]]],
+        map_generator: Type[MapGenerator],
+        html_beneath_name: str = "",
     ):
         self.name = name
         self.description = description
         self.ui_elements = ui_elements
         self.print_layout = print_layout
+        self.map_generator = map_generator
+        self.html_beneath_name = html_beneath_name
+
+        self.logger = logging.getLogger(f"MapType {self.name}")
+        self.logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
+        lu.add_file_handler(self.logger)
 
     @property
     def selector_values(self) -> Dict[str, Any]:
@@ -73,6 +85,9 @@ class MapType:
         template = Template(selector.sql_orig)
         sql_updated = template.render(data=selector_values)
         selector.sql = sql_updated
+        if selector.debug:
+            self.logger.info(f"Original SQL:\n{selector.sql_orig}")
+            self.logger.info(f"Updated SQL:\n{selector.sql}")
 
     def _process_multi_selector_element(
         self, _selector_values: Dict[str, Any], multi_sel: MultiSelector
@@ -124,6 +139,13 @@ class MapType:
         _selector_values[element.label] = element.widget
         if element.provide_raw_options:
             _selector_values[f"{element.label} OPTIONS"] = element.options_raw
+        if element.use_for_file_format:
+            if "!FILEFORMAT!" in _selector_values.keys():
+                raise ValueError(
+                    f"Only one selector of MapType '{self.name}' may be "
+                    "used to set the file format"
+                )
+            _selector_values["!FILEFORMAT!"] = _selector_values[element.label]
         return _selector_values
 
     def _process_other_ui_element(self, element: Tuple[Callable, str]):

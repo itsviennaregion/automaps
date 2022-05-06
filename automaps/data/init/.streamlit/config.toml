@@ -1,0 +1,3 @@
+[server]
+port = 8506
+baseUrlPath = "automaps-demo"
