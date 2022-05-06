@@ -21,7 +21,7 @@ to get most out of autoMaps. Check out the
 Then open your command line and clone the autoMaps repository:
 
 ```bash
-git clone https://gitlab.com/its-vienna-region/digilab/automatisierte-karten
+git clone https://github.com/itsviennaregion/automaps.git
 ```
 
 Change into the cloned directory:
@@ -124,18 +124,19 @@ baseUrlPath = "automaps-demo"
 ``` 
 
 ### The main configuration (`automapsconf.py`, `automapsconf_poly.py`, `db.py`)
+
 The main configuration is defined in a Python file, which typically is called 
 `automapsconf.py` and located in the same directory as `app.py`. For the demo project
 this configuration is split into three files, two of them imported into the main file
 `automapsconf.py`. This helps to keep everything clearly arranged and to store
 database credentials in a dedicated file, which can be kept locally in version control
 scenarios (e.g. by gitignoring it). This structure is recommended as best practice for
-your own projects.
+your own projects. For more information take a look at the
+[User Guide](user_guide/main_config.md).
 
-`automapsconf.py` requires some 
-[obligatory config options](user_guide.md#obligatory-config-options) and supports
-a list of [optional config options](user_guide.md#optional-config-options). At this
-point, we will focus only on two of them, `db` and `MAPTYPES_AVAIL`:
+`automapsconf.py` requires some mandatory config options and supports a list of optional
+config options. At this point, we will focus only on two of them, `db` and
+`MAPTYPES_AVAIL`:
 
 The configuration option `db` is necessary to connect to your project's (geo)database
 and thus to present the available options in the frontend (like the values of the

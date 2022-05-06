@@ -1,6 +1,6 @@
 site_name: autoMaps
 
-repo_url: https://gitlab.com/its-vienna-region/digilab/automaps
+repo_url: https://github.com/itsviennaregion/automaps
 
 nav:
     - Home: index.md

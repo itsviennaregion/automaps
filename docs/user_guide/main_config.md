@@ -3,7 +3,7 @@
 This section describes the structure and options of the main configuration of an 
 automaps project.
 
-When initilizing a new project (see section [Command Line Interface](user_guide/cli.md))
+When initilizing a new project (see section [Command Line Interface](cli.md))
 a default configuration file is created in the project folder. The configuration is done
 in a simple Python module. This allows a flexible setup, e.g. by splitting the 
 configuration into multiple files.
@@ -15,14 +15,14 @@ The following mandatory options need to been set:
 * `MAPTYPES_AVAIL (List[MapType])`: This list needs to contain at least one instance of
 a `MapType` class. The `MapType` objects mainly hold information about the UI elements
 and their relationship with the project's input data. For further information see 
-section [The `MapType` class](user_guide/map_type).
+section [The `MapType` class](map_type.md).
 
 * `QGIS_INSTALLATION_PATH (str)`: This string variable holds a path to your QGIS installation, e.g. `"/usr"`. The path can be determined by opening up the QGIS GUI and 
 running QgsApplication.prefixPath() in the Python console.
 
 * `FILEPATH_QGIS_PROJECT (str)`: This string variable holds the path to the QGIS 
 project associated with your autoMaps project (qgz or qgs file), e.g.
-`"./some_file_name.qgz"`. See section [The QGIS project](user_guide/qgis_project.md)
+`"./some_file_name.qgz"`. See section [The QGIS project](qgis_project.md)
 for further information.
 
 * `LOG_PATH (str)`: This string variable holds the path where the log file should be 
