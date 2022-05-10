@@ -32,7 +32,15 @@ class StepData:
 class MapGenerator(ABC):
     name: str
     steps: OrderedDict[str, Step]
-    data_to_exclude_from_filename: List[str] = []
+    data_to_exclude_from_filename: List[str] = [
+        "selectors_to_exclude_from_filename",
+        "maptype_dict_key",
+        "step",
+        "job_uuid",
+        "print_layout",
+        "!FILEFORMAT!",
+        "event",
+    ]
 
     def __init__(
         self,
@@ -64,18 +72,12 @@ class MapGenerator(ABC):
     @property
     def filename(self) -> str:
         data = copy(self.data)
-        for label in data.get("selectors_to_exclude_from_filename", []):
-            data.pop(label)
-        data.pop("selectors_to_exclude_from_filename", None)
-        data.pop("maptype_dict_key", None)
-        data.pop("step", None)
-        data.pop("job_uuid", None)
-        data.pop("print_layout", None)
-        data.pop("!FILEFORMAT!", None)
-        option_keys_to_pop = [x for x in data.keys() if " OPTIONS" in x]
-        for key in option_keys_to_pop:
-            data.pop(key, None)
-        for key in self.data_to_exclude_from_filename:
+        data_keys_to_pop = (
+            data.get("selectors_to_exclude_from_filename", [])
+            + [x for x in data.keys() if " OPTIONS" in x]
+            + self.data_to_exclude_from_filename
+        )
+        for key in data_keys_to_pop:
             data.pop(key, None)
         return os.path.join(
             self.basepath_fileserver,
