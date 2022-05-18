@@ -40,7 +40,7 @@ class MyFancyMapGenerator(MyMapGenerator):
 
 
 def test_init(tmp_path):
-    g = MyMapGenerator(DATA, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(DATA, tmp_path, "myLayout", StepData({}), "abc123")
     assert isinstance(g, MapGenerator)
     assert g.data == DATA
     assert g.basepath_fileserver == tmp_path
@@ -53,12 +53,12 @@ def test_init(tmp_path):
 
 
 def test_exclude_from_filename(tmp_path):
-    g = MyFancyMapGenerator(DATA, tmp_path, "myLayout", StepData({}))
+    g = MyFancyMapGenerator(DATA, tmp_path, "myLayout", StepData({}), "abc123")
     assert str(g.data["funny_value"]) not in g.filename
 
 
 def test_run_step(tmp_path):
-    g = MyMapGenerator(DATA, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(DATA, tmp_path, "myLayout", StepData({}), "abc123")
     g.run_step("Initialize")
     assert g.step_data.project.customVariables() == {}
     g.run_step("Set variables")
@@ -67,21 +67,21 @@ def test_run_step(tmp_path):
 
 def test_file_format(tmp_path):
     data = {}
-    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}), "abc123")
     assert g.file_format == "pdf"
     g = MyMapGenerator(
-        data, tmp_path, "myLayout", StepData({}), default_file_format="svg"
+        data, tmp_path, "myLayout", StepData({}), "abc123", default_file_format="svg"
     )
     assert g.file_format == "svg"
     data = {"!FILEFORMAT!": "pdf"}
-    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}), "abc123")
     assert g.file_format == "pdf"
     data = {"!FILEFORMAT!": "png"}
-    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}), "abc123")
     assert g.file_format == "png"
     data = {"!FILEFORMAT!": "PNG"}
-    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+    g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}), "abc123")
     assert g.file_format == "png"
     with pytest.raises(ValueError):
         data = {"!FILEFORMAT!": "bmp"}
-        g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}))
+        g = MyMapGenerator(data, tmp_path, "myLayout", StepData({}), "abc123")
