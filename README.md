@@ -31,6 +31,9 @@ Start by reading the
 
 ---
 
+![Teaser](static/teaser.gif)
+---
+
 _powered by_
 
 [![VOR](static/VorLogo.min.349px.white.png)](https://vor.at)
