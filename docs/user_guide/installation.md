@@ -2,7 +2,7 @@
 
     Only tested on Ubuntu 20.04! Installation on Windows is experimental.
 
-# Requirements
+## Requirements
 autoMaps requires a recent version of [Python](https://www.python.org/), the Python 
 package manager, [pip](https://pip.pypa.io/en/stable/installation/), and the free and
 open source geographic information system [QGIS](https://qgis.org/) to be installed on
@@ -23,13 +23,13 @@ If you already have those packages installed, you may skip down to [Installing
 autoMaps](#installing-automaps).
 
 
-## Installing Python
+### Installing Python
 Install [Python](https://www.python.org/) using your package manager of choice, or by 
 downloading an installer appropriate for your system from 
 [python.org](https://www.python.org/downloads) and running it.
 
 
-## Installing pip
+### Installing pip
 If you're using a recent version of Python, the Python package manager, 
 [pip](https://pip.pypa.io/en/stable/installation/), is most likely installed by default.
 However, you may need to upgrade pip to the lasted version:
@@ -47,7 +47,7 @@ python get-pip.py
 ```
 
 
-## Installing QGIS
+### Installing QGIS
 autoMaps uses [QGIS](https://qgis.org/), a free and open source geographic information
 system, to generate maps. Get it on the 
 [QGIS downloads page](https://qgis.org/en/site/forusers/download.html) and install it
@@ -56,7 +56,7 @@ to get most out of autoMaps. Check out the
 [QGIS documentation](https://qgis.org/en/docs/index.html), if necessary.
 
 
-# Installing autoMaps
+## Installing autoMaps
 Open your command line and clone the autoMaps repository:
 ```bash
 git clone https://github.com/itsviennaregion/automaps.git
