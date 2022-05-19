@@ -28,3 +28,11 @@ Start by reading the
 ### Easy to configure
 
 ### Builds on reliable open source projects
+
+---
+
+_powered by_
+
+[![VOR](static/VorLogo.min.349px.white.png)](https://vor.at)
+
+[![ITS Vienna Region](static/logo_its_standard_b150px.jpg)](https://its-viennaregion.at/en/index.html)
