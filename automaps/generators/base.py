@@ -200,15 +200,15 @@ class MapGenerator(ABC):
         self,
         map_name: str,
         layer: QgsMapLayer,
-        buffer: float = 200.0,
         scale: float = 1000.0,
     ):
-        buffered_layer_extent = layer.extent().buffered(buffer)
+        # buffer needed if only 1 point in layer
+        buffered_layer_extent = layer.extent().buffered(1)
         self.step_data.layout.itemById(map_name).zoomToExtent(buffered_layer_extent)  # type: ignore
         self.step_data.layout.itemById(map_name).setScale(scale)  # type: ignore
 
-    def _export_print_layout(self, layout: QgsPrintLayout):
-        return export_layout(layout, self.filename, self.file_format)
+    def _export_print_layout(self):
+        export_layout(self.step_data.layout, self.filename, self.file_format)
 
     def _remove_legend_node(self, layer_name: str):
         legend = next(

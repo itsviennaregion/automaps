@@ -255,7 +255,7 @@ class MapGeneratorPoly(MapGenerator):
         )
 
     def export_layout(self):
-        self._export_print_layout(self.step_data.layout)
+        self._export_print_layout()
         self.step_data.project.write("./poly_out.qgz")
         del self.step_data.project
 ```
