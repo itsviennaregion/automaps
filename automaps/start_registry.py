@@ -9,7 +9,7 @@ if conf_path not in sys.path:
 if automaps_path not in sys.path:
     sys.path.append(automaps_path)
 
-from automaps.registry.registry import Registry
+from automaps.messaging.registry import Registry
 
 if __name__ == "__main__":
     registry = Registry()

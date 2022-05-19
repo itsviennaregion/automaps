@@ -33,7 +33,7 @@ def run():
 def run_registry(config_file):
     _process_config_file(config_file)
     # check_config_options()
-    from automaps.registry.registry import Registry
+    from automaps.messaging.registry import Registry
 
     registry = Registry()
     registry.listen()
@@ -45,7 +45,7 @@ def run_registry(config_file):
 @click.option("-w", "--worker_number_in_config", type=int)
 def run_worker(config_file, port, worker_number_in_config):
     _process_config_file(config_file)
-    from automaps.worker.worker import QgisWorker
+    from automaps.messaging.worker import QgisWorker
     import automapsconf
 
     if (port is None) and (worker_number_in_config is None):

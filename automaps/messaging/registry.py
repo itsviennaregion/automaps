@@ -12,7 +12,7 @@ import zmq
 
 from automaps.confutils import get_config_value
 import automaps.logutils as lu
-from automaps.worker.worker import State
+from automaps.messaging.worker import State
 
 import automapsconf
 

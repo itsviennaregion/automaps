@@ -22,7 +22,7 @@ from automaps.fileserver import (
     get_streamlit_download_path,
     create_streamlit_download_path,
 )
-from automaps.client.client import (
+from automaps.messaging.client import (
     ask_registry_for_idle_worker,
     ask_server_for_steps,
     send_job_cancellation_to_worker,
