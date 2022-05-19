@@ -1,3 +1,5 @@
+"""This is the general configuration for the demo project."""
+
 from automapsconf_poly import maptype_poly
 from db import db
 

@@ -8,13 +8,16 @@ nav:
     - User Guide: 
         - Overview: user_guide/overview.md
         - Installation: user_guide/installation.md
+        - Architecture: user_guide/architecture.md
         - Command Line Interface: user_guide/cli.md
         - Main Configuration: user_guide/main_config.md
         - Streamlit Configuration: user_guide/streamlit_config.md
         - The MapType Class: user_guide/map_type.md
         - User Interface Elements: user_guide/ui_elements.md
         - The MapGenerator Class: user_guide/map_generator.md
-        - Architecture: user_guide/architecture.md
+    - API:
+        - _qgis: api/_qgis.md
+        - generators: api/generators.md
     - About: about.md
 theme: 
     name: material
@@ -22,6 +25,15 @@ theme:
         scheme: slate
     features:
         - content.code.annotate 
+
+plugins:
+    - mkdocstrings:
+        default_handler: python
+        handlers:
+            python:
+                selection:
+                    filters: []
+
 markdown_extensions:
     - toc:
         permalink: "#"

@@ -1,3 +1,5 @@
+"""This is the frontend configuration for the demo project."""
+
 import streamlit as st
 
 from automaps.maptype import MapType
@@ -15,12 +17,9 @@ maptype_poly = MapType(
             from districtborder
             order by NAMEK""",
             st.selectbox,
-            widget_args={
-                "help": "Choose your district!"
-            },
+            widget_args={"help": "Choose your district!"},
             no_value_selected_text="Choose district ...",
         ),
-        
         SelectorSimple(
             "File Format",
             ["PDF", "PNG", "SVG"],

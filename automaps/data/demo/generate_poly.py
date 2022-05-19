@@ -1,3 +1,5 @@
+"""This is the MapGenerator configuration for the demo project."""
+
 from collections import OrderedDict
 
 from automaps.generators.base import MapGenerator, Step

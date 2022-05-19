@@ -1,10 +1,19 @@
+"""This module handles the export of QGIS layouts."""
+
 from qgis.core import QgsLayout, QgsLayoutExporter
 from PIL import Image
 
-# import conf_local
-
 
 def export_layout(layout: QgsLayout, filepath: str, file_format: str):
+    """Exports layout as pdf, png or svg to the desired filepath.
+
+    Args:
+        layout (QgsLayout): The layout to export.
+        filepath (str): The output filepath, including to file extension.
+        file_format (str): Can be one of 'pdf', 'png', 'svg'.
+
+    Raises:
+        ValueError: if unsupported file format is requested."""
     exporter = QgsLayoutExporter(layout)
     if file_format.lower() == "pdf":
         pdf_settings = QgsLayoutExporter.PdfExportSettings()
