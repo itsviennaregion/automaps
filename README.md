@@ -31,11 +31,12 @@ Start by reading the
 
 ---
 
-![Teaser](static/teaser.gif)
+![](https://raw.githubusercontent.com/itsviennaregion/automaps/master/static/teaser.gif)
+
 ---
 
 _powered by_
 
-[![VOR](static/VorLogo.min.349px.white.png)](https://vor.at)
+[![VOR](https://github.com/itsviennaregion/automaps/raw/master/static/VorLogo.min.349px.white.png)](https://vor.at)
 
-[![ITS Vienna Region](static/logo_its_standard_b150px.jpg)](https://its-viennaregion.at/en/index.html)
+[![ITS Vienna Region](https://github.com/itsviennaregion/automaps/raw/master/static/logo_its_standard_b150px.jpg)](https://its-viennaregion.at/en/index.html)
