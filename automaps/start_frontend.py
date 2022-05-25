@@ -24,10 +24,10 @@ from automaps.fileserver import (
 )
 from automaps.messaging.client import (
     ask_registry_for_idle_worker,
-    ask_server_for_steps,
+    ask_worker_for_steps,
     send_job_cancellation_to_worker,
-    send_job_finished_confirmation_to_server,
-    send_task_to_server,
+    send_job_finished_confirmation_to_worker,
+    send_task_to_worker,
 )
 from automaps.confutils import get_config_value, get_default_args, has_config_option
 import automaps.logutils as lu
@@ -144,7 +144,7 @@ def start_frontend():
                             f"{lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port "
                             f"{worker_port}"
                         )
-                        steps = ask_server_for_steps(
+                        steps = ask_worker_for_steps(
                             maptype_dict_key, job_uuid, worker_port
                         )
                         logging.getLogger("frontend").info(
@@ -168,7 +168,7 @@ def start_frontend():
                                 f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
                                 f"on port {worker_port}"
                             )
-                            step_message = send_task_to_server(
+                            step_message = send_task_to_worker(
                                 maptype_dict_key,
                                 selector_values,
                                 maptype.print_layout,
@@ -198,7 +198,7 @@ def start_frontend():
                 else:
                     st.info(
                         get_config_value(
-                            "NO_SERVER_AVAILABLE_TEXT",  # TODO: automapsconf.py
+                            "NO_SERVER_AVAILABLE_TEXT",
                             "Map server is busy, please retry later!",
                         )
                     )
@@ -220,7 +220,7 @@ def start_frontend():
                         f"{lu.shorten_uuid(worker_info.get('idle_worker_uuid', None))} "
                         f"on port {worker_port}"
                     )
-                    send_job_finished_confirmation_to_server(job_uuid, worker_port)
+                    send_job_finished_confirmation_to_worker(job_uuid, worker_port)
 
                 # If idle worker has been found, but job has not been finished
                 # Send job cancellation to worker
