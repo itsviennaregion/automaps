@@ -20,7 +20,6 @@ PROJECT_TITLE = "Some project title"
 # TODO: Add page title
 PAGE_TITLE = "Some page title"
 
-PORT_MAP_SERVER = 5656
 PORTS_WORKERS = [5656, 5657]
 PORT_REGISTRY = 5757
 

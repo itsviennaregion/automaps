@@ -3,16 +3,15 @@ from typing import List, Optional
 from automaps.maptype import MapType
 
 LOG_PATH: str
-PORT_MAP_SERVER: int
 PORT_REGISTRY: int
 PORTS_WORKERS: List[int]
-PAGE_TITLE: str
 FILEPATH_QGIS_PROJECT: str
 MAPTYPES_AVAIL: List[MapType]
 QGIS_INSTALLATION_PATH: str
 db: dict
 
 PROJECT_TITLE: Optional[str]
+PAGE_TITLE: Optional[str]
 SHOW_DEBUG_INFO: Optional[bool]
 LOG_FORMAT: Optional[str]
 LOG_LEVEL_SERVER: Optional[str]
