@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="automaps",
-    version="1.0.0",
+    version="1.0.1",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
     description="Automatically generate customized and ready to print maps",
