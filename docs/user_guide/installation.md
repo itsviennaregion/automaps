@@ -78,6 +78,34 @@ example like this:
 
 !!! info
 
+    You may also install the `automaps` package into a Python virtual environment. This
+    allows to install `autoMaps` and all packages it depends on in your virtual
+    environment, except the Python `qgis` package. To tell the Python interpreter of
+    your virtual environment, where the `qgis` package is located, you have to add a 
+    `.pth` file (e.g., `qgis.pth`) to the `.../site-packages/` directory of your virtual
+    environment
+    (see [Python docs](https://docs.python.org/3/install/index.html#modifying-python-s-search-path)).
+
+    You can find out, which path you have to put into the file, by running:
+
+        <PATH_TO_YOUR_SYSTEM_PYTHON_INTERPRETER> -c "import qgis; print(qgis.__path__)"
+
+    e.g.
+
+        /bin/python3 -c "import qgis; print(qgis.__path__)"
+
+    Assuming this results in the path `/usr/lib/python3/dist-packages/qgis`, that
+    your system Python interpreter is located under `/bin/python3`, and that you are 
+    using Python version 3.8, the procedure to install automaps into a new virtual
+    environment is as follows:
+
+        /bin/python3 -m venv venv
+        source venv/bin/activate
+        pip install automaps
+        echo "/usr/lib/python3/dist-packages" > venv/lib/python3.8/site-packages/qgis.pth
+
+!!! info
+
     If you are trying to install `autoMaps` on Windows, the method to find the Python
     interpreter described above may not work, as it yields only the path to the
     `qgis.exe` as a result. Try to locate a file called `python-qgis.bat` in the same

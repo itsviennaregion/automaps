@@ -11,48 +11,7 @@ For further details on using autoMaps, please refer to the
 
     Only tested on Ubuntu 20.04! Installation on Windows is experimental.
 
-autoMaps uses [QGIS](https://qgis.org/), a free and open source geographic information
-system, to generate maps. Get it on the
-[QGIS downloads page](https://qgis.org/en/site/forusers/download.html) and install it
-first. You probably should be familiar with QGIS and at least a little bit of `PyQGIS`
-to get most out of autoMaps. Check out the
-[QGIS documentation](https://qgis.org/en/docs/index.html), if necessary.
-
-Then open your command line and clone the autoMaps repository:
-
-```bash
-git clone https://github.com/itsviennaregion/automaps.git
-```
-
-Change into the cloned directory:
-
-```bash
-cd automaps
-```
-
-Install the `automaps` package __for the Python interpreter used by QGIS__, for 
-example like this:
-```bash
-/usr/bin/python3 -m pip install .
-```
-
-!!! info
-
-    If you are not sure, which Python interpreter is used by QGIS, open the QGIS GUI and
-    run the following commands in the Python console: 
-        
-        import sys
-        sys.executable
-
-    This may return something like `/usr/bin/python3`. Use the path to this Python
-    interpreter in the command above.
-
-!!! info
-
-    If you are trying to install `autoMaps` on Windows, the method to find the Python
-    interpreter described above may not work, as it yields only the path to the
-    `qgis.exe` as a result. Try to locate a file called `python-qgis.bat` in the same
-    directory as `qgis.exe` and use it to start the correct Python interpreter.
+Follow the [Installation instructions](user_guide/installation.md) in the User Guide.
 
 
 
