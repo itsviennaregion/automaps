@@ -1,1 +1,0 @@
-# autoMaps User Guide

@@ -148,7 +148,7 @@ config options. At this point, we will focus only on two of them, `db` and
 The configuration option `db` is necessary to connect to your project's (geo)database
 and thus to present the available options in the frontend (like the values of the
 drop down menu `District name`). It has to be a dictionary which can be converted
-to an [SQLAlchemy `URL` object](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.engine.URL).
+into an [SQLAlchemy `URL` object](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.engine.URL).
 For the demo project, only `drivername` and `database` are set to point to the 
 SQLite database which is part of the geopackage `demo_data.gpkg`:
 ``` python

@@ -1,6 +1,6 @@
 autoMaps combines various building blocks to a scalable system:
 
-![Architecture](architecture.png)
+![Architecture](../img/architecture.png)
 
 ## Map generation: QGIS
 

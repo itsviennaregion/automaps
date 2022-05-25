@@ -6,19 +6,20 @@ nav:
     - Home: index.md
     - Getting Started: getting_started.md
     - User Guide: 
-        - Overview: user_guide/overview.md
         - Installation: user_guide/installation.md
         - Architecture: user_guide/architecture.md
         - Command Line Interface: user_guide/cli.md
         - Main Configuration: user_guide/main_config.md
-        - Streamlit Configuration: user_guide/streamlit_config.md
+        - The QGIS Project: user_guide/qgis_project.md
         - The MapType Class: user_guide/map_type.md
         - User Interface Elements: user_guide/ui_elements.md
         - The MapGenerator Class: user_guide/map_generator.md
+        - Streamlit Configuration: user_guide/streamlit_config.md
     - API:
         - _qgis: api/_qgis.md
         - generators: api/generators.md
-    - About: about.md
+        - maptype: api/maptype.md
+        - selector: api/selector.md
 theme: 
     name: material
     palette:

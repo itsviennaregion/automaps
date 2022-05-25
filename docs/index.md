@@ -1,5 +1,6 @@
 # Welcome to autoMaps
-Automatically generate customized and ready to print maps 
+
+Automatically generate customized and ready to print maps
 
 ---
 
@@ -18,7 +19,19 @@ Start by reading the
 ---
 
 # Features
+
 ## Pre-define your map layouts, let your users set the map parameters
+
 ## Use the power of a GIS, serve the maps over the web
+
 ## Easy to configure
+
 ## Builds on reliable open source projects
+
+---
+
+_powered by_
+
+[![VOR](img/VorLogo.min.349px.white.png)](https://vor.at)
+
+[![ITS Vienna Region](img/logo_its_standard_b150px.jpg)](https://its-viennaregion.at/en/index.html)
