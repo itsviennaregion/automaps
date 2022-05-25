@@ -13,12 +13,12 @@ def ask_registry_for_idle_worker(frontend_uuid: str):
 
     socket.send_json({"command": "get_idle_worker", "frontend_uuid": frontend_uuid})
 
-    message_from_server = socket.recv_json()
+    message_from_registry = socket.recv_json()
 
-    return message_from_server
+    return message_from_registry
 
 
-def ask_server_for_steps(
+def ask_worker_for_steps(
     maptype_dict_key: str, job_uuid: str, worker_port: int
 ) -> Iterable[str]:
     context = zmq.Context()
@@ -29,21 +29,21 @@ def ask_server_for_steps(
         {"event": "init_job", "init": maptype_dict_key, "job_uuid": job_uuid}
     )
 
-    message_from_server = socket.recv_json()
+    message_from_worker = socket.recv_json()
 
-    return message_from_server["steps"]
+    return message_from_worker["steps"]
 
 
-def send_job_finished_confirmation_to_server(job_uuid: str, worker_port: int):
+def send_job_finished_confirmation_to_worker(job_uuid: str, worker_port: int):
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.connect(f"tcp://localhost:{worker_port}")
 
     socket.send_json({"event": "job_finished", "job_uuid": job_uuid})
 
-    message_from_server = socket.recv_json()
+    message_from_worker = socket.recv_json()
 
-    return message_from_server
+    return message_from_worker
 
 
 def send_job_cancellation_to_worker(job_uuid: str, worker_port: int):
@@ -53,12 +53,12 @@ def send_job_cancellation_to_worker(job_uuid: str, worker_port: int):
 
     socket.send_json({"event": "job_cancelled", "job_uuid": job_uuid})
 
-    message_from_server = socket.recv_json()
+    message_from_worker = socket.recv_json()
 
-    return message_from_server
+    return message_from_worker
 
 
-def send_task_to_server(
+def send_task_to_worker(
     maptype_dict_key: str,
     data: dict,
     print_layout: Union[str, Tuple[str, Dict[str, str]]],
@@ -93,6 +93,6 @@ def send_task_to_server(
 
     socket.send_json(data)
 
-    message_from_server = socket.recv_json()
+    message_from_worker = socket.recv_json()
 
-    return message_from_server
+    return message_from_worker
