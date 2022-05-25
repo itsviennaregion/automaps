@@ -309,8 +309,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -353,6 +353,20 @@
     <li class="md-nav__item">
       <a href="../map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -421,23 +435,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -479,6 +506,24 @@
 
 
 <h1 id="command-line-interface">Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permanent link">#</a></h1>
+<p>autoMaps provides a command line interface to execute common tasks. It can be accessed
+using the <code>automaps</code> command. Run it without parameters to get help about the available
+subcommands and their usage:</p>
+<div class="highlight"><pre><span></span><code>$ automaps
+Usage: automaps [OPTIONS] COMMAND [ARGS]...
+
+This is the main entry point for all autoMaps commands. Take a look at the
+subcommands and run them with option --help to get more information on their
+usage.
+
+Options:
+--help  Show this message and exit.
+
+Commands:
+init-demo     Initializes a new autoMaps demo project.
+init-project  Initializes a new autoMaps project.
+run           Runs an existing autoMaps project.
+</code></pre></div>
 
               
             </article>

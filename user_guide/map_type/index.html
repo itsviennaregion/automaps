@@ -299,8 +299,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -322,9 +322,54 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          The MapType Class
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         The MapType Class
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -353,6 +398,20 @@
     <li class="md-nav__item">
       <a href="../map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -421,23 +480,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -462,6 +534,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -478,86 +579,126 @@
 
 
 
-<h1 id="the-maptype-class">The <code>MapType</code> class<a class="headerlink" href="#the-maptype-class" title="Permanent link">#</a></h1>
-<p>MapType is initialized with the following arguments: </p>
+<h1 id="the-maptype-class">The <code>MapType</code> Class<a class="headerlink" href="#the-maptype-class" title="Permanent link">#</a></h1>
+<p><a href="../../api/maptype/">API docs</a></p>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>Each map type of an autoMaps project needs to consist of:</p>
 <ul>
-<li><code>name (str)</code>: Name of the map type. This must be used as a key in the variable <code>GENERATORS</code>. 
-in <code>/conf_server.py</code> (see below). The name will be shown as main heading in the UI. It is
-also used to generate the radio button values for the available map types in the sidebar.</li>
-<li><code>description (str)</code>: Description of the map type. Will be displayed in the frontend.</li>
-<li><code>ui_elements (Iterable[Union[MultiSelector, BaseSelector, Tuple[Callable, str]])</code>: 
-Iterable of UI elements, being either <code>selector</code> objects or tuples of 
-<code>st.write</code> and a string, e.g. <code>(st.write, "## heading")</code>. <ul>
-<li>Selector objects are used to define the choices that are displayed in the UI. 
-are defined. The selection will be displayed at the start of processing as 
+<li>a <code>MapType</code> object (described here)</li>
+<li>a generator class (a subclass of <code>MapGenerator</code>) (see
+<a href="../map_generator/">this</a> section)</li>
+<li>one or more QGIS print layouts in an associated QGIS project file (see 
+<a href="../qgis_project/">this</a> section)</li>
+</ul>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">#</a></h2>
+<p>A <code>MapType</code> object is initialized with the following arguments:</p>
+<ul>
+<li>
+<p><code>name (str)</code>: Name of the map type. The name will be shown as main heading in the UI.
+It is also used to generate the radio button values for the available map types in the
+sidebar.</p>
+</li>
+<li>
+<p><code>description (str)</code>: Description of the map type. Will be displayed in the frontend.</p>
+</li>
+<li>
+<p><code>ui_elements (Iterable[Union[MultiSelector, BaseSelector, Tuple[Callable, str]])</code>:
+Iterable of UI elements, being either <code>selector</code> objects or tuples of
+<code>st.write</code> and a string, e.g. <code>(st.write, "## heading")</code>.</p>
+<ul>
+<li>Selector objects are used to define the choices that are displayed in the UI.
+The selection will be stored in the associated <code>MapGenerator</code> object in the 
 <code>self.data</code> attribute.</li>
 <li>Tuples of the type <code>(st.write, str)</code> can be used to display texts in the UI,
-e.g. to display headings or further explanations. In the future
-other streamlit methods may also be supported.</li>
+e.g. to display headings or further explanations.</li>
 </ul>
 </li>
-<li><code>print_layout (Union[str, Tuple[str, Dict[str, str]])</code>: This will print the name of the text contained in the 
-QGIS project file (see <code>/conf_local.py</code>). 
-<code>print_layout</code> must take one of the following two types:<ul>
+<li>
+<p><code>print_layout (Union[str, Tuple[str, Dict[str, str]])</code>: This argument connects the
+<code>MapType</code> with on or more QGIS print layouts. <code>print_layout</code> must take one of the
+following two types:</p>
+<ul>
 <li><code>str</code>: The name of the print layout in the associated QGIS project.</li>
-<li><code>tuple[str, Dict[str, str]]</code>: <ul>
-<li>At position 0 of <code>tuple</code>: The name of the selector, from which the name of the 
-print layout is to be read</li>
+<li><code>tuple[str, Dict[str, str]]</code>:<ul>
+<li>At position 0 of <code>tuple</code>: The name of the selector, from which the name of the
+print layout is to be read.</li>
 <li>At position 1 of the <code>tuple</code>: A mapping between the options of the selector
-and the corresponding names of the print layout.</li>
-<li>Example: <code>print_layout=("map layout", {"external": "public transport overview area 
-[external]", "internal": "Public transport overview area [internal]", "reduced": "Public transport overview
-area [reduced]"})</code></li>
+and the corresponding names of the print layout.
+Example:</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>html_beneath_name (str, optional)</code>: This String can be used, to add arbitrary html code in 
-the UI, right beneath the <code>MapType</code> name heading (e.g. to add custom links to a help page).</li>
 </ul>
-<p>Example:
-<div class="highlight"><pre><span></span><code><span class="n">MAPTYPES_AVAIL</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MapType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">.</span>
-    <span class="s2">&quot;Public transport overview&quot;</span><span class="p">:</span> <span class="n">MapType</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ÖV-Überblick&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This can be used to create a public transport overview.&quot;</span>
-        <span class="s2">&quot;It works like this: ...&quot;</span><span class="p">,</span>
-        <span class="n">ui_elements</span><span class="o">=</span><span class="p">[</span>
-            <span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="s2">&quot;## basic settings&quot;</span><span class="p">),</span>
-            <span class="n">SelectorSimple</span><span class="p">(</span>
-                <span class="s2">&quot;Spatial layer,</span>
-                <span class="p">[</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">],</span>
-                <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">,</span>
-                <span class="n">widget_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Help text&quot;</span><span class="p">},</span>
-                <span class="n">no_value_selected_text</span><span class="o">=</span><span class="s2">&quot;Select spatial layer ...&quot;</span><span class="p">,</span>
-            <span class="p">),</span>
-            <span class="n">SelectorSQL</span><span class="p">(</span>
-                <span class="s2">&quot;municipality&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;select distinct pg from bev_municipalities&quot;</span><span class="p">,</span>
-                <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">,</span>
-                <span class="n">no_value_selected_text</span><span class="o">=</span><span class="s2">&quot;select municipality ...&quot;</span><span class="p">,</span>
-                <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;spatial_level&quot;</span><span class="p">:</span> <span class="s2">&quot;municipality&quot;</span><span class="p">},</span>
-            <span class="p">),</span>
-            <span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="s2">&quot;## map elements&quot;</span><span class="p">),</span>
-            <span class="n">SelectorSQL</span><span class="p">(</span>
-                <span class="s2">&quot;lines&quot;</span><span class="p">,</span>
-                <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                select distinct line_name</span>
-<span class="sd">                from</span>
-<span class="sd">                    pt_links l,</span>
-<span class="sd">                    communities g</span>
-<span class="sd">                where</span>
-<span class="sd">                    g.name = &#39;{{ data[&quot;municipality&quot;] }}&#39;</span>
-<span class="sd">                    and ST_Intersects(l.geom, g.geom)</span>
-<span class="sd">                &quot;&quot;&quot;</span><span class="p">,</span>
-                <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">,</span>
-                <span class="n">additional_values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ALL&quot;</span><span class="p">],</span>
-                <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;spatial_level&quot;</span><span class="p">:</span> <span class="s2">&quot;municipality&quot;</span><span class="p">},</span>
-            <span class="p">),</span>
-        <span class="p">],</span>
-        <span class="n">print_layout</span><span class="o">=</span><span class="s2">&quot;test_layout&quot;</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">}</span>
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code>    <span class="n">print_layout</span><span class="o">=</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;map layout&quot;</span><span class="p">,</span>  <span class="c1"># the name of the selector, as defined in `ui_elements`</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;external&quot;</span><span class="p">:</span> <span class="s2">&quot;Public transport overview [external]&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;internal&quot;</span><span class="p">:</span> <span class="s2">&quot;Public transport overview [internal]&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;reduced&quot;</span><span class="p">:</span> <span class="s2">&quot;Public transport overview [reduced]&quot;</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>
+<p><code>map_generator (Type[MapGenerator])</code>: The class of the associated <code>MapGenerator</code>. This
+generator receives the data dictionary from the frontend, containing all the user
+selections plus additional metadata, and creates the map based on this input.</p>
+</li>
+<li>
+<p><code>html_beneath_name (str, optional)</code>: This string can be used, to add arbitrary html
+code in the UI, right beneath the <code>MapType</code> name heading (e.g. to add custom links to a
+help page).</p>
+</li>
+</ul>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">streamlit</span> <span class="k">as</span> <span class="nn">st</span>
+
+<span class="kn">from</span> <span class="nn">automaps.maptype</span> <span class="kn">import</span> <span class="n">MapType</span>
+<span class="kn">from</span> <span class="nn">automaps.selector</span> <span class="kn">import</span> <span class="n">SelectorSimple</span><span class="p">,</span> <span class="n">SelectorSQL</span>
+<span class="kn">from</span> <span class="nn">generate_poly</span> <span class="kn">import</span> <span class="n">MapGeneratorPoly</span>
+
+<span class="n">maptype_poly</span> <span class="o">=</span> <span class="n">MapType</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Districts in Vienna&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Choose a district and get your map!&quot;</span><span class="p">,</span>
+    <span class="n">ui_elements</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">SelectorSQL</span><span class="p">(</span>
+            <span class="s2">&quot;District name&quot;</span><span class="p">,</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            select distinct NAMEK</span>
+<span class="sd">            from districtborder</span>
+<span class="sd">            order by NAMEK&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">,</span>
+            <span class="n">widget_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Choose your district!&quot;</span><span class="p">},</span>
+            <span class="n">no_value_selected_text</span><span class="o">=</span><span class="s2">&quot;Choose district ...&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">SelectorSQL</span><span class="p">(</span>
+            <span class="s2">&quot;Stop names,</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            select distinct name</span>
+<span class="sd">            from stops</span>
+<span class="sd">            where district = &#39;{{ data[&quot;District name&quot;] }}&#39;</span>
+<span class="sd">            order by name&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">,</span>
+            <span class="n">widget_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Choose the stops to be displayed!&quot;</span><span class="p">},</span>
+            <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;District name&quot;</span><span class="p">],</span>
+            <span class="n">no_value_selected_text</span><span class="o">=</span><span class="s2">&quot;Choose stops ...&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">SelectorSimple</span><span class="p">(</span>
+            <span class="s2">&quot;File Format&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="s2">&quot;PNG&quot;</span><span class="p">,</span> <span class="s2">&quot;SVG&quot;</span><span class="p">],</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">,</span>
+            <span class="n">exclude_from_filename</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">use_for_file_format</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">print_layout</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+    <span class="n">map_generator</span><span class="o">=</span><span class="n">MapGeneratorPoly</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">MAPTYPES_AVAIL</span> <span class="o">=</span> <span class="p">[</span><span class="n">maptype_poly</span><span class="p">]</span>
+</code></pre></div>
 
               
             </article>
@@ -571,7 +712,7 @@ the UI, right beneath the <code>MapType</code> name heading (e.g. to add custom 
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../streamlit_config/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Streamlit Configuration" rel="prev">
+        <a href="../qgis_project/" class="md-footer__link md-footer__link--prev" aria-label="Previous: The QGIS Project" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -580,7 +721,7 @@ the UI, right beneath the <code>MapType</code> name heading (e.g. to add custom 
               <span class="md-footer__direction">
                 Previous
               </span>
-              Streamlit Configuration
+              The QGIS Project
             </div>
           </div>
         </a>

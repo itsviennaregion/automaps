@@ -338,6 +338,40 @@
     User Interface
   </a>
   
+    <nav class="md-nav" aria-label="User Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    General
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-content" class="md-nav__link">
+    Static content
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texts" class="md-nav__link">
+    Texts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styling" class="md-nav__link">
+    Styling
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -367,8 +401,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -411,6 +445,20 @@
     <li class="md-nav__item">
       <a href="../map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -479,23 +527,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -546,6 +607,40 @@
     User Interface
   </a>
   
+    <nav class="md-nav" aria-label="User Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    General
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-content" class="md-nav__link">
+    Static content
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texts" class="md-nav__link">
+    Texts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styling" class="md-nav__link">
+    Styling
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -579,49 +674,51 @@
 
 
 <h1 id="the-main-configuration">The main configuration<a class="headerlink" href="#the-main-configuration" title="Permanent link">#</a></h1>
-<p>This section describes the structure and options of the main configuration of an 
+<p>This section describes the structure and options of the main configuration of an
 automaps project.</p>
 <p>When initilizing a new project (see section <a href="../cli/">Command Line Interface</a>)
 a default configuration file is created in the project folder. The configuration is done
-in a simple Python module. This allows a flexible setup, e.g. by splitting the 
-configuration into multiple files.</p>
+in a simple Python module. This allows a flexible setup, e.g. by splitting the
+configuration into multiple files and importing them into the main module. The module
+needs to be called <code>automapsconf.py</code>.</p>
 <h2 id="mandatory-configuration">Mandatory configuration<a class="headerlink" href="#mandatory-configuration" title="Permanent link">#</a></h2>
 <p>The following mandatory options need to been set:</p>
 <ul>
 <li>
 <p><code>MAPTYPES_AVAIL (List[MapType])</code>: This list needs to contain at least one instance of
 a <code>MapType</code> class. The <code>MapType</code> objects mainly hold information about the UI elements
-and their relationship with the project's input data. For further information see 
+and their relationship with the project's input data. For further information see
 section <a href="../map_type/">The <code>MapType</code> class</a>.</p>
 </li>
 <li>
-<p><code>QGIS_INSTALLATION_PATH (str)</code>: This string variable holds a path to your QGIS installation, e.g. <code>"/usr"</code>. The path can be determined by opening up the QGIS GUI and 
-running QgsApplication.prefixPath() in the Python console.</p>
+<p><code>QGIS_INSTALLATION_PATH (str)</code>: This string variable holds a path to your QGIS installation, e.g. <code>"/usr"</code>. The path can be determined by opening up the QGIS GUI and
+running <code>QgsApplication.prefixPath()</code> in the Python console.</p>
 </li>
 <li>
-<p><code>FILEPATH_QGIS_PROJECT (str)</code>: This string variable holds the path to the QGIS 
+<p><code>FILEPATH_QGIS_PROJECT (str)</code>: This string variable holds the path to the QGIS
 project associated with your autoMaps project (qgz or qgs file), e.g.
 <code>"./some_file_name.qgz"</code>. See section <a href="../qgis_project/">The QGIS project</a>
 for further information.</p>
 </li>
 <li>
-<p><code>LOG_PATH (str)</code>: This string variable holds the path where the log file should be 
+<p><code>LOG_PATH (str)</code>: This string variable holds the path where the log file should be
 written, e.g. <code>"./some_file_name.log"</code>.</p>
 </li>
 <li>
-<p><code>PORT_MAP_SERVER (int, defaults to 5656)</code>: This integer variable sets the port for
-the communication between frontend and backend processes. If you have no reason to 
-change it, leave the default as it is.</p>
+<p><code>PORTS_WORKERS (List[int])</code>: The ZeroMQ ports of the worker processes as a list of
+integers.</p>
 </li>
 <li>
-<p><code>PORTS_WORKERS</code>: TODO</p>
+<p><code>PORT_REGISTRY (int)</code>: The ZeroMQ port of the registry as an integer.</p>
 </li>
 <li>
-<p><code>PORT_REGISTRY</code>: TODO</p>
+<p><code>db (dict)</code>: The configuration of the database connection. It has to be a dictionary
+which can be converted into an <a href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.engine.URL">SQLAlchemy <code>URL</code> object</a>.</p>
 </li>
 </ul>
 <h2 id="optional-configuration">Optional configuration<a class="headerlink" href="#optional-configuration" title="Permanent link">#</a></h2>
 <h3 id="user-interface">User Interface<a class="headerlink" href="#user-interface" title="Permanent link">#</a></h3>
+<h4 id="general">General<a class="headerlink" href="#general" title="Permanent link">#</a></h4>
 <ul>
 <li>
 <p><code>PROJECT_TITLE (str)</code>: This string variable sets the project title. The title will be
@@ -631,7 +728,116 @@ shown in the sidebar menu. If the variable is not set, no title will be shown.</
 <p><code>PAGE_TITLE (str)</code>: This string variable sets the page title, which will be shown in
 the browser tab. If the variable is not set, Streamlit's default title is used.</p>
 </li>
+<li>
+<p><code>SHOW_DEBUG_INFO (Optional[bool])</code>: If <code>True</code>, a debug section is added to the user
+interface. If not set, no debug section will be shown.</p>
+</li>
 </ul>
+<h4 id="static-content">Static content<a class="headerlink" href="#static-content" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p><code>STATIC_PATH (str)</code>: The path to the directory containing static files for the user
+interface (logo or favicon images, help sites etc.). Typically, this is a subdirectory
+of your autoMaps configuration. All content of the directory is then copied to 
+Streamlit's download directory as a subdirectory <code>static_automaps</code> to be available for
+the frontend process. If not set, no content will be copied.</p>
+</li>
+<li>
+<p><code>LOGO_PATH (Optional[str])</code>: The path to the logo of your project. Must start with
+<code>./static_automaps/</code> to be accessible by the frontend. Use the <code>STATIC_PATH</code> config
+option for automatically copying files from your configuration directory to Streamlit`s
+static directory. If not set, no logo will be shown.</p>
+</li>
+<li>
+<p><code>FAVICON_PATH (Optional[str])</code>: The path to the favicon of your project. Must start
+with <code>./static_automaps/</code> to be accessible by the frontend. Use the <code>STATIC_PATH</code> config
+option for automatically copying files from your configuration directory to Streamlit<code>s
+static directory. If not set, Streamlit</code>s default favicon will be shown.</p>
+</li>
+</ul>
+<h4 id="texts">Texts<a class="headerlink" href="#texts" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p><code>MAPTYPE_TEXT (Optional[str])</code>: Text to be shown above the radio buttons in the side
+bar. If not set, the text "Map type" will be shown.</p>
+</li>
+<li>
+<p><code>MISSING_ATTRIBUTES_TEXT (Optional[str])</code>: Text to be shown, if not all necessary
+map attributes are defined in the user interface. If not set, the text "Please define
+all required map attributes!" will be shown.</p>
+</li>
+<li>
+<p><code>CREATE_MAP_BUTTON_TEXT (Optional[str])</code>: Text to be shown on the button which starts
+the map creation process. If not set, the text "Create map" will be used.</p>
+</li>
+<li>
+<p><code>WAITING_FOR_SERVER_TEXT (Optional[str])</code>: Text to be shown, while the frontend
+process is wating for an idle worker. If not set, the text "Waiting for map server ..."
+will be shown.</p>
+</li>
+<li>
+<p><code>NO_SERVER_AVAILABLE_TEXT (Optional[str])</code>: Text to be shown, if after some time no
+idle worker has been found to process the map creation request. If not set, the text
+"Map server is busy, please retry later!" will be used.</p>
+</li>
+<li>
+<p><code>SPINNER_TEXT (Optional[str])</code>: (Markdown) text to be shown by the Streamlit spinner
+while the map creation request is processed by a worker. You can include two variables
+(<code>maptype_name</code> and <code>step</code>) in the text. If not set, it defaults to
+<code>"Creating map _{maptype_name}_ ({step})"</code>.</p>
+</li>
+<li>
+<p><code>MAP_READY_TEXT (Optional[str])</code>: (Markdown) text to be shown after the map creation
+process has been finished. You can include the varible <code>maptype_name</code> in the text. If
+not set, it defaults to <code>"Map _{maptype_name}_ ready"</code>.</p>
+</li>
+</ul>
+<h4 id="styling">Styling<a class="headerlink" href="#styling" title="Permanent link">#</a></h4>
+<ul>
+<li><code>CUSTOM_HTML (Optional[str])</code>: Custom HTML which will be injected at the top of the
+Streamlit page. Its main use is to change the page styling. If not set, no HTML will be
+injected. You may set the config option to something like:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">h1</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">padding-top</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="kt">rem</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="nt">footer</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">visibility</span><span class="p">:</span><span class="w"> </span><span class="kc">hidden</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="nt">strong</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">800</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
+<ul>
+<li><code>DOWNLOAD_BUTTON_STYLE (Optional[str])</code>: Custom HTML which will be injected right
+above the download button. Its main use is to change the button styling. Use the css
+identifier <code>#{button_id}</code> for this purpose. If not set, a simple default style will
+be used. You may set the config option so something like:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="err">#</span><span class="p">{</span><span class="err">button_id</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#99cc00</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.87</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="k">border</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mf">0.35</span><span class="kt">em</span><span class="w"> </span><span class="mf">0.58</span><span class="kt">em</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">position</span><span class="p">:</span><span class="w"> </span><span class="kc">relative</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mf">0.25</span><span class="kt">rem</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="err">}</span><span class="w"></span>
+<span class="w">    </span><span class="err">#</span><span class="p">{</span><span class="err">button_id</span><span class="p">}:</span><span class="nd">hover</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#649b00</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="err">}</span><span class="w"></span>
+<span class="w">    </span><span class="err">#</span><span class="p">{</span><span class="err">button_id</span><span class="p">}:</span><span class="nd">active</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#99cc00</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="err">}</span><span class="w"></span>
+<span class="w">    </span><span class="err">#</span><span class="p">{</span><span class="err">button_id</span><span class="p">}:</span><span class="nd">focus</span><span class="p">:</span><span class="nd">not</span><span class="o">(</span><span class="p">:</span><span class="nd">active</span><span class="o">)</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#99cc00</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="err">}</span><span class="w"></span>
+<span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
 <h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">#</a></h3>
 <ul>
 <li>
@@ -640,33 +846,16 @@ It needs to be one of Python's <code>logging</code> modules levels, like <code>D
 the log level defaults to <code>DEBUG</code>.</p>
 </li>
 <li>
-<p><code>LOG_FORMAT (str)</code>: TODO</p>
+<p><code>LOG_FORMAT (str)</code>: The log format (see
+<a href="https://docs.python.org/3/library/logging.html">Python Docs</a>). If not set,
+<code>"%(asctime)s -- %(levelname)-7s -- %(name)s -- %(message)s"</code> will be used.</p>
 </li>
 <li>
-<p><code>STATIC_PATH (str)</code>: TODO</p>
+<p><code>DOWNLOADS_RETAIN_TIME (Optional[int])</code>: Maximum age of map export files to be kept in
+the download directory, in seconds. Older files will be deleted. If not set, it defaults
+to 8 hours.</p>
 </li>
 </ul>
-<p>from typing import List</p>
-<p>from automaps.maptype import MapType</p>
-<p>SHOW_DEBUG_INFO: bool
-PORT_MAP_SERVER: int
-QGIS_INSTALLATION_PATH: str
-DOWNLOADS_RETAIN_TIME: int
-LOGO_PATH: str
-FAVICON_PATH: str
-PROJECT_TITLE: str
-PAGE_TITLE: str
-MAPTYPE_TEXT: str
-MISSING_ATTRIBUTES_TEXT: str
-CREATE_MAP_BUTTON_TEXT: str
-WAITING_FOR_SERVER_TEXT: str
-NO_SERVER_AVAILABLE_TEXT: str
-SPINNER_TEXT: str
-MAP_READY_TEXT: str
-CUSTOM_HTML: str
-DOWNLOAD_BUTTON_STYLE: str
-FILEPATH_QGIS_PROJECT: str
-db: dict</p>
 
               
             </article>
@@ -696,13 +885,13 @@ db: dict</p>
       
       
         
-        <a href="../streamlit_config/" class="md-footer__link md-footer__link--next" aria-label="Next: Streamlit Configuration" rel="next">
+        <a href="../qgis_project/" class="md-footer__link md-footer__link--next" aria-label="Next: The QGIS Project" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Streamlit Configuration
+              The QGIS Project
             </div>
           </div>
           <div class="md-footer__button md-icon">

@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#selector-objects" class="md-skip">
+        <a href="#user-interface-elements" class="md-skip">
           Skip to content
         </a>
       
@@ -299,8 +299,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -361,8 +361,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#others" class="md-nav__link">
-    Others
+  <a href="#baseselector-classes" class="md-nav__link">
+    BaseSelector classes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiselector-class" class="md-nav__link">
+    MultiSelector class
   </a>
   
 </li>
@@ -384,6 +391,20 @@
     <li class="md-nav__item">
       <a href="../map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -452,23 +473,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -500,8 +534,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#others" class="md-nav__link">
-    Others
+  <a href="#baseselector-classes" class="md-nav__link">
+    BaseSelector classes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiselector-class" class="md-nav__link">
+    MultiSelector class
   </a>
   
 </li>
@@ -524,142 +565,163 @@
 
 
 
-<h1 id="selector-objects"><code>Selector</code> objects<a class="headerlink" href="#selector-objects" title="Permanent link">#</a></h1>
+<h1 id="user-interface-elements">User Interface Elements<a class="headerlink" href="#user-interface-elements" title="Permanent link">#</a></h1>
+<p><a href="../../api/selector/">API docs</a></p>
 <p>The configuration of the selection options displayed in the UI is done with the help of
 <code>Selector</code> objects.</p>
-<p><strong><code>BaseSelector</code> classes</strong></p>
+<h2 id="baseselector-classes"><code>BaseSelector</code> classes<a class="headerlink" href="#baseselector-classes" title="Permanent link">#</a></h2>
 <p>Two selector classes derived from <code>selector.BaseSelector</code> are available:</p>
 <ul>
-<li><code>SelectorSimple</code>: For lists of choices (e.g. "bus" or "train"),
-which are defined directly in <code>conf.py</code>.</li>
-<li><code>SelectorSQL</code>: For lists of selections that are formed based on a database
-database query.</li>
+<li>
+<p><code>SelectorSimple</code>: For lists of choices (e.g. "bus" or "train"), which are defined
+directly in <code>automapsconf.py</code>.</p>
+</li>
+<li>
+<p><code>SelectorSQL</code>: For lists of selections that are formed based on a database query.</p>
+</li>
 </ul>
 <p>These <code>Selector</code> classes share the following parameters for initialization:</p>
 <ul>
-<li><code>label (str)</code>: name of the selector. Displayed in the UI. Furthermore
-the label can be used to define dependencies between the selectors of a <code>MapType</code> (see parameter <code>depend
-(see</code>depends_on_selectors` parameter).</li>
-<li><code>widget_method (Callable, optional)</code>: One of the widgets provided by streamlit 
-(e.g. st.radio or st.selectbox). If no argument or <code>None</code> is passed, no widget will be used in the
-UI, no widget for selecting values will be displayed. The list of options created (e.g. by an SQL query)
-will still be available and can be edited via the <code>self.data</code> attribute. 
-<code>self.data</code> attribute of the associated <code>MapType</code>. With this mechanism
-can be used to execute SQL queries in the background, the results of which cannot be
-visible and selectable in the UI, but can be used by subsequent selectors. 
-selectors.</li>
-<li><code>widget_args (dict, optional)</code>: dictionary of arguments passed to initialize the widget object.
-of the widget object (e.g. <code>{"help"="help text"}</code>).</li>
-<li><code>no_value_selected_text (str, optional)</code>: selection option to be displayed,
-before a value has been selected (e.g. "Select spatial layer ...").</li>
 <li>
-<p><code>depends_on_selectors (Union[List[str], Dict[str, Any]], optional)</code>: 
-This can be used to define conditions that must be met for the widget to be
-is displayed. This can be used to define dependencies between selectors. 
-Either a list or a dictionary can be passed:</p>
+<p><code>label (str)</code>: name of the selector. Displayed in the UI. Furthermore
+the label can be used to define dependencies between the selectors of a <code>MapType</code>
+(see <code>depends_on_selectors</code> parameter).</p>
+</li>
+<li>
+<p><code>widget_method (Callable, optional)</code>: One of the widgets provided by streamlit
+(e.g. <code>st.radio</code> or <code>st.selectbox</code>). If no argument or <code>None</code> is passed, no widget for
+selecting values will be displayed. The list of options created in the background (e.g.
+by an SQL query) will still be available and can be edited via the <code>self.data</code> attribute
+of the associated <code>MapGenerator</code>. This mechanism can be used to execute SQL queries in the
+background, the results of which are not visible and selectable in the UI, but can be
+used by subsequent selectors, or the associated <code>MapGenerator</code>.</p>
+</li>
+<li>
+<p><code>widget_args (dict, optional)</code>: dictionary of arguments passed to initialize the
+widget object (e.g. <code>{"help"="help text"}</code>).</p>
+</li>
+<li>
+<p><code>no_value_selected_text (str, optional)</code>: selection option to be displayed, before a
+value has been selected (e.g. "Select spatial layer ...").</p>
+</li>
+<li>
+<p><code>depends_on_selectors (Union[List[str], Dict[str, Any]], optional)</code>: This can be used
+to define conditions that must be met for the widget to be executed and displayed. It
+allows to define dependencies between selectors. Either a list or a dictionary can be
+passed:</p>
 <ul>
 <li>
-<p><strong>Dictionary</strong>: 
-As keys must be the labels
-of selectors also defined for the same <code>MapType</code> must be used as keys, as
-Values the values that must be selected for the corresponding selector. If
-e.g. the value "line" must be selected for the selector with the label "spatial layer", then <code>depends
-then</code>depends_on_selectors={"Spatial layer": "Line"}` must be set. Currently
-can only be checked for equality. If the dictionary contains more than one key/value pairs
-only one of the conditions must be met (OR operation).</p>
+<p><strong>Dictionary</strong>:
+Keys: labels of selectors also defined for the same <code>MapType</code>. Values: the option
+values that must be selected for the corresponding selector. If e.g. the value
+"line" must be selected for the selector with the label "Spatial layer", then
+<code>depends_on_selectors={"Spatial layer": "Line"}</code> must be set. Currently, only checks
+for equality can be performed (e.g. no greater than or unequal). If the dictionary
+contains more than one key/value pair, only one of the conditions must be met (OR
+operation).</p>
 </li>
 <li>
-<p><strong>list</strong>:
-A list of selector labels of selectors of the same <code>MapType</code>. If the 
-corresponding selectors contain either <code>None</code> or the default text 
-(<code>no_value_selected_text</code>) as value, the widget will not be displayed.
-For example, a selector for public transport lines can only be displayed if first
-a municipality has been selected (<code>depends_on_selectors=["municipality"]</code>). If the list
-list contains multiple selector labels, the widget will be displayed as soon as one of the listed
-listed selectors has a value selected (OR operation).</p>
+<p><strong>List</strong>:
+A list of selector labels of selectors of the same <code>MapType</code>. If the corresponding
+selectors contain either <code>None</code> or the default text (<code>no_value_selected_text</code>) as
+value, the widget will not be displayed.
+For example, a selector for public transport lines can only be displayed, if a
+municipality has been selected first (<code>depends_on_selectors=["municipality"]</code>).
+If the list contains multiple selector labels, the widget will be displayed as soon
+as one of the listed listed selectors has a value selected (OR operation).</p>
 </li>
 </ul>
 </li>
 <li>
-<p><code>label_ui (str, optional)</code>: Alternative label of the widget to be displayed in the UI.
-should be displayed.</p>
+<p><code>label_ui (str, optional)</code>: Alternative label of the widget to be displayed in the UI.</p>
 </li>
-<li><code>optional (bool, optional, default False)</code>: Indicates whether the widget is optional, i.e. whether
-map generation can be started even though the widget has the default value of
-(<code>no_value_selected_text</code>) or an empty list as result. Has influence
-on setting the <code>has init values</code> flag in the associated <code>MapType</code>.</li>
-<li><code>exclude_from_filename (bool, optional, default False)</code>: If <code>True</code> then the
-value(s) of the selector will not be used to generate the filename. </li>
+<li>
+<p><code>optional (bool, optional, default False)</code>: Indicates whether the widget is optional,
+i.e. whether map generation can be started even though the widget has the default value
+of (<code>no_value_selected_text</code>) or an empty list as result. Has influence on setting the
+<code>has init values</code> flag in the associated <code>MapType</code>.</p>
+</li>
+<li>
+<p><code>exclude_from_filename (bool, optional, default False)</code>: If <code>True</code> then the value(s)
+of the selector will not be used to generate the filename.</p>
+</li>
 </ul>
-<p>The <code>SelectorSimple</code> class is also initialized with the following parameter 
-initialized:</p>
+<p>The <code>SelectorSimple</code> class is also initialized with the following parameter:</p>
 <ul>
-<li><code>options (Iterable[Any])</code>: iterable of selectors.</li>
+<li><code>options (Iterable[Any])</code>: iterable of selector values.</li>
 </ul>
-<p>The <code>SelectorSQL</code> class additionally has the following 
-initialization parameters:</p>
+<p>The <code>SelectorSQL</code> class additionally has the following initialization parameters:</p>
 <ul>
-<li><code>sql (str)</code>: SQL statement that is sent to the database defined in <code>db.ini
-and should return a list of selections, for example:</code>"select distinct 
-linenumber from lines"<code>. The string can be 
-[Jinja2](https://pypi.org/project/Jinja2/)-expressions to read the</code>data<code>dictionary with the selecting UI options. 
-This allows the selected values of a selector defined in</code>MapType<code>as</code>ui_element<code>to be used in the SQL 
-can be used in the SQL query of another selector. In 
-the selection of bus lines can be limited to those lines that intersect the selected municipality. 
-which intersect the selected municipality. For an example see above at</code>MapType`. </li>
-<li><code>additional_values (Iterable[Any], optional)</code>: iterable of additional 
-choices that are prepended to the values obtained via SQL,
-e.g. <code>["ALL"]</code>. Condition: the SQL statement returns at least one element.
-Otherwise, the additional values are not prepended.</li>
-<li><code>provide_raw_options (Boolean, optional)</code>: The data dictionary of the associated
-MapType<code>a new entry can be added. This has as key the 
-selector with appended</code>" OPTIONS"<code>as key and all available options as value. 
-options available, regardless of which one was selected in the UI. Default</code>False`. </li>
+<li>
+<p><code>sql (str)</code>: SQL statement that is sent to the database defined in <code>db.py</code>. The
+statement should return a list of selections, for example:
+<code>"select distinct linenumber from lines"</code>. The string can include
+<a href="https://pypi.org/project/Jinja2/">Jinja2</a>-expressions to read the <code>data</code> dictionary of
+the <code>MapType</code>. This allows to use the selected values of another selector inside the SQL
+query. For example, the list of bus stops can be limited to those stops, that lie within
+the selected district (see <a href="../map_type/#example">The MapType Class</a> for a code example).
+You can also use other features of <code>Jinja2</code>, for example to express if-else-conditions.</p>
+</li>
+<li>
+<p><code>additional_values (Iterable[Any], optional)</code>: iterable of additional choices that are
+prepended to the values obtained via SQL, e.g. <code>["ALL"]</code>. Condition: the SQL statement
+returns at least one element. Otherwise, the additional values are not prepended.</p>
+</li>
+<li>
+<p><code>provide_raw_options (Boolean, optional)</code>: Adds a new entry to the data dictionary of
+the associated <code>MapType</code>. It has as the label of the selector with appended
+<code>" OPTIONS"</code> as key and all available options as value, regardless of which one was
+selected in the UI. Default <code>False</code>.</p>
+</li>
 </ul>
-<p><strong><code>MultiSelector</code> class</strong></p>
+<h2 id="multiselector-class"><code>MultiSelector</code> class<a class="headerlink" href="#multiselector-class" title="Permanent link">#</a></h2>
 <p>In addition to the two classes derived from <code>BaseSelector</code> there is the
-MultiSelector<code>is available. This can be used to combine multiple selectors.
-These selectors should have mutually exclusive dependencies (defined with</code>depends 
-with <code>depends_on_selectors</code>). The first selector passed via the <code>selectors</code> list,
-which returns a value not equal to <code>None</code> is used to create an entry in the <code>data</code> dictionary
-with the <code>label</code> of the <code>MultiSelector</code> as key.</p>
-<p>The <code>MultiSelector</code> class is initialized with the following parameters:
-* <code>label (str)</code>: name of the selector. Will be displayed in the UI. 
-* <code>selectors (List[BaseSelector])</code>: list of <code>BaseSelector</code> objects, see above.
-* <code>exclude_from_filename (bool, optional, default False)</code>: If <code>True</code>, then the selector's
-value(s) of the selector will not be used to generate the filename. </p>
-<p>Example:</p>
+<code>MultiSelector</code> class available. It can be used to combine multiple selectors.
+These selectors should have mutually exclusive dependencies (defined with
+<code>depends on_selectors</code>). The first selector passed via the <code>selectors</code> list,
+which returns a value not equal to <code>None</code> is used to create an entry in the <code>data</code>
+dictionary, with the <code>label</code> of the <code>MultiSelector</code> as key.</p>
+<p>The <code>MultiSelector</code> class is initialized with the following parameters:</p>
+<ul>
+<li>
+<p><code>label (str)</code>: name of the selector. Will be displayed in the UI.</p>
+</li>
+<li>
+<p><code>selectors (List[BaseSelector])</code>: list of <code>BaseSelector</code> objects, see above.</p>
+</li>
+<li>
+<p><code>exclude_from_filename (bool, optional, default False)</code>: If <code>True</code>, the selector's</p>
+</li>
+<li>value(s) will not be used to generate the filename.</li>
+</ul>
+<p>In the following example, the selector "Stops a" will be shown, if no lines are
+selected (empy list), the selector "Stops b" will be shown otherwise:</p>
 <div class="highlight"><pre><span></span><code><span class="n">MultiSelector</span><span class="p">(</span>
-    <span class="s2">&quot;`stops`,</span>
+    <span class="s2">&quot;Stops,</span>
     <span class="p">[</span>
         <span class="n">SelectorSimple</span><span class="p">(</span>
-        <span class="s2">&quot;Stops a&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="s2">&quot;All&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">],</span>
-        <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">,</span>
-        <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;Lines in the municipality&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;lines in district&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;lines in tender region&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;Lines in State&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="p">},</span>
-        <span class="n">label_ui</span><span class="o">=</span><span class="s2">&quot;stops&quot;</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">SelectorSimple</span><span class="p">(</span>
-        <span class="s2">&quot;Stops b&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="s2">&quot;All&quot;</span><span class="p">,</span> <span class="s2">&quot;Stops served&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">],</span>
-        <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">,</span>
-        <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">&quot;Lines in the municipality&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Lines in district&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Lines in tender region&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;lines in state&quot;</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="n">label_ui</span><span class="o">=</span><span class="s2">&quot;Stops&quot;</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">],</span>
+            <span class="s2">&quot;Stops a&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;All&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">],</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">,</span>
+            <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;Lines in the municipality&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;Lines in district&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="p">},</span>
+            <span class="n">label_ui</span><span class="o">=</span><span class="s2">&quot;Stops&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">SelectorSimple</span><span class="p">(</span>
+            <span class="s2">&quot;Stops b&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;All&quot;</span><span class="p">,</span> <span class="s2">&quot;Stops served&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">],</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">,</span>
+            <span class="n">depends_on_selectors</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;Lines in the municipality&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lines in district&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">label_ui</span><span class="o">=</span><span class="s2">&quot;Stops&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">],</span>
 <span class="p">),</span>
 </code></pre></div>
-<h3 id="others">Others<a class="headerlink" href="#others" title="Permanent link">#</a></h3>
 
               
             </article>

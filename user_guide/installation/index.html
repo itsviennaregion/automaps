@@ -249,8 +249,6 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           Installation
@@ -267,8 +265,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -277,22 +273,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#installing-python" class="md-nav__link">
     Installing Python
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#installing-pip" class="md-nav__link">
     Installing pip
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#installing-qgis" class="md-nav__link">
     Installing QGIS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-automaps" class="md-nav__link">
+    Installing autoMaps
   </a>
   
 </li>
@@ -354,8 +370,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -398,6 +414,20 @@
     <li class="md-nav__item">
       <a href="../map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -466,23 +496,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -504,8 +547,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -514,22 +555,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#installing-python" class="md-nav__link">
     Installing Python
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#installing-pip" class="md-nav__link">
     Installing pip
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#installing-qgis" class="md-nav__link">
     Installing QGIS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-automaps" class="md-nav__link">
+    Installing autoMaps
   </a>
   
 </li>
@@ -552,30 +613,32 @@
 
 
 
+  <h1>Installation</h1>
+
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Only tested on Ubuntu 20.04! Installation on Windows is experimental.</p>
 </div>
-<h1 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">#</a></h1>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">#</a></h2>
 <p>autoMaps requires a recent version of <a href="https://www.python.org/">Python</a>, the Python 
 package manager, <a href="https://pip.pypa.io/en/stable/installation/">pip</a>, and the free and
 open source geographic information system <a href="https://qgis.org/">QGIS</a> to be installed on
 your system.</p>
 <p>You can check if you already have these installed from the command line:</p>
 <div class="highlight"><pre><span></span><code>$ python --version
-Python <span class="m">3</span>.8.2
+Python 3.8.2
 $ pip --version
-pip <span class="m">20</span>.0.2 from /usr/local/lib/python3.8/site-packages/pip <span class="o">(</span>python <span class="m">3</span>.8<span class="o">)</span>
+pip 20.0.2 from /usr/local/lib/python3.8/site-packages/pip (python 3.8)
 $ qgis --version
-QGIS <span class="m">3</span>.18.1-Zürich <span class="s1">&#39;Zürich&#39;</span> <span class="o">(</span>202f1bf7e5<span class="o">)</span>
+QGIS 3.18.1-Zürich &#39;Zürich&#39; (202f1bf7e5)
 </code></pre></div>
 <p>If you already have those packages installed, you may skip down to <a href="#installing-automaps">Installing
 autoMaps</a>.</p>
-<h2 id="installing-python">Installing Python<a class="headerlink" href="#installing-python" title="Permanent link">#</a></h2>
+<h3 id="installing-python">Installing Python<a class="headerlink" href="#installing-python" title="Permanent link">#</a></h3>
 <p>Install <a href="https://www.python.org/">Python</a> using your package manager of choice, or by 
 downloading an installer appropriate for your system from 
 <a href="https://www.python.org/downloads">python.org</a> and running it.</p>
-<h2 id="installing-pip">Installing pip<a class="headerlink" href="#installing-pip" title="Permanent link">#</a></h2>
+<h3 id="installing-pip">Installing pip<a class="headerlink" href="#installing-pip" title="Permanent link">#</a></h3>
 <p>If you're using a recent version of Python, the Python package manager, 
 <a href="https://pip.pypa.io/en/stable/installation/">pip</a>, is most likely installed by default.
 However, you may need to upgrade pip to the lasted version:</p>
@@ -586,24 +649,18 @@ However, you may need to upgrade pip to the lasted version:</p>
 install it:</p>
 <div class="highlight"><pre><span></span><code>python get-pip.py
 </code></pre></div>
-<h2 id="installing-qgis">Installing QGIS<a class="headerlink" href="#installing-qgis" title="Permanent link">#</a></h2>
+<h3 id="installing-qgis">Installing QGIS<a class="headerlink" href="#installing-qgis" title="Permanent link">#</a></h3>
 <p>autoMaps uses <a href="https://qgis.org/">QGIS</a>, a free and open source geographic information
 system, to generate maps. Get it on the 
 <a href="https://qgis.org/en/site/forusers/download.html">QGIS downloads page</a> and install it
 first. You probably should be familiar with QGIS and at least a little bit of <code>PyQGIS</code>
 to get most out of autoMaps. Check out the
 <a href="https://qgis.org/en/docs/index.html">QGIS documentation</a>, if necessary.</p>
-<h1 id="installing-automaps">Installing autoMaps<a class="headerlink" href="#installing-automaps" title="Permanent link">#</a></h1>
-<p>Open your command line and clone the autoMaps repository:
-<div class="highlight"><pre><span></span><code>git clone https://github.com/itsviennaregion/automaps.git
-</code></pre></div></p>
-<p>Change into the cloned directory:
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> automaps
-</code></pre></div></p>
-<p>Install the <code>automaps</code> package <strong>for the Python interpreter used by QGIS</strong>, for 
-example like this:
-<div class="highlight"><pre><span></span><code>/usr/bin/python3 -m pip install .
-</code></pre></div></p>
+<h2 id="installing-automaps">Installing autoMaps<a class="headerlink" href="#installing-automaps" title="Permanent link">#</a></h2>
+<p>Install the <code>automaps</code> package from <a href="https://pypi.org/project/automaps/">PyPI</a>
+<strong>for the Python interpreter used by QGIS</strong>, for example like this:</p>
+<div class="highlight"><pre><span></span><code>/usr/bin/python3 -m pip install automaps
+</code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>If you are not sure, which Python interpreter is used by QGIS, open the QGIS GUI and
@@ -613,6 +670,40 @@ sys.executable
 </code></pre></div>
 <p>This may return something like <code>/usr/bin/python3</code>. Use the path to this Python
 interpreter in the command above.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You may also install the <code>automaps</code> package into a Python virtual environment. This
+allows to install autoMaps and all its dependencies in your virtual environment, 
+except the Python <code>qgis</code> package. To tell the Python interpreter of your virtual
+environment, where the <code>qgis</code> package is located, you have to add a <code>.pth</code> file 
+(e.g., <code>qgis.pth</code>) to the <code>.../site-packages/</code> directory of your virtual environment
+(see <a href="https://docs.python.org/3/install/index.html#modifying-python-s-search-path">Python docs</a>).</p>
+<p>You can find out, which path you have to put into the file, by running:</p>
+<div class="highlight"><pre><span></span><code>&lt;PATH_TO_YOUR_SYSTEM_PYTHON_INTERPRETER&gt; -c &quot;import qgis; print(qgis.__path__)&quot;
+</code></pre></div>
+<p>e.g.</p>
+<div class="highlight"><pre><span></span><code>/usr/bin/python3 -c &quot;import qgis; print(qgis.__path__)&quot;
+</code></pre></div>
+<p>Assuming </p>
+<ul>
+<li>this results in the path <code>/usr/lib/python3/dist-packages/qgis</code>, </li>
+<li>that your system Python interpreter is located under <code>/usr/bin/python3</code>,</li>
+<li>and that you are using Python version 3.8, </li>
+</ul>
+<p>the procedure to install automaps into a new virtual environment is as follows:</p>
+<p>Create the virtual environment:</p>
+<div class="highlight"><pre><span></span><code>usr/bin/python3 -m venv venv
+</code></pre></div>
+<p>Activate the virtual environment:</p>
+<div class="highlight"><pre><span></span><code>source venv/bin/activate
+</code></pre></div>
+<p>Install autoMaps:</p>
+<div class="highlight"><pre><span></span><code>pip install automaps
+</code></pre></div>
+<p>Create the <code>.pth</code> file:</p>
+<div class="highlight"><pre><span></span><code>echo &quot;/usr/lib/python3/dist-packages&quot; &gt; venv/lib/python3.8/site-packages/qgis.pth
+</code></pre></div>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>

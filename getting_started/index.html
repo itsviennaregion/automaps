@@ -393,8 +393,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../user_guide/streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../user_guide/qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -437,6 +437,20 @@
     <li class="md-nav__item">
       <a href="../user_guide/map_generator/" class="md-nav__link">
         The MapGenerator Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
       </a>
     </li>
   
@@ -505,23 +519,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
-        About
+      <a href="../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -641,39 +668,7 @@
 <p class="admonition-title">Warning</p>
 <p>Only tested on Ubuntu 20.04! Installation on Windows is experimental.</p>
 </div>
-<p>autoMaps uses <a href="https://qgis.org/">QGIS</a>, a free and open source geographic information
-system, to generate maps. Get it on the
-<a href="https://qgis.org/en/site/forusers/download.html">QGIS downloads page</a> and install it
-first. You probably should be familiar with QGIS and at least a little bit of <code>PyQGIS</code>
-to get most out of autoMaps. Check out the
-<a href="https://qgis.org/en/docs/index.html">QGIS documentation</a>, if necessary.</p>
-<p>Then open your command line and clone the autoMaps repository:</p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/itsviennaregion/automaps.git
-</code></pre></div>
-<p>Change into the cloned directory:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> automaps
-</code></pre></div>
-<p>Install the <code>automaps</code> package <strong>for the Python interpreter used by QGIS</strong>, for 
-example like this:
-<div class="highlight"><pre><span></span><code>/usr/bin/python3 -m pip install .
-</code></pre></div></p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>If you are not sure, which Python interpreter is used by QGIS, open the QGIS GUI and
-run the following commands in the Python console: </p>
-<div class="highlight"><pre><span></span><code>import sys
-sys.executable
-</code></pre></div>
-<p>This may return something like <code>/usr/bin/python3</code>. Use the path to this Python
-interpreter in the command above.</p>
-</div>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>If you are trying to install <code>autoMaps</code> on Windows, the method to find the Python
-interpreter described above may not work, as it yields only the path to the
-<code>qgis.exe</code> as a result. Try to locate a file called <code>python-qgis.bat</code> in the same
-directory as <code>qgis.exe</code> and use it to start the correct Python interpreter.</p>
-</div>
+<p>Follow the <a href="../user_guide/installation/">Installation instructions</a> in the User Guide.</p>
 <h2 id="creating-a-demo-project">Creating a demo project<a class="headerlink" href="#creating-a-demo-project" title="Permanent link">#</a></h2>
 <p>To get a feeling for the functionality and configuration of autoMaps you should first
 create a demo project.</p>
@@ -749,7 +744,7 @@ config options. At this point, we will focus only on two of them, <code>db</code
 <p>The configuration option <code>db</code> is necessary to connect to your project's (geo)database
 and thus to present the available options in the frontend (like the values of the
 drop down menu <code>District name</code>). It has to be a dictionary which can be converted
-to an <a href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.engine.URL">SQLAlchemy <code>URL</code> object</a>.
+into an <a href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.engine.URL">SQLAlchemy <code>URL</code> object</a>.
 For the demo project, only <code>drivername</code> and <code>database</code> are set to point to the 
 SQLite database which is part of the geopackage <code>demo_data.gpkg</code>:
 <div class="highlight"><pre><span></span><code><span class="n">db</span> <span class="o">=</span> <span class="p">{</span>

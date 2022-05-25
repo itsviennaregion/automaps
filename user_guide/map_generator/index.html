@@ -299,8 +299,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../streamlit_config/" class="md-nav__link">
-        Streamlit Configuration
+      <a href="../qgis_project/" class="md-nav__link">
+        The QGIS Project
       </a>
     </li>
   
@@ -347,40 +347,27 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          The MapGenerator Class
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         The MapGenerator Class
       </a>
       
-        
+    </li>
+  
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+            
+          
+            
+              
   
   
   
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-mapgenerator-class" class="md-nav__link">
-    The MapGenerator class
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
+    <li class="md-nav__item">
+      <a href="../streamlit_config/" class="md-nav__link">
+        Streamlit Configuration
+      </a>
     </li>
   
 
@@ -448,23 +435,36 @@
 
             
           
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
+            
+              
   
   
   
     <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        About
+      <a href="../../api/maptype/" class="md-nav__link">
+        maptype
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/selector/" class="md-nav__link">
+        selector
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -486,21 +486,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-mapgenerator-class" class="md-nav__link">
-    The MapGenerator class
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -518,65 +505,82 @@
 
 
 
-  <h1>The MapGenerator Class</h1>
-
-<h2 id="the-mapgenerator-class">The <code>MapGenerator</code> class<a class="headerlink" href="#the-mapgenerator-class" title="Permanent link">#</a></h2>
-<p>Each generator class needs a class attribute <code>name</code>, a method <code>_set_steps()</code>
-and freely definable methods for map generation. </p>
-<p>The method <code>_set_steps()</code> must have the attribute <code>self.steps</code> of type 
-<code>OrderedDict[str, Step]</code>. As keys speaking names of the 
-processing step should be assigned as keys. These are also displayed in the frontend for information
-about the processing progress. The processing is carried out in the 
-<code>OrderedDict</code> order.</p>
-<p>NamedTuples of type <code>Step</code> are expected as values, with the following attributes:
-* <code>func (Callable)</code> is the method defined in the class that executes the step.
-* <code>weight (float)</code> is the relative weight of the step with respect to the expected processing time (relative to the other steps).
-  processing time (relative to the other steps of a map generator). This
-  is used to display the progress bar in the frontend.</p>
-<p><strong>Attention!</strong>: For each execution of a step a new instance of the
-<code>MapGenerator</code> is created! The attribute 'self' can therefore not be used to pass data between steps. 
-between the steps. Instead, the attribute <code>step_data</code> 
-of type <code>StepData</code> can be used instead, as can be seen in the example. For this purpose any attributes can be added to the
-object any attributes can be added.</p>
-<p>During initialization the associated QGIS project (defined in 
-<code>/conf_local.py</code>) and the print layout (defined with the argument <code>print_layout</code>).
-in the configuration of the associated <code>MapType</code> in <code>/conf.py</code>) are loaded. The two 
-loaded objects are stored in <code>self.step_data.project</code> and <code>self.step_data.layout</code> and are 
-and are available there for all processing steps.</p>
-<p>For example, a small generator class with three steps could look like this: </p>
+<h1 id="the-mapgenerator-class">The <code>MapGenerator</code> Class<a class="headerlink" href="#the-mapgenerator-class" title="Permanent link">#</a></h1>
+<p><a href="../../api/generators/">API docs</a></p>
+<p>Each map type of an autoMaps project needs to consist of:</p>
+<ul>
+<li>a <code>MapType</code> object (see <a href="../map_type/">this</a> section)</li>
+<li>a generator class (a subclass of <code>MapGenerator</code>), described here</li>
+<li>one or more QGIS print layouts in an associated QGIS project file (see
+<a href="../qgis_project/">this</a> section)</li>
+</ul>
+<p>Each generator class needs to be a subclass of <code>automaps.generators.base.MapGenerator</code>.</p>
+<p>Each generator class needs a class attribute <code>name</code>, a method <code>_set_steps()</code>,
+and freely definable methods for map generation.</p>
+<p>The method <code>_set_steps()</code> must itself set the attribute <code>self.steps</code> of type
+<code>OrderedDict[str, Step]</code>.</p>
+<p>As keys of the <code>OrderedDict</code>, speaking names of the processing step should be
+assigned. These are also displayed in the frontend for information about the
+processing progress. The processing is carried out in the ordered of the items in the
+<code>OrderedDict</code>.</p>
+<p>As values of the <code>OrderedDict</code>, <code>NamedTuples</code> of type <code>Step</code> are expected, with the
+following attributes:</p>
+<ul>
+<li><code>func (Callable)</code> is the method defined in the class that executes the step.</li>
+<li><code>weight (float)</code> is the relative weight of the step with respect to the expected
+processing time (relative to the other steps).This is used to display the progress bar
+in the frontend.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>For each execution of a step a new instance of the <code>MapGenerator</code> is created! The
+attribute <code>self</code> can therefore not be used to pass data between steps. Instead, the
+attribute <code>step_data</code> of type <code>StepData</code> should be used (take a look at the example
+below). For this purpose, attributes can be added freely to the <code>step_data</code> object.</p>
+</div>
+<p>During initialization, the associated QGIS project (defined with the config option
+<code>FILEPATH_QGIS_PROJECT</code>) and the print layout (defined with the argument <code>print_layout</code>).
+in the configuration of the associated <code>MapType</code> in <code>/automapsconf.py</code>) are loaded.
+These to objects are stored in <code>self.step_data.project</code> and <code>self.step_data.layout</code>,
+respectively, and are thus available for all processing steps.</p>
+<p>For example, a small generator class with four steps could look like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">automaps.generators.base</span> <span class="kn">import</span> <span class="n">MapGenerator</span><span class="p">,</span> <span class="n">Step</span>
 
 
-<span class="k">class</span> <span class="nc">MapGeneratorUeberblick</span><span class="p">(</span><span class="n">MapGenerator</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ÖV-Überblick&quot;</span>
+<span class="k">class</span> <span class="nc">MapGeneratorPoly</span><span class="p">(</span><span class="n">MapGenerator</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Districts in Vienna&quot;</span>
 
     <span class="k">def</span> <span class="nf">_set_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;Projektvariablen setzen&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_variables</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="s2">&quot;Layer filtern&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_layers</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="s2">&quot;Kartenausschnitt festlegen&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_extent</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="s2">&quot;Karte exportieren&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_layout</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="s2">&quot;Initialize project&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_project</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;Filter layers&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_layers</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;Zoom to extent&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_extent</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;Export map&quot;</span><span class="p">:</span> <span class="n">Step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_layout</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">set_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_project_variable</span><span class="p">(</span><span class="s2">&quot;gemeinde_aktiv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Gemeinde&quot;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">init_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_layers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_project_variable</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_map_layer_visibility</span><span class="p">(</span><span class="s2">&quot;districts&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_map_layer_visibility</span><span class="p">(</span><span class="s2">&quot;OpenStreetMap&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_data</span><span class="o">.</span><span class="n">district_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;NAMEK = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;District name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 
     <span class="k">def</span> <span class="nf">filter_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_map_layer_filter_expression</span><span class="p">(</span>
-                <span class="s2">&quot;bev_gemeinden&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;pg = &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Gemeinde&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-            <span class="p">)</span>
+            <span class="s2">&quot;districts&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_data</span><span class="o">.</span><span class="n">district_filter</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_map_to_layer_extent</span><span class="p">(</span>
-            <span class="s2">&quot;Hauptkarte&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_map_layer</span><span class="p">(</span><span class="s2">&quot;bev_gemeinden&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_map_to_layer_extent</span><span class="p">(</span><span class="s2">&quot;Map 1&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_map_layer</span><span class="p">(</span><span class="s2">&quot;districts&quot;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">export_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_export_print_layout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_data</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;./poly_out.qgz&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_data</span><span class="o">.</span><span class="n">project</span>
 </code></pre></div>
 
               
@@ -607,13 +611,13 @@ and are available there for all processing steps.</p>
       
       
         
-        <a href="../../api/_qgis/" class="md-footer__link md-footer__link--next" aria-label="Next: _qgis" rel="next">
+        <a href="../streamlit_config/" class="md-footer__link md-footer__link--next" aria-label="Next: Streamlit Configuration" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              _qgis
+              Streamlit Configuration
             </div>
           </div>
           <div class="md-footer__button md-icon">
