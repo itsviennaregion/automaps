@@ -20,17 +20,34 @@ def _process_config_file(config_file):
 
 @click.group()
 def cli():
+    """This is the main entry point for all autoMaps commands.
+    Take a look at the subcommands and run them with option --help to get more
+    information on their usage."""
     pass
 
 
 @cli.group()
 def run():
+    """Runs an existing autoMaps project. There are different modes to run
+    a project. Take a look at the subcommands to get more information."""
     pass
 
 
 @run.command(name="registry")
-@click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-c",
+    "--config-file",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to the config file, including the filename. The file needs to be called "
+    "'automapsconf.py'.",
+)
 def run_registry(config_file):
+    """Starts the autoMaps registry process, as defined in the config file.
+
+    Example usage:
+
+        automaps run registry -c ./myproject/automapsconf.py"""
     _process_config_file(config_file)
     # check_config_options()
     from automaps.messaging.registry import Registry
@@ -40,10 +57,35 @@ def run_registry(config_file):
 
 
 @run.command(name="worker")
-@click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
-@click.option("-p", "--port", type=int)
-@click.option("-w", "--worker_number_in_config", type=int)
+@click.option(
+    "-c",
+    "--config-file",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to the config file, including the filename. The file needs to be called "
+    "'automapsconf.py'.",
+)
+@click.option("-p", "--port", type=int, help="The port number.")
+@click.option(
+    "-w",
+    "--worker_number_in_config",
+    type=int,
+    help="The worker number, "
+    "starting from 1. The ports defined in the config option PORTS_WORKERS "
+    "will be used.",
+)
 def run_worker(config_file, port, worker_number_in_config):
+    """Starts a single autoMaps worker process.
+
+    The port of the worker can either be set
+    directly using the --port option, or by referencing the worker number as defined
+    in the config file using the --worker_number_in_config option.
+
+    Example usage:
+
+        automaps run worker -c ./myproject/automaps.conf -p 12345
+
+        automaps run worker -c ./myproject/automaps.conf -w 1"""
     _process_config_file(config_file)
     from automaps.messaging.worker import QgisWorker
     import automapsconf
@@ -73,8 +115,20 @@ def run_worker(config_file, port, worker_number_in_config):
 
 
 @run.command(name="frontend")
-@click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-c",
+    "--config-file",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to the config file, including the filename. The file needs to be called "
+    "'automapsconf.py'.",
+)
 def run_frontend(config_file):
+    """Starts the autoMaps frontend process.
+
+    Example usage:
+
+        automaps run frontend -c ./myproject/automaps.conf"""
     _process_config_file(config_file)
     config_path = str(Path(config_file).absolute().parent)
     automaps_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -98,8 +152,21 @@ def run_frontend(config_file):
 
 
 @run.command(name="dev")
-@click.option("-c", "--config-file", type=click.Path(exists=True), required=True)
+@click.option(
+    "-c",
+    "--config-file",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to the config file, including the filename. The file needs to be called "
+    "'automapsconf.py'.",
+)
 def run_dev(config_file):
+    """Runs all autoMaps components - frontend, registry, worker(s) - as defined in the
+    config file.
+
+    Example usage:
+
+        automaps run dev -c ./myproject/automaps.conf"""
     _process_config_file(config_file)
     from automaps.app import AutoMaps
 
@@ -109,6 +176,14 @@ def run_dev(config_file):
 @cli.command(name="init-project")
 @click.argument("project-name")
 def init_project(project_name):
+    """Initializes a new autoMaps project.
+
+    The project will be created in a subirectory (called PROJECT_NAME) of the current
+    working directory.
+
+    Example usage:
+
+        automaps init-project my_new_project"""
     try:
         os.mkdir(project_name)
     except FileExistsError:
@@ -133,6 +208,13 @@ def init_project(project_name):
 
 @cli.command(name="init-demo")
 def init_demo_project():
+    """Initializes a new autoMaps demo project.
+    The project will be created in a subdirectory 'automaps-demo' of the current working
+    directory.
+
+    Example usage:
+
+        automaps init-demo"""
     project_name = "automaps-demo"
     project_path = os.path.join(os.getcwd(), project_name)
     try:
