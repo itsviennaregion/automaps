@@ -1,12 +1,8 @@
-from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime, timezone
-import json
 import logging
-from typing import Dict, List, Optional, Union
-from uuid import uuid1
+from typing import Dict, Optional
 import signal
-import streamlit
 import sys
 import zmq
 
@@ -49,7 +45,7 @@ class Registry:
         sys.exit()
 
     @property
-    def workers(self):
+    def workers(self) -> Dict[str, str]:
         return {
             worker_uuid: str(worker) for worker_uuid, worker in self._workers.items()
         }
@@ -75,16 +71,28 @@ class Registry:
 
     def listen(self):
         while True:
-            message = self.socket.recv_json()
+            message: dict = self.socket.recv_json()
             self.logger.debug(f"Registry received {message}")
 
-            if message["command"] == "update_state":
+            if message.get("command", None) == "update_state":
                 self._update_state(message)
 
-            if message["command"] == "get_idle_worker":
+            elif message.get("command", None) == "get_idle_worker":
                 self._get_idle_worker(message)
 
+            elif "command" in message.keys():
+                self._respond_to_unknown_command(message)
+
+            else:
+                self._respond_to_malformed_message(message)
+
     def _update_state(self, message: dict):
+        if (
+            "worker_uuid" not in message.keys()
+            or "server_port" not in message.keys()
+            or "state" not in message.keys()
+        ):
+            return self._respond_to_malformed_message(message)
         if message["worker_uuid"] not in self._workers.keys():
             self.logger.info(
                 f"New worker {lu.shorten_uuid(message['worker_uuid'])} registered."
@@ -109,6 +117,8 @@ class Registry:
         )
 
     def _get_idle_worker(self, message: dict):
+        if "frontend_uuid" not in message.keys():
+            return self._respond_to_malformed_message(message)
         self.logger.debug(
             f"Frontend {lu.shorten_uuid(message['frontend_uuid'])} is asking for idle "
             f"workers. Worker states: {self.worker_states_short}"
@@ -122,3 +132,11 @@ class Registry:
             return_message = {"idle_worker_port": None}
         self.logger.debug(f"Result of idle worker search: {return_message}")
         self.socket.send_json(return_message)
+
+    def _respond_to_unknown_command(self, message: dict):
+        self.logger.warning(f"Received unknown command: {message['command']}")
+        self.socket.send_json({"error": "Unknown command!"})
+
+    def _respond_to_malformed_message(self, message: dict):
+        self.logger.warning(f"Received malformed message: {message}")
+        self.socket.send_json({"error": "Malformed message!"})
