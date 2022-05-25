@@ -19,7 +19,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
     ],
     install_requires=[
-        "click>=8.0.4",
+        "click>=8.0.4,<8.1",  # <8.1 added for compatibility with streamlit 1.9
         "Jinja2>=3.1.1",
         "pandas>=1.4.2",
         "psycopg2>=2.9.3",
