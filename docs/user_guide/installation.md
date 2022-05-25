@@ -52,18 +52,10 @@ to get most out of autoMaps. Check out the
 
 ## Installing autoMaps
 
-Open your command line and clone the autoMaps repository:
+Install the `automaps` package from [PyPI](https://pypi.org/project/automaps/)
+__for the Python interpreter used by QGIS__, for example like this:
 
-    git clone https://github.com/itsviennaregion/automaps.git
-
-Change into the cloned directory:
-
-    cd automaps
-
-Install the `automaps` package __for the Python interpreter used by QGIS__, for 
-example like this:
-
-    /usr/bin/python3 -m pip install .
+    /usr/bin/python3 -m pip install automaps
 
 !!! info
 
@@ -79,11 +71,10 @@ example like this:
 !!! info
 
     You may also install the `automaps` package into a Python virtual environment. This
-    allows to install `autoMaps` and all packages it depends on in your virtual
-    environment, except the Python `qgis` package. To tell the Python interpreter of
-    your virtual environment, where the `qgis` package is located, you have to add a 
-    `.pth` file (e.g., `qgis.pth`) to the `.../site-packages/` directory of your virtual
-    environment
+    allows to install autoMaps and all its dependencies in your virtual environment, 
+    except the Python `qgis` package. To tell the Python interpreter of your virtual
+    environment, where the `qgis` package is located, you have to add a `.pth` file 
+    (e.g., `qgis.pth`) to the `.../site-packages/` directory of your virtual environment
     (see [Python docs](https://docs.python.org/3/install/index.html#modifying-python-s-search-path)).
 
     You can find out, which path you have to put into the file, by running:
@@ -92,16 +83,30 @@ example like this:
 
     e.g.
 
-        /bin/python3 -c "import qgis; print(qgis.__path__)"
+        /usr/bin/python3 -c "import qgis; print(qgis.__path__)"
 
-    Assuming this results in the path `/usr/lib/python3/dist-packages/qgis`, that
-    your system Python interpreter is located under `/bin/python3`, and that you are 
-    using Python version 3.8, the procedure to install automaps into a new virtual
-    environment is as follows:
+    Assuming 
+    
+    * this results in the path `/usr/lib/python3/dist-packages/qgis`, 
+    * that your system Python interpreter is located under `/usr/bin/python3`,
+    * and that you are using Python version 3.8, 
+    
+    the procedure to install automaps into a new virtual environment is as follows:
 
-        /bin/python3 -m venv venv
+    Create the virtual environment:
+
+        usr/bin/python3 -m venv venv
+    
+    Activate the virtual environment:
+
         source venv/bin/activate
+
+    Install autoMaps:
+
         pip install automaps
+
+    Create the `.pth` file:
+
         echo "/usr/lib/python3/dist-packages" > venv/lib/python3.8/site-packages/qgis.pth
 
 !!! info
