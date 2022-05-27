@@ -71,19 +71,20 @@ __for the Python interpreter used by QGIS__, for example like this:
 !!! info
 
     You may also install the `automaps` package into a Python virtual environment. This
-    allows to install autoMaps and all its dependencies in your virtual environment, 
-    except the Python `qgis` package. To tell the Python interpreter of your virtual
-    environment, where the `qgis` package is located, you have to add a `.pth` file 
-    (e.g., `qgis.pth`) to the `.../site-packages/` directory of your virtual environment
-    (see [Python docs](https://docs.python.org/3/install/index.html#modifying-python-s-search-path)).
+    keeps your system Python nice and clean. As `qgis` cannot be installed via pip,
+    you have to take an extra step to access this package from within the virtual
+    environment: To tell the Python interpreter of your virtual environment, where the
+    `qgis` package is located, you have to add a `.pth` file (e.g., `qgis.pth`) to its
+    `.../site-packages/` directory (see
+    [Python docs](https://docs.python.org/3/install/index.html#modifying-python-s-search-path)).
 
-    You can find out, which path you have to put into the file, by running:
+    You can find out, which path you have to write into the file, by running:
 
-        <PATH_TO_YOUR_SYSTEM_PYTHON_INTERPRETER> -c "import qgis; print(qgis.__path__)"
+        <PATH_TO_YOUR_SYSTEM_PYTHON_INTERPRETER> -c "import qgis; print(qgis.__path__[0])"
 
     e.g.
 
-        /usr/bin/python3 -c "import qgis; print(qgis.__path__)"
+        /usr/bin/python3 -c "import qgis; print(qgis.__path__[0])"
 
     Assuming 
     
@@ -95,7 +96,7 @@ __for the Python interpreter used by QGIS__, for example like this:
 
     Create the virtual environment:
 
-        usr/bin/python3 -m venv venv
+        /usr/bin/python3 -m venv venv
     
     Activate the virtual environment:
 
