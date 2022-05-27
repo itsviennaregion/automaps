@@ -84,3 +84,8 @@ class MapGeneratorPoly(MapGenerator):
         self.step_data.project.write("./poly_out.qgz")
         del self.step_data.project
 ```
+
+The `MapGenerator` base class offers many helper methods to simplify the calls to the
+QGIS API, e.g. to set filter expressions, set map extents, set project variables, or
+toggle the visibility of layers. Take a look at the
+[API documentation](../api/generators.md) for further details.
