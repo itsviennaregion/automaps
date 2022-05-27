@@ -229,6 +229,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         Installation
       </a>
@@ -492,7 +506,28 @@
 
 
 <h1 id="the-qgis-project">The QGIS Project<a class="headerlink" href="#the-qgis-project" title="Permanent link">#</a></h1>
-<p>TBD</p>
+<p>Each map type of an autoMaps project needs to consist of:</p>
+<ul>
+<li>a <code>MapType</code> object (see <a href="../map_type/">this</a> section)</li>
+<li>a generator class (a subclass of <code>MapGenerator</code>) (see <a href="../map_generator/">this</a>
+section)</li>
+<li>one or more QGIS print layouts in an associated QGIS project file (described here)</li>
+</ul>
+<p>The main configuration <code>automapsconf.py</code> of an autoMaps project references a QGIS
+project via its <code>FILEPATH_QGIS_PROJECT</code> option
+(see <a href="../main_config/">Main Configuration</a>). This project is used to bring all the
+geodata together, to define the symbology, the labels etc. Details on this process
+are beyond the scope of this user guide but can be found in the
+<a href="https://qgis.org/en/docs/index.html">QGIS docs</a>.</p>
+<p>At least one QGIS print layout is needed to export maps with autoMaps. It is linked
+to the <a href="../map_type/">MapType</a> via its <code>print_layout</code> argument.</p>
+<p>Before the map export is executed, the associated QGIS project is automatically loaded
+into memory by autoMaps and modified by the processing steps of the respective
+<a href="../map_generator/">MapGenerator</a>. This way, the sophisticated cartographic capabilities
+of QGIS can be used to prepare the general styling and layout, which is then used to
+create a concrete map as defined by the user. Take a look at the description of the
+<a href="../../getting_started/#exploring-the-demo-project">demo project</a> to get an impression
+of this workflow.</p>
 
               
             </article>
