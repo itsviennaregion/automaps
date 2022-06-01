@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="automaps",
-    version="1.0.4",
+    version="1.0.5",
     author="Roland Lukesch",
     author_email="roland.lukesch@its-viennaregion.at",
     description="Automatically generate customized and ready to print maps",
@@ -22,11 +22,11 @@ setuptools.setup(
         "click>=8.0.4,<8.1",  # <8.1 added for compatibility with streamlit 1.9
         "Jinja2>=3.1.1",
         "pandas>=1.4.2",
-        "psycopg2>=2.9.3",
+        "psycopg2-binary>=2.9.3",
         "streamlit>=1.8.1",
         "SQLAlchemy>=1.4.35",
         "Pillow>=9.1.0",
-        "protobuf>=3.20",
+        "protobuf>=3.20,<4",  # <4 added for compatibility with streamlit 1.9
         "pyzmq>=22.3.0",
         "traitlets>=5",
     ],
