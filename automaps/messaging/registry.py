@@ -23,9 +23,8 @@ class Worker:
 
 class Registry:
     def __init__(self):
-        self.logger = logging.getLogger("registry")
+        self.logger = lu.LoggerClient("registry")
         self.logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
-        lu.add_file_handler(self.logger)
 
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)

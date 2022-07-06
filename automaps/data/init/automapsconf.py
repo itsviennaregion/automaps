@@ -23,6 +23,8 @@ PAGE_TITLE = "Some page title"
 PORTS_WORKERS = [5656, 5657]
 PORT_REGISTRY = 5757
 
+
+# PORT_LOGGER_SERVER = 62855  # Put this on top of the file, if activated!
 # LOG_LEVEL_SERVER = "DEBUG"
 # LOG_FORMAT = ""
 # DOWNLOADS_RETAIN_TIME = 3600 * 12

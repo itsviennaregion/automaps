@@ -56,7 +56,7 @@ interface. If not set, no debug section will be shown.
 
 * `STATIC_PATH (str)`: The path to the directory containing static files for the user
 interface (logo or favicon images, help sites etc.). Typically, this is a subdirectory
-of your autoMaps configuration. All content of the directory is then copied to 
+of your autoMaps configuration. All content of the directory is then copied to
 Streamlit's download directory as a subdirectory `static_automaps` to be available for
 the frontend process. If not set, no content will be copied.
 
@@ -153,6 +153,9 @@ be used. You may set the config option so something like:
 * `LOG_LEVEL_SERVER (str)`: This string variable sets the backend server's log level.
 It needs to be one of Python's `logging` modules levels, like `DEBUG`. If not set,
 the log level defaults to `DEBUG`.
+
+* `PORT_LOGGER_SERVER (int)`: The ZeroMQ port of the logger server as an integer. Be
+sure to put this on top of your configuration file, if activated!
 
 * `LOG_FORMAT (str)`: The log format (see
 [Python Docs](https://docs.python.org/3/library/logging.html)). If not set,

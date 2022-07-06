@@ -32,6 +32,14 @@ class AutoMaps:
 
         import automapsconf
 
+        logger_server = subprocess.Popen(
+            [
+                sys.executable,
+                os.path.join(automaps_run_path, "start_logger_server.py"),
+                conf_path,
+                automaps_path,
+            ]
+        )
         registry = subprocess.Popen(
             [
                 sys.executable,
@@ -63,6 +71,7 @@ class AutoMaps:
             )
             workers.append(worker)
         try:
+            _, _ = logger_server.communicate()
             _, _ = registry.communicate()
             _, _ = frontend.communicate()
             for worker in workers:
@@ -70,7 +79,8 @@ class AutoMaps:
         except KeyboardInterrupt:
             pass
         finally:
-            registry.kill()
-            frontend.kill()
             for worker in workers:
                 worker.kill()
+            frontend.kill()
+            registry.kill()
+            logger_server.kill

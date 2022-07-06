@@ -31,9 +31,8 @@ class MapType:
         self.map_generator = map_generator
         self.html_beneath_name = html_beneath_name
 
-        self.logger = logging.getLogger(f"MapType {self.name}")
+        self.logger = lu.LoggerClient(f"MapType {self.name}")
         self.logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
-        lu.add_file_handler(self.logger)
 
     @property
     def selector_values(self) -> Dict[str, Any]:

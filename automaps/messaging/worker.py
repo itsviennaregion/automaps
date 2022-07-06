@@ -38,11 +38,10 @@ class QgisWorker:
         self.port = port
 
         self._uuid_short = lu.shorten_uuid(self._uuid)
-        self._logger = logging.getLogger(
+        self._logger = lu.LoggerClient(
             f"worker{lu.shorten_uuid(self._uuid, extra_short=True)}"
         )
         self._logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
-        lu.add_file_handler(self._logger)
 
         self._task_on_event = {
             "init_job": self._init_job,

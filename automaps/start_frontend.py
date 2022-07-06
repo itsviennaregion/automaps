@@ -138,7 +138,7 @@ def start_frontend():
                         job_uuid = "J-" + str(uuid1())
                         st.session_state["active_job"] = job_uuid
                         st.session_state["active_worker_port"] = worker_port
-                        logging.getLogger("frontend").info(
+                        st.session_state["logger"].info(
                             f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])}"
                             f" initialized job {lu.shorten_uuid(job_uuid)} for worker "
                             f"{lu.shorten_uuid(worker_info['idle_worker_uuid'])} on port "
@@ -147,7 +147,7 @@ def start_frontend():
                         steps = ask_worker_for_steps(
                             maptype_dict_key, job_uuid, worker_port
                         )
-                        logging.getLogger("frontend").info(
+                        st.session_state["logger"].info(
                             f"Worker {lu.shorten_uuid(worker_info['idle_worker_uuid'])} "
                             f"on port {worker_port} accepted job "
                             f"{lu.shorten_uuid(job_uuid)}"
@@ -161,7 +161,7 @@ def start_frontend():
                                 "SPINNER_TEXT", "Creating map _{maptype_name}_ ({step})"
                             ).format(maptype_name=maptype.name, step=step)
                         ):
-                            logging.getLogger("frontend").debug(
+                            st.session_state["logger"].debug(
                                 f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                                 f"is requesting step '{step}' "
                                 f"for job {lu.shorten_uuid(job_uuid)} from worker "
@@ -185,7 +185,7 @@ def start_frontend():
                         ).format(maptype_name=maptype.name)
                     )
                     _show_download_button(step_message["filename"])
-                    logging.getLogger("frontend").debug(
+                    st.session_state["logger"].debug(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                         f"received results of finished job "
                         f"{lu.shorten_uuid(job_uuid)} from worker "
@@ -212,7 +212,7 @@ def start_frontend():
                 # If idle worker has been found and job is finished:
                 # Send job finished confirmation
                 if worker_port is not None and job_finished:
-                    logging.getLogger("frontend").info(
+                    st.session_state["logger"].info(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                         f"is sending job finished confirmation for job "
                         f"{lu.shorten_uuid(job_uuid)} "
@@ -225,7 +225,7 @@ def start_frontend():
                 # If idle worker has been found, but job has not been finished
                 # Send job cancellation to worker
                 elif worker_port is not None and not job_finished:
-                    logging.getLogger("frontend").info(
+                    st.session_state["logger"].info(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                         f"is sending job cancellation for job "
                         f"{lu.shorten_uuid(job_uuid)} "
@@ -238,7 +238,7 @@ def start_frontend():
                 # No idle worker has been found:
                 # just do some logging
                 else:
-                    logging.getLogger("frontend").warning(
+                    st.session_state["logger"].warning(
                         f"Frontend {lu.shorten_uuid(st.session_state['frontend_uuid'])} "
                         f"could not find idle worker. Job cancelled before "
                         f"initialization."
@@ -250,21 +250,22 @@ def start_frontend():
 
 
 def _init():
+    if "logger" not in st.session_state:
+        st.session_state["logger"] = lu.LoggerClient("frontend")
     if "frontend_uuid" not in st.session_state:
         st.session_state["frontend_uuid"] = "F-" + str(uuid1())
-        logging.getLogger("frontend").info(
+        st.session_state["logger"].info(
             "Frontend initalized with uuid "
             f"{lu.shorten_uuid(st.session_state['frontend_uuid'])}"
         )
     if not hasattr(automapsconf, "init_done"):
         create_streamlit_download_path()
         # _copy_static_content()
-        logging.getLogger("frontend").setLevel(
+        st.session_state["logger"].setLevel(
             get_config_value("LOG_LEVEL_SERVER", logging.INFO)
         )
-        lu.add_file_handler(logging.getLogger("frontend"))
-        logging.getLogger("frontend").info("Automaps initialized!")
-        logging.getLogger("frontend").info(
+        st.session_state["logger"].info("Automaps initialized!")
+        st.session_state["logger"].info(
             f"Download path: {get_streamlit_download_path()}"
         )
         max_seconds = (
@@ -272,7 +273,7 @@ def _init():
             if hasattr(automapsconf, "DOWNLOADS_RETAIN_TIME")
             else get_default_args(DownloadPathJanitor.__init__)["max_seconds"]
         )
-        logging.getLogger("frontend").info(
+        st.session_state["logger"].info(
             f"Downloads are retained for {max_seconds} seconds "
             f"({max_seconds / 3600:.1f} hours)."
         )
@@ -284,7 +285,7 @@ def _init():
 def _copy_static_content():
     if get_config_value("STATIC_PATH"):
         project_static_path, streamlit_static_path = copy_static_content()
-        logging.getLogger("frontend").info(
+        st.session_state["logger"].info(
             f"Static content copied from {project_static_path} to "
             f"frontend static content path {streamlit_static_path}"
         )

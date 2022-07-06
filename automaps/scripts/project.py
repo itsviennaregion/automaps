@@ -33,6 +33,28 @@ def run():
     pass
 
 
+@run.command(name="logger")
+@click.option(
+    "-c",
+    "--config-file",
+    type=click.Path(exists=True),
+    required=True,
+    help="Path to the config file, including the filename. The file needs to be called "
+    "'automapsconf.py'.",
+)
+def run_logger(config_file):
+    """Starts the autoMaps logger server process, as defined in the config file.
+
+    Example usage:
+
+        automaps run logger -c ./myproject/automapsconf.py"""
+    _process_config_file(config_file)
+    from automaps.logutils import LoggerServer
+
+    logger_server = LoggerServer()
+    logger_server.listen()
+
+
 @run.command(name="registry")
 @click.option(
     "-c",
