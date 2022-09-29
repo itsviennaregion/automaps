@@ -122,6 +122,7 @@ class MapType:
         # Does Selector have init values?
         if (
             _selector_values[element.label] == element.no_value_selected_text
+            or _selector_values[element.label] == [element.no_value_selected_text]
             or _selector_values[element.label] == []
         ):
             if not element.optional:

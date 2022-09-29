@@ -87,6 +87,7 @@ class SelectorSQL(BaseSelector):
         exclude_from_filename: bool = False,
         extract_first_option: bool = False,
         retrieve_as_dictionary: bool = False,  # TODO: documentation & tests
+        force_return_list: bool = False,  # TODO: documentation & tests
         use_for_file_format: bool = False,
         debug: bool = False,  # TODO: documentation & tests
     ):
@@ -104,6 +105,7 @@ class SelectorSQL(BaseSelector):
         self.exclude_from_filename = exclude_from_filename
         self.extract_first_option = extract_first_option
         self.retrieve_as_dictionary = retrieve_as_dictionary
+        self.force_return_list = force_return_list
         self.use_for_file_format = use_for_file_format
         self.debug = debug
 
@@ -120,11 +122,15 @@ class SelectorSQL(BaseSelector):
     @property
     def widget(self):
         if self.widget_method:
-            return self.widget_method(
+            return_value = self.widget_method(
                 self.label_ui if self.label_ui else self.label,
                 self.options,
                 **self.widget_args
             )
+            if self.force_return_list:
+                return [return_value]
+            else:
+                return return_value
         else:
             if len(self.options) == 0:
                 return None
