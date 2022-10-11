@@ -357,3 +357,14 @@ class MapGenerator(ABC):
         layerNode = model.rootGroup().findLayer(layer)
         QgsMapLayerLegendUtils.setLegendNodeOrder(layerNode, [])
         model.refreshLayerLegend(layerNode)
+
+    def _set_layer_name(self, old_layer_name: str, new_layer_name: str):
+        """Change the layer name of a layer.
+
+        Can be used to set the text of the legend item.
+
+        Args:
+            old_layer_name (str): The name of the layer befor the change.
+            new_layer_name (str): The new name of the layer.
+        """
+        self._get_map_layer(old_layer_name).setName(new_layer_name)

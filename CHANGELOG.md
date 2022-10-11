@@ -7,3 +7,4 @@
 ## Feature Enhancements
 
     * Add new Argument `force_return_list` to `SelectorSQL`. 
+    * Add new Method `_set_layer_name` to `MapGenerator`
