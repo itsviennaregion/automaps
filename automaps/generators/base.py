@@ -134,6 +134,10 @@ class MapGenerator(ABC):
             f"{'_'.join(str(x) for x in data.values() if x)}".replace(" ", "_")
             .replace(".", "_")
             .replace("/", "_")
+            .replace("'", "")
+            .replace(",", "")
+            .replace("[", "")
+            .replace("]", "")
         )
         filename_with_basepath = os.path.join(
             self.basepath_fileserver, filename_without_basepath
