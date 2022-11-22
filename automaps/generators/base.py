@@ -104,7 +104,7 @@ class MapGenerator(ABC):
         self.total_weight: float = sum([s.weight for s in self.steps.values()])
 
     @property
-    def filename(self) -> str:
+    def filename(self, max_length: int = 250) -> str:
         """The full filename for the export, including path.
 
         The filename is constructed depending on the basepath of the fileserver,
@@ -112,6 +112,10 @@ class MapGenerator(ABC):
         are excluded depending on the project configuration and
         `self.data_to_exclude_from_filename`. Some characters are replaced to ensure
         proper file paths as output.
+
+        Args:
+            max_length (int, optional): Maximum length of the filename, including
+                basepath, excluding extension. Defaults to 250.
 
         Returns:
             str: _description_
@@ -124,15 +128,20 @@ class MapGenerator(ABC):
         )
         for key in data_keys_to_pop:
             data.pop(key, None)
-        return os.path.join(
-            self.basepath_fileserver,
+        filename_without_basepath = (
             f"{self.job_uuid}_"
             f"{self.name}_"
             f"{'_'.join(str(x) for x in data.values() if x)}".replace(" ", "_")
             .replace(".", "_")
             .replace("/", "_")
-            + f".{self.file_format}",
         )
+        filename_with_basepath = os.path.join(
+            self.basepath_fileserver, filename_without_basepath
+        )[:max_length]
+        filename_with_basepath_and_extension = (
+            filename_with_basepath + f".{self.file_format}"
+        )
+        return filename_with_basepath_and_extension
 
     @abstractmethod
     def _set_steps(self):
