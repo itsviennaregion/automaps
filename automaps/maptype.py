@@ -31,9 +31,6 @@ class MapType:
         self.map_generator = map_generator
         self.html_beneath_name = html_beneath_name
 
-        self.logger = lu.LoggerClient(f"MapType {self.name}")
-        self.logger.setLevel(get_config_value("LOG_LEVEL_SERVER", logging.INFO))
-
     @property
     def selector_values(self) -> Dict[str, Any]:
         """Show widgets (if conditions defined by Selector argument
@@ -85,8 +82,8 @@ class MapType:
         sql_updated = template.render(data=selector_values)
         selector.sql = sql_updated
         if selector.debug:
-            self.logger.info(f"Original SQL:\n{selector.sql_orig}")
-            self.logger.info(f"Updated SQL:\n{selector.sql}")
+            print(f"Original SQL:\n{selector.sql_orig}")
+            print(f"Updated SQL:\n{selector.sql}")
 
     def _process_multi_selector_element(
         self, _selector_values: Dict[str, Any], multi_sel: MultiSelector
