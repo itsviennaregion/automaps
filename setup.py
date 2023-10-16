@@ -23,7 +23,7 @@ setuptools.setup(
         "Jinja2>=3.1.1",
         "pandas>=1.4.2",
         "psycopg2-binary>=2.9.3",
-        "streamlit>=1.8.1",
+        "streamlit==1.14.0",
         "SQLAlchemy>=1.4.35",
         "Pillow>=9.1.0",
         "protobuf>=3.20,<4",  # <4 added for compatibility with streamlit 1.9
