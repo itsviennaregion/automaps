@@ -19,14 +19,15 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
     ],
     install_requires=[
-        "click>=8.0.4,<8.1",  # <8.1 added for compatibility with streamlit 1.9
+        "altair==4.0",
+        "click>=8.0.4,<8.1", # <8.1 added for compatibility with streamlit 1.9
         "Jinja2>=3.1.1",
         "pandas>=1.4.2",
         "psycopg2-binary>=2.9.3",
         "streamlit==1.14.0",
         "SQLAlchemy>=1.4.35",
         "Pillow>=9.1.0",
-        "protobuf>=3.20,<4",  # <4 added for compatibility with streamlit 1.9
+        "protobuf>=3.20,<4", # <4 added for compatibility with streamlit 1.9
         "pyzmq>=22.3.0",
         "traitlets>=5",
     ],
